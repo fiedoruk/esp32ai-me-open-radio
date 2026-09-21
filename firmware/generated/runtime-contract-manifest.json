@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/generate-runtime-contract.mjs",
+  "input": {
+    "runtime/runtime-contract.json": "2b0e307d89d4c8f0432d0569f3aa239fb7142801bdce6adf8277eefeafa8f9c6"
+  },
+  "counts": {
+    "soaks": 4,
+    "events": 621,
+    "virtualMinutes": 2100
+  },
+  "outputs": {
+    "runtime/generated/runtime-limits.mjs": "85cb84d4b6d4a56710c915013d5244f28b9b6ac4a8d2dc1abb22948092e22c1f",
+    "ui-contract/fixtures/runtime-soaks.json": "f09f448f18cc5a285f91440e50cbb3036d56cb79a3a597653108a1d8e9ed6900",
+    "firmware/generated/runtime_limits.hpp": "606c2923bc5686cbdc3ec46964e2122db67471cd415a2d225346d8e5fabee8ad",
+    "firmware/generated/runtime_soak_vectors.hpp": "e72fd3986515d8c3c4a36ae7d611b533c377e7c6a1c237eea146c99c5c6f0233"
+  }
+}

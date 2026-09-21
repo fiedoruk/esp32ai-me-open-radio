@@ -1,0 +1,20 @@
+{
+  "note": "Pinned reference figures for the tier anchors. Read by scripts/measure-station-directory.mjs INSTEAD of the catalog, because the catalog is what that script overwrites: taking the baseline from it turned every accepted dip into the next run's reference, so repeated small drops could walk the bar down while each individual step passed the decay guard. Lowering a baseline has to be an edit somebody makes and defends.",
+  "measuredIn": "2026-07-21 full pass",
+  "anchors": [
+    {
+      "id": "radio357",
+      "name": "Radio 357",
+      "baselineX": 1.27,
+      "provenIn": "0.4",
+      "warrant": "owner device-proof 30.07; shipped and owner-confirmed playing 01.08"
+    },
+    {
+      "id": "eskarock",
+      "name": "ESKA ROCK",
+      "baselineX": 1.43,
+      "provenIn": "0.2.1",
+      "warrant": "connect/decode steady in the 0.2.1 smoke; clean BT listening NOT MEASURED"
+    }
+  ]
+}

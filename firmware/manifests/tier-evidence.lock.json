@@ -1,0 +1,18 @@
+{
+  "note": "Stations whose tier rests on hardware evidence rather than on their measured figures. Pinned so a measurement run cannot demote them and erase the reason in one silent step - the exact follow-up docs/142 asked for on 31.07 and nobody built, which let a stale annotation be read as current on 01.08. Changing an entry is legitimate and has to show up in the diff.",
+  "gate": "scripts/check-tier-evidence.mjs",
+  "entries": [
+    {
+      "id": "radio357",
+      "name": "Radio 357",
+      "tier": "B",
+      "evidenceSha256": "f2ea7ba34a42c8b5b7f096e97cf98791611975e9c2c122103957c3962b5246a5"
+    },
+    {
+      "id": "wnet",
+      "name": "Radio Wnet",
+      "tier": "B",
+      "evidenceSha256": "2dc05283652a1b046526ab054afca1ac8305ee30dcc49f840938bd4afa2febec"
+    }
+  ]
+}

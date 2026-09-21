@@ -1,0 +1,12 @@
+{"schemaVersion":1,"startMs":1000000,"supportedCapabilities":["MP3_ICY"],"scenarios":[
+    {"id":"rmf-fm-timeout-lkg","stationId":"rmf-fm","outcomes":{"rmf-fm-api":"TIMEOUT","LAST_KNOWN_GOOD":"SUCCESS"},"lastKnownGood":{"stationId":"rmf-fm","endpointId":"opaque-rmf-fm-lkg"},"expectedStatus":"PLAYING"},
+    {"id":"radio-zet-404-lkg","stationId":"radio-zet","outcomes":{"radio-zet-api":"HTTP_404","LAST_KNOWN_GOOD":"SUCCESS"},"lastKnownGood":{"stationId":"radio-zet","endpointId":"opaque-radio-zet-lkg"},"expectedStatus":"PLAYING"},
+    {"id":"tok-fm-primary-success","stationId":"tok-fm","outcomes":{"tok-fm-player":"SUCCESS"},"lastKnownGood":null,"expectedStatus":"PLAYING"},
+    {"id":"antyradio-primary-success","stationId":"antyradio","outcomes":{"antyradio-api":"SUCCESS"},"lastKnownGood":null,"expectedStatus":"PLAYING"},
+    {"id":"eska-mp3-success","stationId":"radio-eska","outcomes":{"radio-eska-player":"SUCCESS"},"lastKnownGood":null,"expectedStatus":"PLAYING"},
+    {"id":"rmf-maxx-bounded-retry","stationId":"rmf-maxx","outcomes":{"rmf-maxx-api":"TIMEOUT"},"lastKnownGood":null,"expectedStatus":"RETRY_SCHEDULED"},
+    {"id":"radio-plus-lkg","stationId":"radio-plus","outcomes":{"radio-plus-player":"PARSE_ERROR","LAST_KNOWN_GOOD":"SUCCESS"},"lastKnownGood":{"stationId":"radio-plus","endpointId":"opaque-radio-plus-lkg"},"expectedStatus":"PLAYING"},
+    {"id":"zlote-stale-lkg","stationId":"zlote-przeboje","outcomes":{"zlote-przeboje-api":"STALE","LAST_KNOWN_GOOD":"SUCCESS"},"lastKnownGood":{"stationId":"zlote-przeboje","endpointId":"opaque-zlote-lkg"},"expectedStatus":"PLAYING"},
+    {"id":"meloradio-primary-success","stationId":"meloradio","outcomes":{"meloradio-api":"SUCCESS"},"lastKnownGood":null,"expectedStatus":"PLAYING"}
+  ]
+}

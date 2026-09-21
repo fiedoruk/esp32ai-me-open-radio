@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite it using this metadata."
+title: "Open Radio Core2"
+type: software
+license: GPL-3.0-or-later
+version: 0.4.1
+date-released: 2026-08-02
+repository-code: "https://github.com/fiedoruk/open-radio"
+authors:
+  - family-names: "Fiedoruk"
+    given-names: "Tomasz"
+    website: "https://fiedoruk.pl"
+abstract: "A reliability-first open-source internet radio for M5Stack Core2."

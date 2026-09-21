@@ -1,0 +1,7 @@
+{
+  "note": "Stations shipping ON THE OWNER'S REQUEST so they can be tested, not because anything has been proven about them. Deliberately NOT tier-evidence.lock.json: that file means a person heard the station play, and its floor lets a promoted station sit 15% under the anchor. A provisional admission is the opposite case - a station whose measurement is INDISTINGUISHABLE from the bar - so its floor is the instrument's own measured repeatability (+-0.01), not 0.85. Anything further below the bar than the instrument can resolve is a real difference and has to be argued on hardware instead. Every entry blocks publication until it is resolved, so a station admitted for a bench test cannot reach a buyer by nobody getting round to it.",
+  "gate": "scripts/check-provisional-admissions.mjs",
+  "floor": 0.99,
+  "floorBasis": "1 - 0.01, the measured spread of four back-to-back 15 s probes of one stream (1.237-1.248) recorded in the anchor's own tierEvidence on 2026-08-01.",
+  "entries": []
+}

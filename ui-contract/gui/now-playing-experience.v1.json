@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "status": "SOFTWARE_ONLY_DRY_RUN",
+  "variants": [
+    "editorial",
+    "glance",
+    "air"
+  ],
+  "defaultVariant": "editorial",
+  "metadata": {
+    "optional": true,
+    "source": "ICY_STREAM_TITLE",
+    "maxInputBytes": 192,
+    "maxDisplayCharacters": 64,
+    "sanitizeControlCharacters": true,
+    "staleAfterSeconds": 900,
+    "fallbackOrder": [
+      "station-name",
+      "playback-health"
+    ]
+  },
+  "weather": {
+    "optional": true,
+    "provider": "open-meteo",
+    "providerUrl": "https://api.open-meteo.com/v1/forecast",
+    "attributionRequired": true,
+    "locationSource": "AUTO_OPTIMIZE",
+    "locationContract": "ui-contract/location/auto-location.v1.json",
+    "fields": [
+      "temperature_2m",
+      "weather_code",
+      "precipitation_probability"
+    ],
+    "refreshSeconds": 1200,
+    "requestTimeoutMilliseconds": 3500,
+    "lastKnownGoodSeconds": 21600,
+    "failureMode": "HIDE_WIDGET_KEEP_RADIO_PLAYING"
+  },
+  "screensaver": {
+    "modes": [
+      "pulse",
+      "bars",
+      "orbit",
+      "cat"
+    ],
+    "defaultEnabled": true,
+    "defaultMode": "pulse",
+    "activationDelaySeconds": [
+      30,
+      60,
+      120,
+      300,
+      600
+    ],
+    "defaultActivationDelaySeconds": 120,
+    "displayOffEnabled": true,
+    "displayOffDelaySeconds": [
+      900,
+      1800,
+      3600
+    ],
+    "defaultDisplayOffDelaySeconds": 1800,
+    "displayOffScope": "BACKLIGHT_AND_PANEL_ONLY_AUDIO_CONTINUES",
+    "browserSignal": "DETERMINISTIC_SYNTHETIC_ENVELOPE",
+    "firmwareSignal": "BOUNDED_PCM_ANALYSIS_TAP",
+    "maximumFramesPerSecond": 12,
+    "skipFramesUnderAudioPressure": true,
+    "touchExit": true,
+    "touchWakeFromOff": true,
+    "hardwareStatus": "NOT_MEASURED",
+    "catIdentity": "Kiara",
+    "catAppearance": "original procedural grey British Shorthair with amber eyes"
+  },
+  "widgetPriority": {
+    "always": [
+      "station",
+      "track-when-available",
+      "output-route"
+    ],
+    "glance": [
+      "clock",
+      "optional-weather",
+      "precipitation-soon"
+    ],
+    "onlyWhenActionable": [
+      "wifi-recovery",
+      "bluetooth-fallback",
+      "low-battery"
+    ],
+    "rejected": [
+      "news-headlines",
+      "calendar",
+      "remote-station-logos",
+      "air-quality-dashboard"
+    ]
+  },
+  "demo": {
+    "clock": "18:42",
+    "weather": {
+      "temperatureC": 19,
+      "weatherCode": 61,
+      "precipitationProbability": 80,
+      "precipitationInMinutes": 35
+    },
+    "tracks": {
+      "rmf-fm": "Męskie Granie Orkiestra — Supermoce",
+      "radio-zet": "Dua Lipa — Houdini",
+      "tok-fm": "Poranek Radia TOK FM — na żywo",
+      "antyradio": "Metallica — Nothing Else Matters",
+      "radio-eska": "sanah — Hip hip hura!",
+      "rmf-maxx": "Teddy Swims — Lose Control",
+      "radio-plus": "Siewcy Lednicy — Pieśń poranna",
+      "zlote-przeboje": "Perfect — Nie płacz Ewka",
+      "meloradio": "Lady Pank — Kryzysowa narzeczona"
+    }
+  }
+}

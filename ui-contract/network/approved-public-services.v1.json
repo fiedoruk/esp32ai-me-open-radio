@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "projectBackend": false,
+  "services": [
+    {
+      "id": "time-sync",
+      "scheme": "sntp",
+      "host": "pool.ntp.org",
+      "baseUrl": "sntp://pool.ntp.org",
+      "requiredForPlayback": false,
+      "authentication": "NONE"
+    },
+    {
+      "id": "device-console",
+      "scheme": "http",
+      "host": "open-radio.local",
+      "baseUrl": "http://open-radio.local",
+      "requiredForPlayback": false,
+      "authentication": "NONE",
+      "note": "The device's OWN mDNS name, registered by the firmware itself and shown on the Wi-Fi screen and title line so the owner can open the console; traffic never leaves the LAN."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "packId": "pl-pl.launch-nine",
+  "countryCode": "PL",
+  "defaultUiLocale": "pl",
+  "supportedUiLocales": ["pl", "en"],
+  "regionLabels": {"pl":"Cała Polska","en":"All Poland"},
+  "stationCatalogPath": "ui-contract/catalog/station-catalog.v1.json",
+  "stationIdentityPath": "ui-contract/gui/station-identities.v1.json",
+  "maximumStations": 9,
+  "remoteUpdate": false,
+  "runtimeInstall": false
+}

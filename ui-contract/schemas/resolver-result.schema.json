@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fiedoruk.pl/open-radio-core2/schemas/resolver-result.schema.json",
+  "title": "ResolverResult",
+  "type": "object",
+  "required": ["schemaVersion","stationId","status","selectedCandidateId","retryAtMs","trace"],
+  "properties": {
+    "schemaVersion":{"const":1},
+    "stationId":{"type":"string","minLength":3,"maxLength":64},
+    "status":{"enum":["PLAYING","RETRY_SCHEDULED","UNSUPPORTED"]},
+    "selectedCandidateId":{"type":["string","null"],"minLength":3,"maxLength":96},
+    "retryAtMs":{"type":["integer","null"],"minimum":0},
+    "trace":{
+      "type":"array","minItems":1,"maxItems":16,
+      "items":{
+        "type":"object",
+        "required":["atMs","candidateId","action","outcome"],
+        "properties":{
+          "atMs":{"type":"integer","minimum":0},
+          "candidateId":{"type":["string","null"],"minLength":3,"maxLength":96},
+          "action":{"enum":["CAPABILITY_CHECK","ATTEMPT","SKIP"]},
+          "outcome":{"type":"string","minLength":3,"maxLength":32},
+          "scoreBefore":{"type":["integer","null"],"minimum":0,"maximum":100},
+          "scoreAfter":{"type":["integer","null"],"minimum":0,"maximum":100},
+          "quarantineUntilMs":{"type":["integer","null"],"minimum":0}
+        },
+        "additionalProperties":false
+      }
+    }
+  },
+  "additionalProperties":false
+}

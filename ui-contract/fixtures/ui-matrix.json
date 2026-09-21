@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "dimensions": {
+    "systemState": ["CONFIG_REQUIRED", "PLAYING", "RECOVERING", "DEGRADED_PLAYING", "UNSUPPORTED_STATION", "SAFE_MODE"],
+    "locale": ["pl", "en"],
+    "output": ["LOCAL", "BT"]
+  },
+  "fixtures": [
+    {"id":"config-required-pl-local","systemState":"CONFIG_REQUIRED","locale":"pl","output":"LOCAL"},
+    {"id":"config-required-pl-bt","systemState":"CONFIG_REQUIRED","locale":"pl","output":"BT"},
+    {"id":"config-required-en-local","systemState":"CONFIG_REQUIRED","locale":"en","output":"LOCAL"},
+    {"id":"config-required-en-bt","systemState":"CONFIG_REQUIRED","locale":"en","output":"BT"},
+    {"id":"playing-pl-local","systemState":"PLAYING","locale":"pl","output":"LOCAL"},
+    {"id":"playing-pl-bt","systemState":"PLAYING","locale":"pl","output":"BT"},
+    {"id":"playing-en-local","systemState":"PLAYING","locale":"en","output":"LOCAL"},
+    {"id":"playing-en-bt","systemState":"PLAYING","locale":"en","output":"BT"},
+    {"id":"recovering-pl-local","systemState":"RECOVERING","locale":"pl","output":"LOCAL"},
+    {"id":"recovering-pl-bt","systemState":"RECOVERING","locale":"pl","output":"BT"},
+    {"id":"recovering-en-local","systemState":"RECOVERING","locale":"en","output":"LOCAL"},
+    {"id":"recovering-en-bt","systemState":"RECOVERING","locale":"en","output":"BT"},
+    {"id":"degraded-playing-pl-local","systemState":"DEGRADED_PLAYING","locale":"pl","output":"LOCAL"},
+    {"id":"degraded-playing-pl-bt","systemState":"DEGRADED_PLAYING","locale":"pl","output":"BT"},
+    {"id":"degraded-playing-en-local","systemState":"DEGRADED_PLAYING","locale":"en","output":"LOCAL"},
+    {"id":"degraded-playing-en-bt","systemState":"DEGRADED_PLAYING","locale":"en","output":"BT"},
+    {"id":"unsupported-station-pl-local","systemState":"UNSUPPORTED_STATION","locale":"pl","output":"LOCAL"},
+    {"id":"unsupported-station-pl-bt","systemState":"UNSUPPORTED_STATION","locale":"pl","output":"BT"},
+    {"id":"unsupported-station-en-local","systemState":"UNSUPPORTED_STATION","locale":"en","output":"LOCAL"},
+    {"id":"unsupported-station-en-bt","systemState":"UNSUPPORTED_STATION","locale":"en","output":"BT"},
+    {"id":"safe-mode-pl-local","systemState":"SAFE_MODE","locale":"pl","output":"LOCAL"},
+    {"id":"safe-mode-pl-bt","systemState":"SAFE_MODE","locale":"pl","output":"BT"},
+    {"id":"safe-mode-en-local","systemState":"SAFE_MODE","locale":"en","output":"LOCAL"},
+    {"id":"safe-mode-en-bt","systemState":"SAFE_MODE","locale":"en","output":"BT"}
+  ]
+}

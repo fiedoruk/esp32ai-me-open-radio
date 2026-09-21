@@ -1,0 +1,50 @@
+# Hash macierzy 104 przypadkow renderera, JEDEN WPIS NA IMPLEMENTACJE libm.
+#
+# Renderer rysuje strzalke trendu cisnienia przez std::sin i std::cos
+# (renderer.cpp:477, wolane z drawHomeHeader), a ekrany glowne sa w macierzy.
+# sqrt jest w IEEE-754 poprawnie zaokraglany i identyczny wszedzie; sin i cos
+# NIE sa, wiec ostatnie bity roznia sie miedzy libm Apple'a a glibc i kilka
+# pikseli antyaliasingu wychodzi inaczej.
+#
+# Ta bramka dowodzi wiec SAMOZGODNOSCI NA JEDNYM HOSCIE, a nie identycznosci
+# miedzy platformami. To wezsze twierdzenie niz slowo "determinizm" sugeruje
+# i lepiej, zeby stalo tu wprost. Odtwarzalnosc firmware'u to osobna sprawa i
+# opiera sie na przypietym toolchainie ESP32, nie na tym pliku.
+#
+# Renderer nalezy do zamrozonego wydania 0.4 i NIE WOLNO go tu zmieniac, zeby
+# usunac zaleznosc — opublikowana binarka powstala z tego kodu. Wyrownanie
+# platform to praca 0.5: strzalka policzona na liczbach calkowitych.
+#
+# Kazda zmiana renderera zmienia OBIE wartosci, wiec bramka dalej lapie dryf.
+#
+# Wpis 0.4.1 (2026-08-01): ekran ustawien odpowiada teraz "9 z 238" zamiast
+# "9 z 222", co przesunelo macierz. Wartosc linuksowa policzona w kontenerze
+# node:22-bookworm --platform linux/amd64 (g++ 12, glibc 2.36) tym samym
+# skryptem, a nie zgadnieta ani dopisana z jednego hosta.
+#
+# Wpis 0.4.1 FINAL (2026-08-01, wieczor): "9 z 238" -> "9 z 236". Katalog
+# stracil trzy wpisy bez nazwy ('radio', 'rp', 'rmf' — firmware/manifests/
+# directory-exclusions.json) i zyskal Radio Wnet. Obie wartosci policzone
+# ponownie, linuksowa znowu w tym samym kontenerze.
+#
+# Wpis 0.4.1 (2026-08-02): adres na ekranie glownym zmieniony z "fiedoruk.pl"
+# na "open-radio.me" (renderer.cpp:2860) — projekt przeniosl sie na wlasna
+# domene, a ekran nadal odsylal na stara. Napis jest w macierzy, wiec obie
+# wartosci sie przesunely. Linuksowa policzona w node:22-bookworm
+# --platform linux/amd64 (g++ 12) tym samym skryptem; `--write` znowu NIE
+# uzyty, zgodnie z ostrzezeniem nizej.
+#
+# Wpis 0.4.1 (2026-08-02, poprawka): ekran "O radiu" pokazuje teraz w pierwszej
+# linii "Tomasz Fiedoruk · fiedoruk.pl" kolorem tekstu, a adres projektu zszedl
+# do linii drugiej razem z informacja o braku telemetrii. Powod jest trwalosciowy,
+# nie estetyczny: open-radio.me ma date odnowienia, a kostka moze stac na polce
+# lata — nazwisko i domena autora nie wygasaja, wiec pochodzenie jest zakotwiczone
+# w nich. Obie wartosci przeliczone ponownie na wlasnych hostach.
+#
+# UWAGA NA `--write`: nadpisuje TEN PLIK jednym wpisem biezacego hosta i kasuje
+# ten naglowek razem z druga platforma (check-renderer-determinism.mjs:82).
+# Uzyty tu 2026-08-01 skasowal caly rejestr; odtworzony z gita i zapisany
+# recznie. Do czasu naprawy: liczyc hashe osobno na obu hostach i wpisywac tu
+# recznie, `--write` NIE uzywac.
+d99be00c77935d9878c6af96e822a41deede06176723c6fc8aa59d1afb2d7d7f  apple-clang-darwin-arm64
+26df012c572c15797a6b3dc2df499944f1df1382ac90ad28014ab0f6afb85db3  gnu-libstdcxx-linux-x64

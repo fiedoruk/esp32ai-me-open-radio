@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "persistence-scenarios.json",
+  "traces": [
+    {
+      "scenarioId": "commit-selects-new-slot",
+      "write": {
+        "status": "COMMITTED",
+        "phase": "AFTER_COMMIT",
+        "targetSlotId": "B",
+        "generation": 2
+      },
+      "boot": {
+        "schemaVersion": 1,
+        "status": "BOOTABLE",
+        "selectedSlotId": "B",
+        "selectedGeneration": 2,
+        "configSchemaVersion": 2,
+        "migratedFromVersion": null,
+        "rejections": []
+      }
+    },
+    {
+      "scenarioId": "power-loss-before-write",
+      "write": {
+        "status": "INTERRUPTED",
+        "phase": "BEFORE_WRITE",
+        "targetSlotId": "B",
+        "generation": 2
+      },
+      "boot": {
+        "schemaVersion": 1,
+        "status": "BOOTABLE",
+        "selectedSlotId": "A",
+        "selectedGeneration": 1,
+        "configSchemaVersion": 2,
+        "migratedFromVersion": null,
+        "rejections": [
+          {
+            "slotId": "B",
+            "reason": "EMPTY"
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "power-loss-during-payload",
+      "write": {
+        "status": "INTERRUPTED",
+        "phase": "DURING_PAYLOAD",
+        "targetSlotId": "B",
+        "generation": 2
+      },
+      "boot": {
+        "schemaVersion": 1,
+        "status": "BOOTABLE",
+        "selectedSlotId": "A",
+        "selectedGeneration": 1,
+        "configSchemaVersion": 2,
+        "migratedFromVersion": null,
+        "rejections": [
+          {
+            "slotId": "B",
+            "reason": "UNCOMMITTED"
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "power-loss-before-marker",
+      "write": {
+        "status": "INTERRUPTED",
+        "phase": "BEFORE_COMMIT_MARKER",
+        "targetSlotId": "B",
+        "generation": 2
+      },
+      "boot": {
+        "schemaVersion": 1,
+        "status": "BOOTABLE",
+        "selectedSlotId": "A",
+        "selectedGeneration": 1,
+        "configSchemaVersion": 2,
+        "migratedFromVersion": null,
+        "rejections": [
+          {
+            "slotId": "B",
+            "reason": "UNCOMMITTED"
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "checksum-fallback",
+      "write": null,
+      "boot": {
+        "schemaVersion": 1,
+        "status": "BOOTABLE",
+        "selectedSlotId": "A",
+        "selectedGeneration": 1,
+        "configSchemaVersion": 2,
+        "migratedFromVersion": null,
+        "rejections": [
+          {
+            "slotId": "B",
+            "reason": "CHECKSUM_MISMATCH"
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "parse-fallback",
+      "write": null,
+      "boot": {
+        "schemaVersion": 1,
+        "status": "BOOTABLE",
+        "selectedSlotId": "A",
+        "selectedGeneration": 1,
+        "configSchemaVersion": 2,
+        "migratedFromVersion": null,
+        "rejections": [
+          {
+            "slotId": "B",
+            "reason": "PAYLOAD_PARSE_ERROR"
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "legacy-migrates",
+      "write": null,
+      "boot": {
+        "schemaVersion": 1,
+        "status": "BOOTABLE",
+        "selectedSlotId": "A",
+        "selectedGeneration": 1,
+        "configSchemaVersion": 2,
+        "migratedFromVersion": 1,
+        "rejections": [
+          {
+            "slotId": "B",
+            "reason": "EMPTY"
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "future-schema-safe-mode",
+      "write": null,
+      "boot": {
+        "schemaVersion": 1,
+        "status": "SAFE_MODE",
+        "selectedSlotId": null,
+        "selectedGeneration": null,
+        "configSchemaVersion": null,
+        "migratedFromVersion": null,
+        "rejections": [
+          {
+            "slotId": "A",
+            "reason": "FUTURE_SCHEMA_UNSUPPORTED"
+          },
+          {
+            "slotId": "B",
+            "reason": "EMPTY"
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "empty-storage-safe-mode",
+      "write": null,
+      "boot": {
+        "schemaVersion": 1,
+        "status": "SAFE_MODE",
+        "selectedSlotId": null,
+        "selectedGeneration": null,
+        "configSchemaVersion": null,
+        "migratedFromVersion": null,
+        "rejections": [
+          {
+            "slotId": "A",
+            "reason": "EMPTY"
+          },
+          {
+            "slotId": "B",
+            "reason": "EMPTY"
+          }
+        ]
+      }
+    }
+  ]
+}

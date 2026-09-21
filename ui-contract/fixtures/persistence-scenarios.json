@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "startMs": 2000000,
+  "scenarios": [
+    {"id":"commit-selects-new-slot","setup":"BASELINE","writePhase":"AFTER_COMMIT","expectedStatus":"BOOTABLE","expectedSlot":"B","expectedGeneration":2},
+    {"id":"power-loss-before-write","setup":"BASELINE","writePhase":"BEFORE_WRITE","expectedStatus":"BOOTABLE","expectedSlot":"A","expectedGeneration":1},
+    {"id":"power-loss-during-payload","setup":"BASELINE","writePhase":"DURING_PAYLOAD","expectedStatus":"BOOTABLE","expectedSlot":"A","expectedGeneration":1},
+    {"id":"power-loss-before-marker","setup":"BASELINE","writePhase":"BEFORE_COMMIT_MARKER","expectedStatus":"BOOTABLE","expectedSlot":"A","expectedGeneration":1},
+    {"id":"checksum-fallback","setup":"CHECKSUM_CORRUPT_NEWEST","writePhase":null,"expectedStatus":"BOOTABLE","expectedSlot":"A","expectedGeneration":1},
+    {"id":"parse-fallback","setup":"PARSE_CORRUPT_NEWEST","writePhase":null,"expectedStatus":"BOOTABLE","expectedSlot":"A","expectedGeneration":1},
+    {"id":"legacy-migrates","setup":"LEGACY_ONLY","writePhase":null,"expectedStatus":"BOOTABLE","expectedSlot":"A","expectedGeneration":1,"expectedMigratedFrom":1},
+    {"id":"future-schema-safe-mode","setup":"FUTURE_ONLY","writePhase":null,"expectedStatus":"SAFE_MODE","expectedSlot":null,"expectedGeneration":null},
+    {"id":"empty-storage-safe-mode","setup":"EMPTY","writePhase":null,"expectedStatus":"SAFE_MODE","expectedSlot":null,"expectedGeneration":null}
+  ]
+}

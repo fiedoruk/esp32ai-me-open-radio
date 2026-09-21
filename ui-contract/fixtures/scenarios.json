@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    {"id":"first-boot","screen":"WIFI","systemState":"CONFIG_REQUIRED"},
+    {"id":"playing-local","screen":"NOW_PLAYING","systemState":"PLAYING","output":"LOCAL"},
+    {"id":"playing-bt","screen":"NOW_PLAYING","systemState":"PLAYING","output":"BT"},
+    {"id":"wifi-lost","screen":"NOW_PLAYING","systemState":"RECOVERING","reason":"WIFI"},
+    {"id":"bt-lost","screen":"NOW_PLAYING","systemState":"DEGRADED_PLAYING","reason":"BLUETOOTH","output":"LOCAL"},
+    {"id":"station-fallback","screen":"NOW_PLAYING","systemState":"DEGRADED_PLAYING","reason":"STREAM"},
+    {"id":"safe-mode","screen":"NOW_PLAYING","systemState":"SAFE_MODE","output":"LOCAL"}
+  ]
+}

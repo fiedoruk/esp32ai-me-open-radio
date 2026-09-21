@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/generate-firmware-service-vectors.mjs",
+  "counts": {
+    "network": 9,
+    "persistence": 9,
+    "resolver": 9
+  },
+  "inputs": {
+    "ui-contract/fixtures/network-scenarios.json": "41d4647c8f65b0fed17e3928688b795bedb79a7441ddbe4bccf4681469844011",
+    "ui-contract/fixtures/network-traces.json": "a1086ceedcb2c72608af2335c4effc347cdf69a0a5b0b972a886389f3150f9c5",
+    "ui-contract/fixtures/persistence-scenarios.json": "ebce7866b669f0cd9cf1eacb5a5846f99be3348450846c018d0537a5ba2d14f5",
+    "ui-contract/fixtures/persistence-traces.json": "eefb155f8054e85e9a9192286b80e1148f2974f815144da7c94eaec14aaa25e0",
+    "ui-contract/fixtures/resolver-scenarios.json": "22440eaeb0a19812c00c9decc56f813497dab9ac5d67695b8aeaceaf22419a73",
+    "ui-contract/fixtures/resolver-traces.json": "c1e2b4c6c7e2658a65117b29d8a21c0deaceb2f65768fbdf05a9e440650bc444",
+    "ui-contract/catalog/station-catalog.v1.json": "c8f1f27f7bc6a117c815873da4652a301c59955276c36d4f9db25359ddbc97b9"
+  },
+  "output": {
+    "firmware/generated/service_golden_vectors.hpp": "df38ae3a69cd4ee3449f096d8d4fded32bf4d381012a22ad180a9e3e72f6feaa"
+  }
+}

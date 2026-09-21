@@ -1,0 +1,17 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://fiedoruk.pl/open-radio-core2/schemas/network-scan-result.schema.json",
+  "title":"NetworkScanResult",
+  "type":"object",
+  "required":["schemaVersion","scanId","profileRef","security","rssi","reachable","captivePortal"],
+  "properties":{
+    "schemaVersion":{"const":1},
+    "scanId":{"type":"string","minLength":6,"maxLength":53},
+    "profileRef":{"type":["string","null"],"minLength":6,"maxLength":53},
+    "security":{"enum":["WPA2_PSK","WPA3_SAE","OPEN","UNKNOWN"]},
+    "rssi":{"type":"integer","minimum":-100,"maximum":0},
+    "reachable":{"type":"boolean"},
+    "captivePortal":{"type":"boolean"}
+  },
+  "additionalProperties":false
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/generate-ingress-contract.mjs",
+  "input": {
+    "runtime/ingress-contract.json": "031bf1b2a7c4d5b23c1d7171abe50792b2cf2cb1427cd2b6b42f83cfab4138ac"
+  },
+  "counts": {
+    "traces": 10,
+    "facts": 98,
+    "permutations": 3
+  },
+  "outputs": {
+    "runtime/generated/ingress-limits.mjs": "91af24a3d2245a50c17462373f0aef4b949fa01537ae93c29aee34b46b5d5175",
+    "ui-contract/fixtures/callback-traces.json": "be79e9b3157e18b7957ef2423b2c4081cc62f4343641ab481a302497d2d72592",
+    "firmware/generated/runtime_ingress_limits.hpp": "b62e0e1c08b32dbe5923859c570f83c06d3b48fdb73ac1a228e451e5b8435b21",
+    "firmware/generated/runtime_ingress_vectors.hpp": "de00bc4fc9cc16d7eb87edcc503691e5cf3cbb9addcef35a487800e8837a3e3d"
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "network-scenarios.json",
+  "traces": [
+    {
+      "scenarioId": "preferred-home-selected",
+      "schemaVersion": 1,
+      "status": "SELECTED",
+      "selectedProfileRef": "wifi:home",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "scanId": "scan:home",
+          "profileRef": "wifi:home",
+          "decision": "SELECT",
+          "reason": null,
+          "score": 263
+        },
+        {
+          "scanId": "scan:travel",
+          "profileRef": "wifi:travel",
+          "decision": "CANDIDATE",
+          "reason": null,
+          "score": 230
+        }
+      ]
+    },
+    {
+      "scenarioId": "fallback-travel-selected",
+      "schemaVersion": 1,
+      "status": "SELECTED",
+      "selectedProfileRef": "wifi:travel",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "scanId": "scan:home",
+          "profileRef": "wifi:home",
+          "decision": "REJECT",
+          "reason": "UNREACHABLE",
+          "score": null
+        },
+        {
+          "scanId": "scan:travel",
+          "profileRef": "wifi:travel",
+          "decision": "SELECT",
+          "reason": null,
+          "score": 217
+        }
+      ]
+    },
+    {
+      "scenarioId": "unknown-secured-prompts",
+      "schemaVersion": 1,
+      "status": "PROMPT_REQUIRED",
+      "selectedProfileRef": null,
+      "retryAtMs": null,
+      "trace": [
+        {
+          "scanId": "scan:new-secured",
+          "profileRef": null,
+          "decision": "PROMPT",
+          "reason": "UNKNOWN_NETWORK_REQUIRES_ONBOARDING",
+          "score": null
+        }
+      ]
+    },
+    {
+      "scenarioId": "open-network-prompts",
+      "schemaVersion": 1,
+      "status": "PROMPT_REQUIRED",
+      "selectedProfileRef": null,
+      "retryAtMs": null,
+      "trace": [
+        {
+          "scanId": "scan:open",
+          "profileRef": null,
+          "decision": "PROMPT",
+          "reason": "OPEN_NETWORK_REQUIRES_CONFIRMATION",
+          "score": null
+        }
+      ]
+    },
+    {
+      "scenarioId": "captive-network-prompts",
+      "schemaVersion": 1,
+      "status": "PROMPT_REQUIRED",
+      "selectedProfileRef": null,
+      "retryAtMs": null,
+      "trace": [
+        {
+          "scanId": "scan:captive",
+          "profileRef": null,
+          "decision": "PROMPT",
+          "reason": "CAPTIVE_PORTAL_REQUIRES_LOCAL_FLOW",
+          "score": null
+        }
+      ]
+    },
+    {
+      "scenarioId": "unapproved-profile-prompts",
+      "schemaVersion": 1,
+      "status": "PROMPT_REQUIRED",
+      "selectedProfileRef": null,
+      "retryAtMs": null,
+      "trace": [
+        {
+          "scanId": "scan:pending",
+          "profileRef": "wifi:pending",
+          "decision": "PROMPT",
+          "reason": "UNAPPROVED_PROFILE_REQUIRES_CONFIRMATION",
+          "score": null
+        }
+      ]
+    },
+    {
+      "scenarioId": "no-reachable-network-retries",
+      "schemaVersion": 1,
+      "status": "RETRY_SCHEDULED",
+      "selectedProfileRef": null,
+      "retryAtMs": 3011000,
+      "trace": [
+        {
+          "scanId": "scan:home",
+          "profileRef": "wifi:home",
+          "decision": "REJECT",
+          "reason": "UNREACHABLE",
+          "score": null
+        }
+      ]
+    },
+    {
+      "scenarioId": "quarantined-home-falls-back",
+      "schemaVersion": 1,
+      "status": "SELECTED",
+      "selectedProfileRef": "wifi:travel",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "scanId": "scan:home",
+          "profileRef": "wifi:home",
+          "decision": "REJECT",
+          "reason": "QUARANTINED",
+          "score": null
+        },
+        {
+          "scanId": "scan:travel",
+          "profileRef": "wifi:travel",
+          "decision": "SELECT",
+          "reason": null,
+          "score": 210
+        }
+      ]
+    },
+    {
+      "scenarioId": "preferred-home-returns",
+      "schemaVersion": 1,
+      "status": "SELECTED",
+      "selectedProfileRef": "wifi:home",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "scanId": "scan:home",
+          "profileRef": "wifi:home",
+          "decision": "SELECT",
+          "reason": null,
+          "score": 275
+        },
+        {
+          "scanId": "scan:travel",
+          "profileRef": "wifi:travel",
+          "decision": "CANDIDATE",
+          "reason": null,
+          "score": 223
+        }
+      ]
+    }
+  ]
+}

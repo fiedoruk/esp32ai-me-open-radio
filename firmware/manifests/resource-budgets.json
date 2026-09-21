@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 2,
+  "target": "m5stack-core2",
+  "note": "Schema 2 (2026-07-29, docs/124 T1). Schema 1 declared caps that nothing inside `npm run check` enforced: its flash cap sat 23,328 bytes BELOW the image that actually shipped as 0.2.1, and `pcmBufferBytesMax` claimed 65,536 bytes against roughly 3.25 MiB of real PSRAM rings — a field no consumer ever read. Every number here now says where it comes from, and `npm run check:resource-budgets` proves the derived ones still match the source constants.",
+  "flash": {
+    "applicationBytesMax": 3145728,
+    "publicImageBytesMax": 3211264,
+    "policy": "A budget, not a physical limit. Set with deliberate headroom over the shipped 0.2.1 image so unplanned growth is noticed early, while staying far below the partition ceiling. Raising it is allowed and expected; raising it silently is not.",
+    "partitionCeiling": {
+      "app0Bytes": 6553600,
+      "app1Bytes": 6553600,
+      "spiffsBytes": 3538944,
+      "nvsBytes": 20480,
+      "source": "partition table decoded from the shipped output/firmware/public-0-2-1/partitions.bin on 2026-07-29",
+      "note": "app1 exists in the table but is unused: this appliance has no OTA (ADR-004). The 20,480-byte NVS partition is the whole settings store, which bounds the migration work in docs/124 T3."
+    },
+    "shipped": {
+      "release": "0.4.1",
+      "recordedAt": "2026-08-02",
+      "applicationBytes": 2430080,
+      "applicationSha256": "fd460a3f8297a5c85d5d52f868fa4b5f330586d6aa260c96c54ab20f782a1490",
+      "publicImageBytes": 2495616,
+      "source": "release/release-0-4-1.json (appSizeBytes, sizeBytes, appSha256) — the record of the published 0.4.1 artifacts; the same figures are in output/firmware/, which is gitignored, so the measurement is recorded here to stay checkable in CI and in the public mirror"
+    }
+  },
+  "internalRam": {
+    "staticBytesMax": 131072,
+    "enforcedBy": "scripts/collect-firmware-evidence.mjs against the PlatformIO build summary; this figure needs a firmware build and is therefore outside `npm run check`",
+    "shippedStaticBytes": 71244,
+    "note": "Internal DRAM is the scarce resource for TLS, radio stacks and task stacks. shippedStaticBytes is the PlatformIO static RAM figure of the 0.4.1 build (output/firmware/s10-build-evidence.json staticRamBytes). The largest-free-block figure that matters at runtime lives in hardwareGatesPending."
+  },
+  "psram": {
+    "note": "Derived from the compiled constants, never typed by hand. check:resource-budgets recomputes each entry from the source and fails if the manifest drifts.",
+    "derivedFromSource": [
+      {
+        "name": "decodedPcmRingBytes",
+        "bytes": 1048576,
+        "constants": ["kDecodedPcmFrames", "PcmFrame"],
+        "expression": "kDecodedPcmFrames * sizeof(PcmFrame) = 262144 * 4"
+      },
+      {
+        "name": "bluetoothPcmRingBytes",
+        "bytes": 1048576,
+        "constants": ["kBluetoothPcmFrames", "PcmFrame"],
+        "expression": "kBluetoothPcmFrames * sizeof(PcmFrame) = 262144 * 4"
+      },
+      {
+        "name": "speakerBackingBufferBytes",
+        "bytes": 786432,
+        "constants": ["kLocalSpeakerFramesPerBlock"],
+        "expression": "3 buffers * kLocalSpeakerFramesPerBlock * sizeof(int16_t) = 3 * 131072 * 2"
+      },
+      {
+        "name": "decodedDrainBufferBytes",
+        "bytes": 524288,
+        "constants": ["kLocalSpeakerFramesPerBlock", "PcmFrame"],
+        "expression": "kLocalSpeakerFramesPerBlock * sizeof(PcmFrame) = 131072 * 4"
+      }
+    ],
+    "audioTotalBytes": 3407872,
+    "otherConsumersBytes": "NOT_MEASURED",
+    "totalAvailableBytes": "NOT_MEASURED",
+    "noteOnOtherConsumers": "The logo store and the renderer also hold PSRAM. Until those are measured the audio total is a floor, not a budget."
+  },
+  "runtimeHostGates": {
+    "eventQueueCapacity": 16,
+    "timerCapacity": 8,
+    "diagnosticCapacity": 32,
+    "maximumRetryDelayMs": 600000,
+    "queueOverflowsAllowed": 0,
+    "timerOverflowsAllowed": 0
+  },
+  "ingressHostGates": {
+    "mailboxCapacity": 16,
+    "producerCount": 7,
+    "rawTickBits": 32,
+    "maximumDrainPerPass": 16,
+    "deliveryRejectedAllowed": 0
+  },
+  "hardwareIngressMeasurements": {
+    "internalHeapFreeBytes": "NOT_MEASURED",
+    "ownerTaskStackHeadroomBytes": "NOT_MEASURED",
+    "maximumCallbackLatencyUs": "NOT_MEASURED",
+    "audioUnderruns": "NOT_MEASURED"
+  },
+  "hardwareGatesPending": {
+    "note": "TARGETS, NOT SOAK MEASUREMENTS. largestFreeBlockBytesMin now equals the gate the code enforces before a Bluetooth start (16 KiB in main.cpp); since 0.4.1 the firmware logs both sides of that boundary (start_admitted / start_refused), but no endurance soak has yet recorded them, so the figure is a code constant, not soak evidence. The earlier 32,768 was written before anyone costed a TLS session: two mbedTLS record buffers alone are about 33,434 bytes of internal DRAM, so neither value proves a TLS session fits next to A2DP. Treat these as the bar to clear in docs/124 stage 0 and stage 3, not as evidence.",
+    "internalHeapFreeBytesMin": 61440,
+    "largestFreeBlockBytesMin": 16384,
+    "audioTaskStackHeadroomBytesMin": 2048,
+    "underrunsPerHourMax": 3,
+    "watchdogResetsAllowed": 0
+  }
+}

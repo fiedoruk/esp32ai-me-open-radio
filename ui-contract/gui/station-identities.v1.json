@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "defaultAssetPolicy": "project-original-monogram",
+  "officialArtworkPolicy": "disabled-project-original-identity-only",
+  "runtimeFetch": "DISABLED",
+  "stations": [
+    {
+      "id": "rmf-fm",
+      "monogram": "RMF",
+      "accent": "#42D8AE",
+      "accentAlt": "#FFB466",
+      "onAccent": "#081511",
+      "motif": "orbit",
+      "officialArtwork": {
+        "status": "NOT_BUNDLED",
+        "permission": "NOT_REQUESTED_BY_APP",
+        "sourceUrl": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "radio-zet",
+      "monogram": "ZET",
+      "accent": "#A99BFF",
+      "accentAlt": "#52D6CF",
+      "onAccent": "#100D21",
+      "motif": "ripples",
+      "officialArtwork": {
+        "status": "NOT_BUNDLED",
+        "permission": "NOT_REQUESTED_BY_APP",
+        "sourceUrl": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "tok-fm",
+      "monogram": "TOK",
+      "accent": "#8ED9B8",
+      "accentAlt": "#D3A6C8",
+      "onAccent": "#08150F",
+      "motif": "horizon",
+      "officialArtwork": {
+        "status": "NOT_BUNDLED",
+        "permission": "NOT_REQUESTED_BY_APP",
+        "sourceUrl": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "antyradio",
+      "monogram": "ANTY",
+      "accent": "#FF765F",
+      "accentAlt": "#F0B35D",
+      "onAccent": "#1A0805",
+      "motif": "signal",
+      "officialArtwork": {
+        "status": "NOT_BUNDLED",
+        "permission": "NOT_REQUESTED_BY_APP",
+        "sourceUrl": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "radio-eska",
+      "monogram": "ESKA",
+      "accent": "#FF9B62",
+      "accentAlt": "#79D7F2",
+      "onAccent": "#1C0D05",
+      "motif": "grid",
+      "officialArtwork": {
+        "status": "NOT_BUNDLED",
+        "permission": "NOT_REQUESTED_BY_APP",
+        "sourceUrl": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "rmf-maxx",
+      "monogram": "MAXX",
+      "accent": "#47DDD2",
+      "accentAlt": "#FF7BA8",
+      "onAccent": "#071615",
+      "motif": "burst",
+      "officialArtwork": {
+        "status": "NOT_BUNDLED",
+        "permission": "NOT_REQUESTED_BY_APP",
+        "sourceUrl": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "radio-plus",
+      "monogram": "PLUS",
+      "accent": "#C74BFF",
+      "accentAlt": "#3EE6C1",
+      "onAccent": "#140A20",
+      "motif": "burst",
+      "officialArtwork": {
+        "status": "NOT_BUNDLED",
+        "permission": "NOT_REQUESTED_BY_APP",
+        "sourceUrl": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "zlote-przeboje",
+      "monogram": "ZŁOTE",
+      "accent": "#F0A86A",
+      "accentAlt": "#82C9A1",
+      "onAccent": "#1B0E05",
+      "motif": "arches",
+      "officialArtwork": {
+        "status": "NOT_BUNDLED",
+        "permission": "NOT_REQUESTED_BY_APP",
+        "sourceUrl": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "meloradio",
+      "monogram": "MELO",
+      "accent": "#B89CFF",
+      "accentAlt": "#6DD9D1",
+      "onAccent": "#100B20",
+      "motif": "ripples",
+      "officialArtwork": {
+        "status": "NOT_BUNDLED",
+        "permission": "NOT_REQUESTED_BY_APP",
+        "sourceUrl": null,
+        "sha256": null
+      }
+    }
+  ]
+}

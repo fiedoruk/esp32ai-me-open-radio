@@ -1,0 +1,25 @@
+{
+  "note": "Stations withheld from the shipped directory for IDENTITY, not for performance. The tier gate measures one thing - how much audio a stream delivers against the anchor - and these three pass it. What they fail is being recognisable: an installer scrolling the list sees an entry called 'radio' or 'rp' and cannot tell what it is, which is a worse defect than a slow stream because it is permanent and visible on every screen. Kept as an explicit list rather than a clever rule: a length floor alone lets 'radio' through, and a lowercase-initial rule would evict thirteen legitimate stations including 'supernova Gdansk' and 'neural radio'. Three cases do not justify a heuristic that guesses; they justify naming them. Bound to endpointsHash - sha256 over the entry's sorted stream URLs - and not to its name. Name and id are both attacker-movable: id is derived from the name, so renaming the junk entry frees its id for anything that later derives it, and matching on (id, name) alone then withholds the newcomer while the junk ships under its new name. The streams are what the entry actually IS. Adding an entry has to show up in the diff.",
+  "gate": "scripts/check-station-count.mjs",
+  "appliedBy": "scripts/generate-firmware-assets.mjs",
+  "entries": [
+    {
+      "id": "radio",
+      "name": "radio",
+      "reason": "No name at all - the word 'radio'. No homepage, no country in the source data; its favicon is the placeholder icon of an 'under construction' WordPress plugin on teoriachaosu.info, which is what a site that has not launched looks like. Promoted into the shipped set on 2026-08-01 by the 222 -> 238 re-tier.",
+      "endpointsHash": "21fe816ea81546283982e91180eebc008a1e62acfdf915d8b455131f6a88f58f"
+    },
+    {
+      "id": "rp",
+      "name": "rp",
+      "reason": "Two letters, 36 votes, no homepage. Stream is s1.radioparty.pl:8000, so the recognisable Radioparty entries already cover it under their real names. Promoted into the shipped set on 2026-08-01.",
+      "endpointsHash": "e1fc0aab6b39a80d6adf603bdc3c1be3f76d2f0625bdcdcbe35ade3b342dfc07"
+    },
+    {
+      "id": "rmf",
+      "name": "rmf",
+      "reason": "Three letters, 107 votes, no homepage. NOT a regression of 0.4.1 - this one was already in the 222 that 0.4 shipped, so it has been on the list since the directory existed. Distinct from the real 'RMF FM', which stays.",
+      "endpointsHash": "b00f2214680cc2e63e47a217c251430b71d90cd2620682d756b8c79576fc7457"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "status": "RELEASED",
+    "reason": "GPL-3.0-or-later project source with a GPL/MIT/Apache dependency graph; the corresponding-source bundle for the current public release (0.4.1) ships alongside the binary and notices remain mandatory. The 0.4.1 bundle is assembled and verified against its code cut with zero drift; release/release-0-4-1.json carries its hash and size, and check:published-source verifies both against the file that was uploaded. Deliberately not repeated here: this file is source, so it is frozen at the cut, while the archive hash can only be known after the cut - quoting it here guarantees the two disagree, which is exactly how this sentence once came to name an archive that no longer existed."
+  },
+  "binary": {
+    "status": "RELEASED",
+    "reason": "0.4.1 is the current public image (merged 0230fa8c…, app fd460a3f…), published 2026-08-02 and validated on hardware the same day. 0.4 remains downloadable as the previous release; its corresponding-source archive is incomplete and is tracked in STATUS.md. Endurance and battery qualification remain open, disclosed in docs/146. This record was left naming 0.2.1 through the whole 0.4 release and then naming 0.4 through five weeks of 0.4.1, and nothing caught it either time - the reason it is dated now is that a stale eligibility record reads like a current legal position."
+  },
+  "adfReference": {
+    "status": "PRIVATE_REFERENCE_ONLY",
+    "reason": "Large graph and prebuilt codec/service components require exact per-artifact clearance."
+  },
+  "publicationPerformed": true
+}

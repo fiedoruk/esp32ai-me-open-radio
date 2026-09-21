@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "packId": "xx-xx.my-local-radio",
+  "countryCode": "XX",
+  "defaultUiLocale": "xx",
+  "supportedUiLocales": ["xx", "en"],
+  "regionLabels": {"xx":"My country","en":"My country"},
+  "stationCatalogPath": "ui-contract/catalog/my-country.catalog.json",
+  "stationIdentityPath": "ui-contract/gui/my-country.identities.json",
+  "maximumStations": 9,
+  "remoteUpdate": false,
+  "runtimeInstall": false
+}

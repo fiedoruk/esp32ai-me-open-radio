@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "automaticStart": "AFTER_APPROVED_SECURED_WIFI_ONLINE",
+  "manualInputRequired": false,
+  "playbackDependency": false,
+  "services": {
+    "ipLocation": {
+      "adapter": "location/ip-location-adapter.mjs",
+      "freshForSeconds": 2592000,
+      "maximumStaleSeconds": 7776000,
+      "maximumAttempts": 2,
+      "timeoutMilliseconds": 3500,
+      "cacheScope": "PER_APPROVED_WIFI_PROFILE"
+    },
+    "weather": {
+      "adapter": "weather/open-meteo-adapter.mjs",
+      "freshForSeconds": 1200,
+      "maximumStaleSeconds": 21600,
+      "maximumAttempts": 2,
+      "timeoutMilliseconds": 3500,
+      "forecastHours": 6
+    },
+    "time": {
+      "adapter": "time/time-sync-supervisor.mjs",
+      "server": "pool.ntp.org",
+      "failureMode": "RTC_FALLBACK",
+      "firmwareBinding": "PENDING_PHYSICAL_TLS_AND_SCHEDULER_GATE"
+    }
+  },
+  "derivedConfiguration": ["locale-candidate", "country-code", "timezone", "station-region", "weather-coordinates"],
+  "failurePolicy": {
+    "providerFailure": "USE_STALE_CACHE_OR_HIDE_ENHANCEMENT",
+    "allProvidersUnavailable": "KEEP_RADIO_PLAYING_WITH_EMBEDDED_DEFAULTS",
+    "continuousTracking": false,
+    "projectBackend": false,
+    "analytics": false
+  }
+}

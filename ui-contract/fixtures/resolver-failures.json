@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "outcomes": ["SUCCESS","TIMEOUT","HTTP_404","STALE","PARSE_ERROR"],
+  "policies": [
+    {"id":"primary-timeout-alternate-success","sequence":["TIMEOUT","SUCCESS"],"expected":"PLAYING"},
+    {"id":"primary-404-last-known-good","sequence":["HTTP_404","SUCCESS"],"expected":"PLAYING"},
+    {"id":"two-timeouts-quarantine","sequence":["TIMEOUT","TIMEOUT"],"expected":"QUARANTINED"},
+    {"id":"stale-without-fallback","sequence":["STALE"],"expected":"RETRY_SCHEDULED"},
+    {"id":"unsupported-capability","sequence":[],"expected":"UNSUPPORTED"}
+  ]
+}

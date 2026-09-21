@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/generate-firmware-assets.mjs",
+  "stationCount": 9,
+  "mp3Ready": 9,
+  "hlsDecoderPending": 0,
+  "inputs": {
+    "ui-contract/catalog/station-catalog.v1.json": "c8f1f27f7bc6a117c815873da4652a301c59955276c36d4f9db25359ddbc97b9",
+    "ui-contract/catalog/pl-directory.v1.json": "24400e53de7d398d0c1308a32b39153784143f56b64014832974bccc2041cece",
+    "firmware/manifests/legacy-station-index.json": "77f89a8049c8f2c6b6d2e27f2b8edb42f1ad2edb7faa32a82634ee1478c5caa9",
+    "firmware/manifests/directory-exclusions.json": "fc8f382a4984a4c874075b3a82e624547857ac3677e62673a4691237c3488b48",
+    "network-onboarding/index.html": "80f5c6743f0d27fa4748ca5d6b1cb154a23551a3b8b9b4fae07262649535665f",
+    "network-onboarding/styles.css": "551aaff8076e9b1648a67d10b51e222cb76f1d03a240871f1575ddd769fd8ba2",
+    "network-onboarding/state-machine.mjs": "8a0e62f548a695aeac0e1acb1264cf0c1b1824f5408134fc5d3f2b73288a1c8d",
+    "network-onboarding/app.mjs": "32180477df49883006c8cbfa394219d28ec9b86f24d6dc016d2b598cf40db9ea"
+  },
+  "outputs": {
+    "firmware/generated/station_catalog.hpp": "b73ec5acf1dad154470571580d4e790625f85e6f50d741053333670c1b940973",
+    "firmware/generated/onboarding_assets.hpp": "e5be612a87e1c6c81ca70f7c634e7d271b2c0dc837846e5934758ba144da5426"
+  }
+}

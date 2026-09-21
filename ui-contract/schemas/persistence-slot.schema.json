@@ -1,0 +1,16 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://fiedoruk.pl/open-radio-core2/schemas/persistence-slot.schema.json",
+  "title":"PersistenceSlot",
+  "type":"object",
+  "required":["slotId","generation","payloadText","checksum","commitMarker","writtenAtMs"],
+  "properties":{
+    "slotId":{"enum":["A","B"]},
+    "generation":{"type":"integer","minimum":1},
+    "payloadText":{"type":"string","minLength":1,"maxLength":4096},
+    "checksum":{"type":"string","minLength":14,"maxLength":14},
+    "commitMarker":{"enum":["COMMITTED",null]},
+    "writtenAtMs":{"type":"integer","minimum":0}
+  },
+  "additionalProperties":false
+}

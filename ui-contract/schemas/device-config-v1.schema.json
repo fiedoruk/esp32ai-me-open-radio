@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://fiedoruk.pl/open-radio-core2/schemas/device-config-v1.schema.json",
+  "title":"LegacyDeviceConfigV1",
+  "type":"object",
+  "required":["schemaVersion","language","stationId","volume","wifiProfileRef","bluetoothDeviceRef","cityLabel","onboardingComplete"],
+  "properties":{
+    "schemaVersion":{"const":1},
+    "language":{"enum":["pl","en"]},
+    "stationId":{"type":"string","minLength":3,"maxLength":64},
+    "volume":{"type":"integer","minimum":0,"maximum":100},
+    "wifiProfileRef":{"type":"string","minLength":6,"maxLength":53},
+    "bluetoothDeviceRef":{"type":["string","null"],"minLength":4,"maxLength":51},
+    "cityLabel":{"type":["string","null"],"minLength":1,"maxLength":64},
+    "onboardingComplete":{"type":"boolean"}
+  },
+  "additionalProperties":false
+}

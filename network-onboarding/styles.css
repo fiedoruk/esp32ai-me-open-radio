@@ -1,0 +1,140 @@
+:root {
+  color: #f5f5ef;
+  background: #0c1014;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; min-height: 100dvh; background: radial-gradient(circle at 20% 0%, #213d38 0, transparent 36rem), #0c1014; }
+/* The page is painted edge to edge via viewport-fit=cover, so every outer
+   edge has to earn its inset back or content slides under the notch and the
+   home indicator. */
+button, input { font: inherit; }
+button { min-height: 44px; border: 1px solid #52605f; border-radius: 14px; color: inherit; background: #172024; cursor: pointer; }
+button:hover { border-color: #95e4bd; }
+button:focus-visible, input:focus-visible { outline: 3px solid #f3c969; outline-offset: 2px; }
+.shell { width: min(760px, calc(100% - 32px - env(safe-area-inset-left) - env(safe-area-inset-right))); margin: 0 auto; padding: calc(28px + env(safe-area-inset-top)) 0 calc(20px + env(safe-area-inset-bottom)); }
+.topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.eyebrow { margin: 0 0 7px; color: #9ab2ad; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+h1 { margin: 0; font-size: clamp(2rem, 8vw, 3.8rem); line-height: .96; max-width: 10ch; }
+h2 { margin: 0; font-size: 1.25rem; overflow-wrap: anywhere; }
+#selected-network-label { overflow-wrap: anywhere; }
+p { color: #bcc8c5; line-height: 1.55; }
+.language { display: flex; gap: 6px; }
+.language button { min-width: 48px; padding: 0 12px; }
+.language button[aria-pressed="true"] { color: #0c1014; border-color: #95e4bd; background: #95e4bd; font-weight: 900; }
+.privacy-strip { display: flex; gap: 8px; margin: 28px 0 14px; padding: 13px 16px; border: 1px solid #2b5047; border-radius: 15px; background: #11231f; color: #b9d9cf; }
+.panel { padding: clamp(20px, 5vw, 34px); border: 1px solid #29353a; border-radius: 24px; background: rgba(18, 24, 29, .94); box-shadow: 0 24px 80px rgba(0, 0, 0, .28); }
+.step { display: flex; gap: 16px; align-items: flex-start; }
+.step > span { display: grid; flex: 0 0 38px; width: 38px; height: 38px; place-items: center; border-radius: 12px; color: #0c1014; background: #f3c969; font-weight: 900; }
+.step p { margin: 6px 0 0; }
+.network-list { display: grid; gap: 10px; margin-top: 24px; }
+.list-note { margin: 10px 2px 0; font-size: 14px; opacity: 0.72; }
+/* min-width:0 twice, deliberately: a grid item defaults to min-width:auto,
+   which is min-content, so a row containing an unbreakable SSID like
+   Osiedlowa-Siec-24GHz-Goscie-0042 refuses to shrink and scrolls the whole
+   setup page sideways on a 320 px phone. */
+.network { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 16px; text-align: left; min-width: 0; }
+.network > span { min-width: 0; }
+.network strong, .network small { display: block; }
+.network strong { overflow-wrap: anywhere; }
+.network small { margin-top: 4px; color: #99aaa8; }
+.badge { padding: 6px 9px; border-radius: 999px; color: #c9d4d1; background: #263236; font-size: .74rem; font-weight: 800; white-space: nowrap; }
+.badge.safe { color: #11251f; background: #95e4bd; }
+.back { margin-bottom: 20px; padding: 0 14px; border: 0; background: transparent; }
+form { margin-top: 24px; }
+label { display: block; margin-bottom: 8px; font-weight: 800; }
+.password-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+input { width: 100%; min-height: 50px; padding: 0 14px; border: 1px solid #52605f; border-radius: 14px; color: #fff; background: #0d1316; }
+.password-row button { padding: 0 16px; }
+.primary { border-color: #95e4bd; color: #0c1714; background: #95e4bd; font-weight: 900; }
+form > .primary { width: 100%; margin-top: 14px; }
+.error { margin: 8px 0 0; color: #ffaaa0; }
+.blocked, .complete { text-align: center; }
+.status-icon { display: grid; width: 58px; height: 58px; margin: 0 auto 18px; place-items: center; border-radius: 18px; color: #241511; background: #f39a76; font-size: 2rem; font-weight: 900; }
+.status-icon.ok { color: #0e201a; background: #95e4bd; }
+.blocked .primary { padding: 0 24px; }
+.now-playing { display: flex; align-items: center; gap: 18px; margin: -8px -8px 28px; padding: 18px; border-radius: 18px; background: linear-gradient(135deg, #5a1f32, #a73f39); }
+.now-playing p, .now-playing h2, .now-playing span { margin: 0; color: #fff; }
+.now-playing p { font-size: .74rem; font-weight: 900; letter-spacing: .12em; }
+.now-playing h2 { margin: 3px 0; font-size: 1.8rem; }
+.pulse { width: 38px; height: 38px; border: 9px solid rgba(255,255,255,.28); border-radius: 50%; background: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,.12); }
+.optional > span { background: #9cc7ed; }
+.actions { margin-top: 24px; }
+.actions.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.now-playing.compact { margin-bottom: 26px; padding: 13px 16px; background: #253d48; }
+.now-playing.compact .pulse { width: 22px; height: 22px; border-width: 5px; }
+.complete dl { display: grid; gap: 8px; margin: 24px 0 0; }
+.complete dl div { display: flex; justify-content: space-between; padding: 12px 14px; border-radius: 12px; background: #0d1417; }
+.complete dd { margin: 0; color: #95e4bd; font-weight: 900; }
+footer { display: flex; justify-content: space-between; gap: 20px; padding: 16px 4px 0; color: #74817f; font-size: .76rem; }
+
+@media (max-width: 520px) {
+  .shell { width: min(100% - 20px, 760px); padding-top: 18px; }
+  .topbar { gap: 12px; }
+  h1 { font-size: 2.25rem; }
+  .privacy-strip { display: block; }
+  .actions.two { grid-template-columns: 1fr; }
+  footer { display: grid; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pulse { animation: pulse 1.7s ease-in-out infinite; }
+  @keyframes pulse { 50% { transform: scale(.9); opacity: .72; } }
+  /* A CSS animation restarts whenever an element goes from display:none to
+     shown, which is exactly what toggling [hidden] does — so each step of the
+     flow arrives instead of snapping into place. No JS, no transition on a
+     discrete property, and it simply does not run when motion is reduced. */
+  .panel:not([hidden]) { animation: panel-in .26s cubic-bezier(.2, .7, .3, 1) both; }
+  @keyframes panel-in { from { opacity: 0; transform: translateY(10px); } }
+  .network { transition: transform .12s ease, border-color .12s ease; }
+  .network:active { transform: scale(.985); }
+}
+
+/* The cube and the phone are one product, so they draw from one icon set and
+   one station identity. Every symbol below is copied verbatim from
+   ui-contract/icons/tabler-core2.svg — the same sprite the device renders —
+   and a test fails the build if the two ever drift apart. */
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.glyph { width: 1.15em; height: 1.15em; flex: none; vertical-align: -.18em; }
+.status-icon svg { width: 30px; height: 30px; }
+.back { display: inline-flex; align-items: center; gap: 8px; }
+.privacy-strip { align-items: flex-start; }
+.privacy-strip .glyph { margin-top: .15em; color: #95e4bd; }
+
+/* Signal strength stops being three text dots and becomes the cube's wifi mark,
+   dimmed by how much of it is real. */
+.signal { display: inline-flex; align-items: center; gap: 6px; }
+.signal svg { width: 16px; height: 16px; }
+.signal[data-strength="weak"] svg { opacity: .4; }
+.signal[data-strength="fair"] svg { opacity: .7; }
+
+/* The monogram the installer taps here is the monogram that appears on the
+   cube's tile: same letters, same accent, sourced from station-identities. */
+.pulse { display: grid; place-items: center; }
+.pulse svg { width: 18px; height: 18px; color: #a73f39; }
+.now-playing.compact .pulse svg { width: 11px; height: 11px; }
+.step h2 { display: flex; align-items: center; gap: 9px; }
+
+.monogram { display: grid; flex: none; width: 46px; height: 46px; place-items: center; border-radius: 13px; font-size: .74rem; font-weight: 900; letter-spacing: .02em; }
+
+/* Choosing the nine. The strip mirrors the cube's own 3x3 face, so the phone
+   shows the thing the installer is holding rather than an abstract list. */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.default-nine { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; counter-reset: none; }
+.default-nine li { padding: 11px 8px; border: 1px solid #29353a; border-radius: 12px; background: #0f1519; color: #bcc8c5; font-size: .8rem; font-weight: 700; text-align: center; overflow-wrap: anywhere; }
+#station-search { margin: 22px 0 14px; }
+.slot-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 18px; }
+.slot { min-height: 54px; padding: 8px 6px; border: 1px dashed #3c4a4f; border-radius: 12px; background: #0f1519; color: #8fa3a0; font-size: .74rem; font-weight: 800; text-align: center; overflow-wrap: anywhere; }
+.slot.filled { border-style: solid; border-color: #95e4bd; color: #dff5ea; background: #12211d; }
+.slot.builtin { border-style: solid; border-color: #3c4a4f; color: #bcc8c5; }
+button.slot { cursor: pointer; font: inherit; }
+.slot .index { display: block; margin-bottom: 3px; color: #6d807d; font-size: .66rem; }
+#station-list { max-height: 46vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.station-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 14px 16px; text-align: left; min-width: 0; }
+.station-row > span { min-width: 0; }
+.station-row strong { display: block; overflow-wrap: anywhere; }
+.station-row small { display: block; margin-top: 3px; color: #99aaa8; }
+.station-row.chosen { border-color: #95e4bd; background: #12211d; }
+#stations-progress { margin: 6px 0 0; }

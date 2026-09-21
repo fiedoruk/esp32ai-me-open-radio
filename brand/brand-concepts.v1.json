@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "productName": "Open Radio Core2",
+  "typography": {"strategy":"BUNDLED_OFL_ATLAS","family":"Inter","weight":600,"license":"OFL-1.1","runtimeDownload":false},
+  "selectedLogo": "signal-cube",
+  "interfacePalette": {"primaryBlue":"#3689FF","primaryBlueLight":"#0B63CE","policy":"brand-blue-controls-project-original-station-identities"},
+  "concepts": [
+    {"id":"signal-cube","label":"Signal Cube A2","asset":"logo-a-signal-cube.svg","idea":"finished radio appliance with two negative-space broadcast waves and a side beacon","variants":{"negative":"logo-a-signal-cube-negative.svg","monochrome":"logo-a-signal-cube-mono.svg","micro":"logo-a-signal-cube-micro.svg"},"minimumSizePx":20,"safeAreaUnits":16}
+  ]
+}

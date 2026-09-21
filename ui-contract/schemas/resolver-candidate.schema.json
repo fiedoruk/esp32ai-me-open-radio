@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fiedoruk.pl/open-radio-core2/schemas/resolver-candidate.schema.json",
+  "title": "ResolverCandidate",
+  "type": "object",
+  "required": ["id","role","kind","url","owner","parser","transportPreference","persistence","deviceFeasibility","verifiedAt","evidence"],
+  "properties": {
+    "id": {"type":"string","minLength":3,"maxLength":96},
+    "role": {"enum":["PRIMARY","ALTERNATE"]},
+    "kind": {"enum":["OFFICIAL_API","OFFICIAL_REDIRECT","OFFICIAL_PLAYER","OFFICIAL_PAGE"]},
+    "url": {"type":"string","minLength":12,"maxLength":512},
+    "owner": {"type":"string","minLength":2,"maxLength":128},
+    "parser": {"enum":["RMFON_JSON","EUROZET_JSON","TUBA_JSON","TOKFM_PLAYER","ZPR_PLAYER","HTML_REFERENCE"]},
+    "transportPreference": {"type":"array","minItems":1,"maxItems":2,"items":{"enum":["MP3","AAC","HLS_HE_AAC"]}},
+    "persistence": {"const":"DISCOVERY_ONLY"},
+    "deviceFeasibility": {"enum":["FEASIBLE","PARSER_AUDIT_REQUIRED","REFERENCE_ONLY"]},
+    "verifiedAt": {"type":"string","minLength":10,"maxLength":10},
+    "evidence": {"type":"string","minLength":3,"maxLength":96}
+  },
+  "additionalProperties": false
+}

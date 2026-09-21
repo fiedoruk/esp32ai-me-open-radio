@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "width": 320,
+  "height": 240,
+  "orientation": "landscape",
+  "colorTarget": "RGB565",
+  "minimumTouchTarget": 44,
+  "edgeMargin": 8,
+  "gap": 6,
+  "statusBarHeight": 28,
+  "controlBarHeight": 56,
+  "tapMaxMs": 350,
+  "tapSlopPx": 10,
+  "longPressMs": 800,
+  "longPressSlopPx": 12
+}

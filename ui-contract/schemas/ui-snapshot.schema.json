@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fiedoruk.pl/open-radio-core2/schemas/ui-snapshot.schema.json",
+  "title": "UiSnapshot",
+  "type": "object",
+  "required": ["schemaVersion","screen","systemState","recoveryReason","wifi","bluetooth","output","locale","city","speaker","stationIndex","requestedStationIndex","volume","brightness","theme","setupComplete","statusMessage","diagnostics","copy","stations"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "screen": {"enum":["WIFI","CITY","FIRST_SOUND","BLUETOOTH","NOW_PLAYING","STATIONS","SETTINGS","ABOUT","DIAGNOSTICS"]},
+    "systemState": {"enum":["CONFIG_REQUIRED","PLAYING","RECOVERING","DEGRADED_PLAYING","UNSUPPORTED_STATION","SAFE_MODE"]},
+    "recoveryReason": {"enum":["NONE","WIFI","BLUETOOTH","STREAM","MEMORY"]},
+    "wifi": {"enum":["OFFLINE","ONLINE"]},
+    "bluetooth": {"enum":["DISCONNECTED","CONNECTED"]},
+    "output": {"enum":["LOCAL","BT"]},
+    "locale": {"enum":["pl","en"]},
+    "city": {"type":"string","minLength":1,"maxLength":64},
+    "speaker": {"type":["string","null"],"maxLength":96},
+    "stationIndex": {"type":"integer","minimum":0,"maximum":8},
+    "requestedStationIndex": {"type":"integer","minimum":0,"maximum":8},
+    "volume": {"type":"integer","minimum":0,"maximum":100},
+    "brightness": {"type":"integer","minimum":0,"maximum":100},
+    "theme": {"enum":["dark","light"]},
+    "setupComplete": {"type":"boolean"},
+    "statusMessage": {"enum":[null,"FIRST_SOUND","WIFI_LOST","BT_FALLBACK","STATION_FALLBACK","SAFE_MODE"]},
+    "diagnostics": {
+      "type":"object",
+      "required":["recoveries","underruns","minimumHeapKb"],
+      "properties": {
+        "recoveries":{"type":"integer","minimum":0},
+        "underruns":{"type":"integer","minimum":0},
+        "minimumHeapKb":{"type":"integer","minimum":0},
+        "ingressRejected":{"type":"integer","minimum":0},
+        "ingressMailboxDepth":{"type":"integer","minimum":0},
+        "ingressMaximumDepth":{"type":"integer","minimum":0},
+        "ingressRollovers":{"type":"integer","minimum":0}
+      },
+      "additionalProperties":false
+    },
+    "copy": {"type":"object","additionalProperties":{"type":"string"}},
+    "stations": {
+      "type":"array",
+      "minItems":9,
+      "maxItems":9,
+      "items": {
+        "type":"object",
+        "required":["id","name","short","transport","theme"],
+        "properties": {
+          "id":{"type":"string"},
+          "name":{"type":"string"},
+          "short":{"type":"string"},
+          "transport":{"type":"string"},
+          "theme":{"type":"object"}
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

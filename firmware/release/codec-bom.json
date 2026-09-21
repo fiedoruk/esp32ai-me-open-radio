@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "publicCandidate": {
+    "transport": "HTTP/ICY",
+    "codec": "MP3",
+    "decoder": "ESP8266Audio AudioGeneratorMP3 with libmad",
+    "license": "GPL-2.0-or-later",
+    "included": true
+  },
+  "excluded": [
+    {"codec": "AAC/HE-AAC", "reason": "license and implementation gate unresolved"},
+    {"component": "ESP-ADF codec binaries", "reason": "reference lane only; binary provenance gate unresolved"}
+  ]
+}

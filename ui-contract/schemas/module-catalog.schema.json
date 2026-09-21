@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fiedoruk.pl/open-radio/schemas/module-catalog.v1.json",
+  "title": "Open Radio hardware module catalog",
+  "description": "Machine-readable register of M5Stack hardware the cube may learn to read. Data, never C++ logic: adding an entry is a documentation act, adopting one is a separate owner gate.",
+  "type": "object",
+  "required": ["schemaVersion", "target", "updated", "verdicts", "modules"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "target": {"const": "m5stack-core2"},
+    "updated": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "verdicts": {
+      "type": "object",
+      "description": "Human-readable meaning of each verdict, so the catalog explains itself.",
+      "required": ["adopt", "conditional", "deferred", "reject"],
+      "additionalProperties": {"type": "string"}
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/definitions/module"}
+    }
+  },
+  "definitions": {
+    "module": {
+      "type": "object",
+      "required": [
+        "id", "vendorSku", "name", "family", "attachment", "interface",
+        "power", "core2", "driver", "verdict", "evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "vendorSku": {"type": "string", "minLength": 2},
+        "name": {"type": "string", "minLength": 3},
+        "namePl": {"type": "string"},
+        "family": {
+          "enum": ["unit", "module", "base", "kit", "hat"],
+          "description": "M5Stack product family. 'base' stacks under the core, 'module' between core and base, 'unit' hangs off a port cable."
+        },
+        "attachment": {
+          "enum": ["port-a", "port-b", "port-c", "m-bus-top", "m-bus-bottom", "usb-c", "none"],
+          "description": "Physical attachment point on the Core2."
+        },
+        "interface": {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"enum": ["i2c", "uart", "analog", "digital", "power-only", "spi"]},
+            "bus": {
+              "enum": ["external", "internal", "none"],
+              "description": "'internal' means the bus that also carries the PMIC, RTC and touch controller — a shared-fate bus."
+            },
+            "address": {"type": "string", "pattern": "^(0x[0-9a-f]{2}|NOT_MEASURED)$"},
+            "sdaPin": {"type": "string"},
+            "sclPin": {"type": "string"},
+            "notes": {"type": "string"}
+          }
+        },
+        "sensors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["chip", "quantities"],
+            "additionalProperties": false,
+            "properties": {
+              "chip": {"type": "string"},
+              "quantities": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "enum": [
+                    "pm1", "pm2_5", "pm10", "particle-count", "co2", "co2-equivalent",
+                    "temperature", "humidity", "pressure", "gas-resistance", "iaq", "voc"
+                  ]
+                }
+              },
+              "range": {"type": "string"},
+              "accuracy": {"type": "string"},
+              "warmupSeconds": {"type": ["integer", "string"]}
+            }
+          }
+        },
+        "power": {
+          "type": "object",
+          "required": ["supplyVolts", "activeMilliamps", "standbyMicroamps"],
+          "additionalProperties": false,
+          "properties": {
+            "supplyVolts": {"type": "string"},
+            "activeMilliamps": {"type": ["number", "string"]},
+            "standbyMicroamps": {"type": ["number", "string"]},
+            "deliversPowerToPin": {"type": "string"},
+            "notes": {"type": "string"}
+          }
+        },
+        "core2": {
+          "type": "object",
+          "required": ["status", "reason"],
+          "additionalProperties": false,
+          "properties": {
+            "status": {
+              "enum": ["compatible", "conflict", "vendor-conflict", "unverified"],
+              "description": "'vendor-conflict' means two vendor sources disagree; it is never resolved by picking the convenient one."
+            },
+            "reason": {"type": "string", "minLength": 10},
+            "requiresDisassembly": {"type": "boolean"}
+          }
+        },
+        "driver": {
+          "type": "object",
+          "required": ["library", "license", "gplCompatible"],
+          "additionalProperties": false,
+          "properties": {
+            "library": {"type": "string"},
+            "license": {"type": "string"},
+            "gplCompatible": {"type": ["boolean", "string"]},
+            "restrictedOutputs": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Quantities this catalog may NOT ship because the only algorithm producing them is not GPL-compatible."
+            }
+          }
+        },
+        "acoustics": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hasFan": {"type": "boolean"},
+            "audibleNoise": {"type": "string"}
+          }
+        },
+        "alternativeTo": {
+          "type": "string",
+          "description": "id of a part this one is a mutually exclusive alternative to. Alternatives may share an I2C address because they are never on the bus together."
+        },
+        "verdict": {"enum": ["adopt", "conditional", "deferred", "reject"]},
+        "verdictReason": {"type": "string"},
+        "risks": {"type": "array", "items": {"type": "string"}},
+        "priceP": {"type": ["number", "string"], "description": "Retail price in PLN at the dated evidence, or NOT_MEASURED."},
+        "owned": {"type": "boolean", "description": "Whether the project physically has the part. Nothing is claimed working on hardware the project does not hold."},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["source", "url"],
+            "additionalProperties": false,
+            "properties": {
+              "source": {"type": "string"},
+              "url": {"type": "string", "format": "uri"},
+              "retrieved": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

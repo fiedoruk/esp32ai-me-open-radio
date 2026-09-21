@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "defaultMode": "AUTO_OPTIMIZE",
+  "automaticStart": "AFTER_APPROVED_SECURED_WIFI_ONLINE",
+  "continuousTracking": false,
+  "refreshTriggers": ["NEW_APPROVED_WIFI_PROFILE", "RESULT_OLDER_THAN_30_DAYS", "USER_RETRY"],
+  "sources": [
+    {"id": "MANUAL_OVERRIDE", "rank": 0, "automatic": false, "externalRequest": false},
+    {"id": "SAVED_NETWORK_LOCATION", "rank": 1, "automatic": true, "externalRequest": false},
+    {"id": "ONBOARDING_DEVICE_GEOLOCATION", "rank": 2, "automatic": true, "externalRequest": false, "availability": "SECURE_CONTEXT_AND_USER_PERMISSION"},
+    {"id": "WIFI_POSITIONING", "rank": 3, "automatic": true, "externalRequest": true, "defaultEnabled": false, "availability": "APPROVED_PROVIDER_AND_CREDENTIAL_REQUIRED"},
+    {"id": "IP_GEOLOCATION", "rank": 4, "automatic": true, "externalRequest": true, "defaultEnabled": true},
+    {"id": "COUNTRY_DEFAULT", "rank": 5, "automatic": true, "externalRequest": false}
+  ],
+  "ipProvider": {
+    "id": "ipwho-is",
+    "baseUrl": "https://ipwho.is/",
+    "authentication": "NONE",
+    "requestFields": ["success", "city", "region", "country_code", "latitude", "longitude", "timezone.id"],
+    "timeoutMilliseconds": 3500,
+    "maximumAttempts": 2,
+    "backoffSeconds": [30, 300]
+  },
+  "selection": {
+    "maximumAgeSeconds": 2592000,
+    "preferLowerRank": true,
+    "preferLowerAccuracyMetersWithinSameSource": true,
+    "manualOverrideAlwaysWins": true
+  },
+  "outputs": ["coordinates", "accuracy-meters", "locality", "country-code", "timezone", "locale-candidate", "station-region", "weather-coordinates"],
+  "storage": {
+    "scope": "PER_APPROVED_WIFI_PROFILE",
+    "deviceLocalOnly": true,
+    "history": false,
+    "storeExactProviderCoordinates": true
+  },
+  "dataEgress": {
+    "ipLookup": ["PUBLIC_IP_VISIBLE_BY_CONNECTION"],
+    "weatherLookup": ["PUBLIC_IP_VISIBLE_BY_CONNECTION", "LATITUDE", "LONGITUDE"],
+    "wifiPositioningWhenEnabled": ["NEARBY_BSSID", "SIGNAL_STRENGTH"],
+    "projectBackend": false,
+    "analytics": false
+  },
+  "diagnostics": {
+    "localView": ["source", "provider", "locality", "accuracy-meters", "age", "last-error"],
+    "exportedView": ["source-class", "accuracy-band", "age-band", "result-code"],
+    "exportExactCoordinates": false,
+    "exportPublicIp": false,
+    "exportBssid": false
+  },
+  "demo": {
+    "source": "IP_GEOLOCATION",
+    "locality": {"pl": "Białystok", "en": "Bialystok"},
+    "countryCode": "PL",
+    "timezone": "Europe/Warsaw",
+    "latitude": 53.1325,
+    "longitude": 23.1688,
+    "accuracyMeters": 12000
+  }
+}

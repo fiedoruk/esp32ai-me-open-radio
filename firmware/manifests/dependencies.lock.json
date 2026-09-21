@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "publicCandidate": [
+    {
+      "name": "M5Unified",
+      "version": "0.2.18",
+      "commit": "b1ffcc677014ed8bd01e5a1f240736ae654bfe12",
+      "license": "MIT"
+    },
+    {
+      "name": "M5GFX",
+      "version": "0.2.25",
+      "commit": "ad9b814264d4e2000e9f30070002310bbccaffc9",
+      "license": "MIT",
+      "resolvedBy": "PlatformIO registry through M5Unified"
+    },
+    {
+      "name": "ESP32-A2DP",
+      "version": "1.8.11",
+      "commit": "b6da4744286ca15b6f1dee607c077a4747294dd4",
+      "license": "Apache-2.0",
+      "sourceFilter": [
+        "BluetoothA2DPCommon.cpp",
+        "BluetoothA2DPOutput.cpp",
+        "BluetoothA2DPSource.cpp"
+      ]
+    },
+    {
+      "name": "ESP8266Audio",
+      "version": "2.4.1",
+      "commit": "d6184e08977c0f15f1b09eeee119b238ce562383",
+      "license": "GPL-3.0-or-later",
+      "sourceFilter": [
+        "AudioFileSourceHTTPStream.cpp",
+        "AudioFileSourceICYStream.cpp",
+        "AudioGeneratorMP3.cpp",
+        "AudioLogger.cpp",
+        "libmad/*.c"
+      ]
+    }
+  ],
+  "forbiddenPublicComponents": [
+    "AudioGeneratorAAC",
+    "Helix AAC",
+    "esp_audio_codec",
+    "esp-adf-libs"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "width": 320,
+  "height": 240,
+  "pixelFormat": "RGB565",
+  "storage": "uint16_t",
+  "redBits": 5,
+  "greenBits": 6,
+  "blueBits": 5,
+  "canonicalHashBytes": "big-endian-high-byte-first",
+  "hashAlgorithm": "fnv1a-64",
+  "clipping": "half-open-viewport",
+  "alpha": "unsupported",
+  "textProof": "bundled-inter-600-generated-4bit-alpha-atlas",
+  "themeProof": "generated-light-dark-rgb565",
+  "iconProof": "generated-tabler-24x24-masks"
+}

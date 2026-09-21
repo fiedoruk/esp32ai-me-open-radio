@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "resolver-scenarios.json",
+  "traces": [
+    {
+      "scenarioId": "rmf-fm-timeout-lkg",
+      "schemaVersion": 1,
+      "stationId": "rmf-fm",
+      "status": "PLAYING",
+      "selectedCandidateId": "lkg:rmf-fm",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "atMs": 1000000,
+          "candidateId": "rmf-fm-api",
+          "action": "ATTEMPT",
+          "outcome": "TIMEOUT",
+          "scoreBefore": 100,
+          "scoreAfter": 75,
+          "quarantineUntilMs": 0
+        },
+        {
+          "atMs": 1000000,
+          "candidateId": "rmf-fm-player",
+          "action": "SKIP",
+          "outcome": "REFERENCE_ONLY",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        },
+        {
+          "atMs": 1000000,
+          "candidateId": "lkg:rmf-fm",
+          "action": "ATTEMPT",
+          "outcome": "SUCCESS",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "radio-zet-404-lkg",
+      "schemaVersion": 1,
+      "stationId": "radio-zet",
+      "status": "PLAYING",
+      "selectedCandidateId": "lkg:radio-zet",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "atMs": 1001000,
+          "candidateId": "radio-zet-api",
+          "action": "ATTEMPT",
+          "outcome": "HTTP_404",
+          "scoreBefore": 100,
+          "scoreAfter": 50,
+          "quarantineUntilMs": 1031000
+        },
+        {
+          "atMs": 1001000,
+          "candidateId": "radio-zet-player",
+          "action": "SKIP",
+          "outcome": "REFERENCE_ONLY",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        },
+        {
+          "atMs": 1001000,
+          "candidateId": "lkg:radio-zet",
+          "action": "ATTEMPT",
+          "outcome": "SUCCESS",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "tok-fm-primary-success",
+      "schemaVersion": 1,
+      "stationId": "tok-fm",
+      "status": "PLAYING",
+      "selectedCandidateId": "tok-fm-player",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "atMs": 1002000,
+          "candidateId": "tok-fm-player",
+          "action": "ATTEMPT",
+          "outcome": "SUCCESS",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "antyradio-primary-success",
+      "schemaVersion": 1,
+      "stationId": "antyradio",
+      "status": "PLAYING",
+      "selectedCandidateId": "antyradio-api",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "atMs": 1003000,
+          "candidateId": "antyradio-api",
+          "action": "ATTEMPT",
+          "outcome": "SUCCESS",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "eska-mp3-success",
+      "schemaVersion": 1,
+      "stationId": "radio-eska",
+      "status": "PLAYING",
+      "selectedCandidateId": "radio-eska-player",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "atMs": 1004000,
+          "candidateId": "radio-eska-player",
+          "action": "ATTEMPT",
+          "outcome": "SUCCESS",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "rmf-maxx-bounded-retry",
+      "schemaVersion": 1,
+      "stationId": "rmf-maxx",
+      "status": "RETRY_SCHEDULED",
+      "selectedCandidateId": null,
+      "retryAtMs": 1010000,
+      "trace": [
+        {
+          "atMs": 1005000,
+          "candidateId": "rmf-maxx-api",
+          "action": "ATTEMPT",
+          "outcome": "TIMEOUT",
+          "scoreBefore": 100,
+          "scoreAfter": 75,
+          "quarantineUntilMs": 0
+        },
+        {
+          "atMs": 1005000,
+          "candidateId": "rmf-maxx-player",
+          "action": "SKIP",
+          "outcome": "REFERENCE_ONLY",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "radio-plus-lkg",
+      "schemaVersion": 1,
+      "stationId": "radio-plus",
+      "status": "PLAYING",
+      "selectedCandidateId": "lkg:radio-plus",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "atMs": 1006000,
+          "candidateId": "radio-plus-player",
+          "action": "SKIP",
+          "outcome": "REFERENCE_ONLY",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        },
+        {
+          "atMs": 1006000,
+          "candidateId": "radio-plus-page",
+          "action": "SKIP",
+          "outcome": "REFERENCE_ONLY",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        },
+        {
+          "atMs": 1006000,
+          "candidateId": "lkg:radio-plus",
+          "action": "ATTEMPT",
+          "outcome": "SUCCESS",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "zlote-stale-lkg",
+      "schemaVersion": 1,
+      "stationId": "zlote-przeboje",
+      "status": "PLAYING",
+      "selectedCandidateId": "lkg:zlote-przeboje",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "atMs": 1007000,
+          "candidateId": "zlote-przeboje-api",
+          "action": "ATTEMPT",
+          "outcome": "STALE",
+          "scoreBefore": 100,
+          "scoreAfter": 80,
+          "quarantineUntilMs": 0
+        },
+        {
+          "atMs": 1007000,
+          "candidateId": "zlote-przeboje-player",
+          "action": "SKIP",
+          "outcome": "REFERENCE_ONLY",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        },
+        {
+          "atMs": 1007000,
+          "candidateId": "lkg:zlote-przeboje",
+          "action": "ATTEMPT",
+          "outcome": "SUCCESS",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "meloradio-primary-success",
+      "schemaVersion": 1,
+      "stationId": "meloradio",
+      "status": "PLAYING",
+      "selectedCandidateId": "meloradio-api",
+      "retryAtMs": null,
+      "trace": [
+        {
+          "atMs": 1008000,
+          "candidateId": "meloradio-api",
+          "action": "ATTEMPT",
+          "outcome": "SUCCESS",
+          "scoreBefore": 100,
+          "scoreAfter": 100,
+          "quarantineUntilMs": 0
+        }
+      ]
+    }
+  ]
+}

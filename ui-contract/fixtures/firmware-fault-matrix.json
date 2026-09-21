@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    {"id":"no-config","layer":"boot","fault":"no committed configuration","expectedAction":"OPEN_ONBOARDING","audio":"STOPPED"},
+    {"id":"both-config-slots-corrupt","layer":"persistence","fault":"no valid A/B slot","expectedAction":"ENTER_SAFE_MODE","audio":"STOPPED"},
+    {"id":"newest-config-corrupt","layer":"persistence","fault":"newest slot checksum mismatch","expectedAction":"LOAD_OLDER_KNOWN_GOOD","audio":"RESUMABLE"},
+    {"id":"known-wifi-unreachable","layer":"network","fault":"all approved profiles unreachable","expectedAction":"RETRY_NETWORK_BOUNDED","audio":"STOPPED"},
+    {"id":"open-wifi-visible","layer":"network","fault":"unknown open network is strongest","expectedAction":"PROMPT_REQUIRED","audio":"STOPPED"},
+    {"id":"preferred-endpoint-quarantined","layer":"resolver","fault":"preferred candidate exceeds failure threshold","expectedAction":"TRY_ALTERNATE_CANDIDATE","audio":"RESUMABLE"},
+    {"id":"all-endpoints-quarantined","layer":"resolver","fault":"all candidates in backoff","expectedAction":"RETRY_STREAM_AT_DEADLINE","audio":"STOPPED"},
+    {"id":"hls-he-aac-selected","layer":"capability","fault":"station requires unsupported public codec","expectedAction":"SHOW_UNSUPPORTED","audio":"STOPPED"},
+    {"id":"mp3-frame-timeout","layer":"stream","fault":"decoder produces no PCM frames","expectedAction":"RETRY_STREAM_BOUNDED","audio":"STOPPED"},
+    {"id":"bluetooth-write-rejected","layer":"output","fault":"A2DP queue rejects first block","expectedAction":"FALLBACK_LOCAL_SPEAKER","audio":"CONTINUES"},
+    {"id":"bluetooth-disconnected","layer":"output","fault":"remembered sink disappears","expectedAction":"FALLBACK_LOCAL_AND_RETRY_BT","audio":"CONTINUES"},
+    {"id":"both-outputs-unavailable","layer":"output","fault":"A2DP absent and local speaker unavailable","expectedAction":"RETRY_OUTPUT_BOUNDED","audio":"STOPPED"},
+    {"id":"recovery-success","layer":"supervisor","fault":"network stream and output recover","expectedAction":"RETURN_PLAYING","audio":"CONTINUES"}
+  ]
+}

@@ -1,0 +1,924 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "runtime/ingress-contract.json",
+  "limits": {
+    "mailboxCapacity": 16,
+    "producerCount": 7,
+    "rawTickBits": 32,
+    "maximumDrainPerPass": 16
+  },
+  "traces": [
+    {
+      "id": "tick-rollover-boot",
+      "facts": [
+        {
+          "producer": "STORAGE",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 4294967280,
+          "type": "CONFIG_READY"
+        },
+        {
+          "producer": "LOCAL_OUTPUT",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 4294967281,
+          "type": "LOCAL_OUTPUT_AVAILABLE"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 4294967282,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 4294967283,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 5,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 6,
+          "type": "BLUETOOTH_REMEMBERED"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 7,
+          "type": "BLUETOOTH_CONNECTED"
+        }
+      ],
+      "expected": {
+        "finalState": "PLAYING",
+        "finalOutput": "BT",
+        "acceptedFacts": 7,
+        "deliveredFacts": 7,
+        "mailboxOverflows": 0,
+        "invalidFacts": 0,
+        "duplicateFacts": 0,
+        "staleFacts": 0,
+        "staleEpochs": 0,
+        "backwardTicks": 0,
+        "rollovers": 1,
+        "maximumMailboxDepth": 7,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 7,
+        "stateHash": "e4129a21d63de787"
+      }
+    },
+    {
+      "id": "delayed-stream-and-bluetooth-loss",
+      "facts": [
+        {
+          "producer": "STORAGE",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 100,
+          "type": "CONFIG_READY"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 101,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 102,
+          "type": "STREAM_STALLED"
+        },
+        {
+          "producer": "LOCAL_OUTPUT",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 103,
+          "type": "LOCAL_OUTPUT_AVAILABLE"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 104,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 105,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 106,
+          "type": "BLUETOOTH_REMEMBERED"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 107,
+          "type": "BLUETOOTH_CONNECTED"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 3,
+          "rawTick": 108,
+          "type": "BLUETOOTH_LOST"
+        }
+      ],
+      "expected": {
+        "finalState": "DEGRADED_PLAYING",
+        "finalOutput": "LOCAL",
+        "acceptedFacts": 9,
+        "deliveredFacts": 9,
+        "mailboxOverflows": 0,
+        "invalidFacts": 0,
+        "duplicateFacts": 0,
+        "staleFacts": 0,
+        "staleEpochs": 0,
+        "backwardTicks": 0,
+        "rollovers": 0,
+        "maximumMailboxDepth": 9,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 9,
+        "stateHash": "1d71633871368196"
+      }
+    },
+    {
+      "id": "producer-epoch-restart",
+      "facts": [
+        {
+          "producer": "STORAGE",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 1000,
+          "type": "CONFIG_READY"
+        },
+        {
+          "producer": "LOCAL_OUTPUT",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 1001,
+          "type": "LOCAL_OUTPUT_AVAILABLE"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 1002,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 1003,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 1004,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 2,
+          "producerSequence": 1,
+          "rawTick": 1005,
+          "type": "WIFI_LOST"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 1006,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 2,
+          "producerSequence": 2,
+          "rawTick": 1007,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 1008,
+          "type": "STREAM_HEALTHY"
+        }
+      ],
+      "expected": {
+        "finalState": "PLAYING",
+        "finalOutput": "LOCAL",
+        "acceptedFacts": 8,
+        "deliveredFacts": 8,
+        "mailboxOverflows": 0,
+        "invalidFacts": 0,
+        "duplicateFacts": 0,
+        "staleFacts": 0,
+        "staleEpochs": 1,
+        "backwardTicks": 0,
+        "rollovers": 0,
+        "maximumMailboxDepth": 8,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 8,
+        "stateHash": "cb14ab0eaf66ce66"
+      }
+    },
+    {
+      "id": "mailbox-saturation",
+      "facts": [
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 3,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 4,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 5,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 6,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 7,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 8,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 9,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 10,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 11,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 12,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 13,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 14,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 15,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 16,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 17,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        },
+        {
+          "producer": "POWER",
+          "epoch": 1,
+          "producerSequence": 18,
+          "rawTick": 2000,
+          "type": "POWER_INTERRUPTED"
+        }
+      ],
+      "expected": {
+        "finalState": "CONFIG_REQUIRED",
+        "finalOutput": "LOCAL",
+        "acceptedFacts": 16,
+        "deliveredFacts": 16,
+        "mailboxOverflows": 2,
+        "invalidFacts": 0,
+        "duplicateFacts": 0,
+        "staleFacts": 0,
+        "staleEpochs": 0,
+        "backwardTicks": 0,
+        "rollovers": 0,
+        "maximumMailboxDepth": 16,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 16,
+        "stateHash": "83593ebd993ef7e7"
+      }
+    },
+    {
+      "id": "backward-callback-tick",
+      "facts": [
+        {
+          "producer": "STORAGE",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 100,
+          "type": "CONFIG_READY"
+        },
+        {
+          "producer": "LOCAL_OUTPUT",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 101,
+          "type": "LOCAL_OUTPUT_AVAILABLE"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 102,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 103,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 104,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 105,
+          "type": "BLUETOOTH_CONNECTED"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 90,
+          "type": "STREAM_STALLED"
+        }
+      ],
+      "expected": {
+        "finalState": "PLAYING",
+        "finalOutput": "BT",
+        "acceptedFacts": 7,
+        "deliveredFacts": 6,
+        "mailboxOverflows": 0,
+        "invalidFacts": 0,
+        "duplicateFacts": 0,
+        "staleFacts": 0,
+        "staleEpochs": 0,
+        "backwardTicks": 1,
+        "rollovers": 0,
+        "maximumMailboxDepth": 7,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 6,
+        "stateHash": "55795141c684dc77"
+      }
+    },
+    {
+      "id": "invalid-producer-kind",
+      "facts": [
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 10,
+          "type": "BLUETOOTH_CONNECTED"
+        },
+        {
+          "producer": "STORAGE",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 11,
+          "type": "CONFIG_READY"
+        },
+        {
+          "producer": "LOCAL_OUTPUT",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 12,
+          "type": "LOCAL_OUTPUT_AVAILABLE"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 13,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 14,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 15,
+          "type": "STREAM_HEALTHY"
+        }
+      ],
+      "expected": {
+        "finalState": "PLAYING",
+        "finalOutput": "LOCAL",
+        "acceptedFacts": 5,
+        "deliveredFacts": 5,
+        "mailboxOverflows": 0,
+        "invalidFacts": 1,
+        "duplicateFacts": 0,
+        "staleFacts": 0,
+        "staleEpochs": 0,
+        "backwardTicks": 0,
+        "rollovers": 0,
+        "maximumMailboxDepth": 5,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 5,
+        "stateHash": "b410dc487cfa9c06"
+      }
+    },
+    {
+      "id": "duplicate-and-stale-sequence",
+      "facts": [
+        {
+          "producer": "STORAGE",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 50,
+          "type": "CONFIG_READY"
+        },
+        {
+          "producer": "LOCAL_OUTPUT",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 51,
+          "type": "LOCAL_OUTPUT_AVAILABLE"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 52,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 53,
+          "type": "WIFI_LOST"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 3,
+          "rawTick": 54,
+          "type": "WIFI_LOST"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 55,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 4,
+          "rawTick": 56,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 57,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 58,
+          "type": "STREAM_HEALTHY"
+        }
+      ],
+      "expected": {
+        "finalState": "PLAYING",
+        "finalOutput": "LOCAL",
+        "acceptedFacts": 7,
+        "deliveredFacts": 7,
+        "mailboxOverflows": 0,
+        "invalidFacts": 0,
+        "duplicateFacts": 1,
+        "staleFacts": 1,
+        "staleEpochs": 0,
+        "backwardTicks": 0,
+        "rollovers": 0,
+        "maximumMailboxDepth": 7,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 7,
+        "stateHash": "258cb08eba6d5de7"
+      }
+    },
+    {
+      "id": "boot-permutation-11",
+      "seed": 11,
+      "convergenceGroup": "healthy-boot",
+      "facts": [
+        {
+          "producer": "STORAGE",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "CONFIG_READY"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 500,
+          "type": "BLUETOOTH_CONNECTED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "LOCAL_OUTPUT",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "LOCAL_OUTPUT_AVAILABLE"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "BLUETOOTH_REMEMBERED"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 501,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 501,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 501,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 3,
+          "rawTick": 501,
+          "type": "BLUETOOTH_CONNECTED"
+        }
+      ],
+      "expected": {
+        "finalState": "PLAYING",
+        "finalOutput": "BT",
+        "acceptedFacts": 10,
+        "deliveredFacts": 10,
+        "mailboxOverflows": 0,
+        "invalidFacts": 0,
+        "duplicateFacts": 0,
+        "staleFacts": 1,
+        "staleEpochs": 0,
+        "backwardTicks": 0,
+        "rollovers": 0,
+        "maximumMailboxDepth": 10,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 10,
+        "stateHash": "9b09db1d03de4d07"
+      }
+    },
+    {
+      "id": "boot-permutation-29",
+      "seed": 29,
+      "convergenceGroup": "healthy-boot",
+      "facts": [
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "BLUETOOTH_REMEMBERED"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "LOCAL_OUTPUT",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "LOCAL_OUTPUT_AVAILABLE"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 500,
+          "type": "BLUETOOTH_CONNECTED"
+        },
+        {
+          "producer": "STORAGE",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "CONFIG_READY"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 501,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 501,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 501,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 3,
+          "rawTick": 501,
+          "type": "BLUETOOTH_CONNECTED"
+        }
+      ],
+      "expected": {
+        "finalState": "PLAYING",
+        "finalOutput": "BT",
+        "acceptedFacts": 11,
+        "deliveredFacts": 11,
+        "mailboxOverflows": 0,
+        "invalidFacts": 0,
+        "duplicateFacts": 0,
+        "staleFacts": 0,
+        "staleEpochs": 0,
+        "backwardTicks": 0,
+        "rollovers": 0,
+        "maximumMailboxDepth": 11,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 11,
+        "stateHash": "8a862b1c633f73c6"
+      }
+    },
+    {
+      "id": "boot-permutation-47",
+      "seed": 47,
+      "convergenceGroup": "healthy-boot",
+      "facts": [
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "BLUETOOTH_REMEMBERED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STORAGE",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "CONFIG_READY"
+        },
+        {
+          "producer": "LOCAL_OUTPUT",
+          "epoch": 1,
+          "producerSequence": 1,
+          "rawTick": 500,
+          "type": "LOCAL_OUTPUT_AVAILABLE"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 500,
+          "type": "BLUETOOTH_CONNECTED"
+        },
+        {
+          "producer": "WIFI",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 501,
+          "type": "WIFI_CONNECTED"
+        },
+        {
+          "producer": "RESOLVER",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 501,
+          "type": "RESOLVER_READY"
+        },
+        {
+          "producer": "STREAM",
+          "epoch": 1,
+          "producerSequence": 2,
+          "rawTick": 501,
+          "type": "STREAM_HEALTHY"
+        },
+        {
+          "producer": "BLUETOOTH",
+          "epoch": 1,
+          "producerSequence": 3,
+          "rawTick": 501,
+          "type": "BLUETOOTH_CONNECTED"
+        }
+      ],
+      "expected": {
+        "finalState": "PLAYING",
+        "finalOutput": "BT",
+        "acceptedFacts": 11,
+        "deliveredFacts": 11,
+        "mailboxOverflows": 0,
+        "invalidFacts": 0,
+        "duplicateFacts": 0,
+        "staleFacts": 0,
+        "staleEpochs": 0,
+        "backwardTicks": 0,
+        "rollovers": 0,
+        "maximumMailboxDepth": 11,
+        "deliveryRejected": 0,
+        "runtimeProcessedEvents": 11,
+        "stateHash": "8a862b1c633f73c6"
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "outcomes": ["CONNECTED","TIMEOUT","AUTH_FAILURE","NO_ROUTE","CAPTIVE_DETECTED"],
+  "backoffMs": [5000,30000,120000,600000],
+  "automaticSecurity": ["WPA2_PSK","WPA3_SAE"],
+  "promptOnly": ["OPEN","UNKNOWN","CAPTIVE_PORTAL","UNAPPROVED"]
+}

@@ -1,0 +1,117 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "open-radio-core2-0.4.2-release-graph",
+  "documentNamespace": "https://fiedoruk.pl/spdx/open-radio-core2/release-0-4-2",
+  "creationInfo": {
+    "created": "2026-08-01T00:00:00Z",
+    "creators": [
+      "Person: Tomasz Fiedoruk",
+      "Tool: Open Radio Core2 build scripts"
+    ]
+  },
+  "packages": [
+    {
+      "name": "Open Radio Core2",
+      "SPDXID": "SPDXRef-OpenRadio",
+      "versionInfo": "0.4.2",
+      "downloadLocation": "https://fiedoruk.pl/os/open-radio-0-4-2.bin",
+      "licenseConcluded": "GPL-3.0-or-later",
+      "licenseDeclared": "GPL-3.0-or-later",
+      "filesAnalyzed": false,
+      "comment": "Two artifacts carry this software: open-radio-0-4-2.bin is the factory image written from 0x0 and erases stored settings, open-radio-0-4-2-update.bin is the application alone written at 0x10000 and keeps them. Both contain the same application bytes."
+    },
+    {
+      "name": "Arduino-ESP32",
+      "SPDXID": "SPDXRef-ArduinoESP32",
+      "versionInfo": "2.0.17",
+      "downloadLocation": "https://github.com/espressif/arduino-esp32",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "LGPL-2.1-or-later",
+      "filesAnalyzed": false
+    },
+    {
+      "name": "M5Unified",
+      "SPDXID": "SPDXRef-M5Unified",
+      "versionInfo": "0.2.18",
+      "downloadLocation": "git+https://github.com/m5stack/M5Unified@b1ffcc677014ed8bd01e5a1f240736ae654bfe12",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "filesAnalyzed": false
+    },
+    {
+      "name": "M5GFX",
+      "SPDXID": "SPDXRef-M5GFX",
+      "versionInfo": "0.2.25",
+      "downloadLocation": "git+https://github.com/m5stack/M5GFX@ad9b814264d4e2000e9f30070002310bbccaffc9",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "filesAnalyzed": false
+    },
+    {
+      "name": "ESP32-A2DP",
+      "SPDXID": "SPDXRef-ESP32A2DP",
+      "versionInfo": "1.8.11",
+      "downloadLocation": "git+https://github.com/pschatzmann/ESP32-A2DP@b6da4744286ca15b6f1dee607c077a4747294dd4",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "filesAnalyzed": false
+    },
+    {
+      "name": "ESP8266Audio",
+      "SPDXID": "SPDXRef-ESP8266Audio",
+      "versionInfo": "2.4.1",
+      "downloadLocation": "git+https://github.com/earlephilhower/ESP8266Audio@d6184e08977c0f15f1b09eeee119b238ce562383",
+      "licenseConcluded": "GPL-3.0-or-later",
+      "licenseDeclared": "GPL-3.0-or-later",
+      "filesAnalyzed": false
+    },
+    {
+      "name": "libmad",
+      "SPDXID": "SPDXRef-libmad",
+      "versionInfo": "0.15.1b (ESP8266Audio subset)",
+      "downloadLocation": "git+https://github.com/earlephilhower/ESP8266Audio@d6184e08977c0f15f1b09eeee119b238ce562383#src/libmad",
+      "licenseConcluded": "GPL-2.0-or-later",
+      "licenseDeclared": "GPL-2.0-or-later",
+      "filesAnalyzed": false
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-OpenRadio"
+    },
+    {
+      "spdxElementId": "SPDXRef-OpenRadio",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-ArduinoESP32"
+    },
+    {
+      "spdxElementId": "SPDXRef-OpenRadio",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-M5Unified"
+    },
+    {
+      "spdxElementId": "SPDXRef-OpenRadio",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-ESP32A2DP"
+    },
+    {
+      "spdxElementId": "SPDXRef-OpenRadio",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-ESP8266Audio"
+    },
+    {
+      "spdxElementId": "SPDXRef-M5Unified",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-M5GFX"
+    },
+    {
+      "spdxElementId": "SPDXRef-ESP8266Audio",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-libmad"
+    }
+  ]
+}

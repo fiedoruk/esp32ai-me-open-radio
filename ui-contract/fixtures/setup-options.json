@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "cities": ["Automatycznie", "Warszawa", "Białystok", "Kraków", "Gdańsk", "Wrocław"],
+  "speakers": ["JBL Flip", "Salon Speaker", "Słuchawki BT"]
+}

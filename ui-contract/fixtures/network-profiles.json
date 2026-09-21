@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {"schemaVersion":1,"ref":"wifi:home","approved":true,"priority":90,"healthScore":95,"consecutiveFailures":0,"quarantineUntilMs":0,"lastSuccessMs":2900000,"preferred":true},
+    {"schemaVersion":1,"ref":"wifi:travel","approved":true,"priority":70,"healthScore":85,"consecutiveFailures":0,"quarantineUntilMs":0,"lastSuccessMs":2800000,"preferred":false},
+    {"schemaVersion":1,"ref":"wifi:legacy-home","approved":true,"priority":50,"healthScore":60,"consecutiveFailures":1,"quarantineUntilMs":0,"lastSuccessMs":null,"preferred":false},
+    {"schemaVersion":1,"ref":"wifi:pending","approved":false,"priority":80,"healthScore":100,"consecutiveFailures":0,"quarantineUntilMs":0,"lastSuccessMs":null,"preferred":false}
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "target": "m5stack-core2",
+  "publicCandidate": {
+    "python": "3.13.12",
+    "platformioCore": "6.1.19",
+    "platform": {
+      "name": "platformio/espressif32",
+      "version": "6.13.0",
+      "commit": "6994b7f936a6a944430babae4430842d0941e558"
+    },
+    "framework": {
+      "name": "platformio/framework-arduinoespressif32",
+      "version": "3.20017.241212+sha.dcc1105b",
+      "upstreamVersion": "2.0.17"
+    },
+    "toolchain": "espressif/toolchain-xtensa-esp32@8.4.0+2021r2-patch5",
+    "cmake": "3.30.9",
+    "ninja": "1.11.1.git.kitware.jobserver-1"
+  },
+  "adfReference": {
+    "container": "espressif/idf@sha256:9352fff95ecee99e953b8fdd4949cda6baeeae76fe23c330dca1133ef92679f9",
+    "espAdf": {
+      "tag": "v2.8",
+      "commit": "d0493218b6986e5663a5465b6e2545a336ef901d"
+    },
+    "espIdf": "2c211b236707889e8400c4dc5644dd5c4ee071e0",
+    "espAdfLibs": "3472016c997e8ddbbb75ee67d2127becb0993942",
+    "espSr": "8ecc462b44ee430bbdde6fd76ce2f956efdbd9be"
+  }
+}

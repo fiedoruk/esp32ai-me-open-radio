@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "configs": {
+    "currentA": {
+      "schemaVersion": 2,
+      "locale": "pl",
+      "preferredStationId": "rmf-fm",
+      "volume": 42,
+      "brightness": 75,
+      "theme": "dark",
+      "nowPlayingVariant": "editorial",
+      "display": {"screensaverEnabled":true,"screensaverMode":"pulse","screensaverDelaySeconds":120,"displayOffEnabled":true,"displayOffDelaySeconds":1800},
+      "wifiProfileRefs": ["wifi:home"],
+      "bluetoothDeviceRef": "bt:living-room",
+      "city": {"mode": "AUTO_APPROXIMATE", "label": null},
+      "onboardingComplete": true
+    },
+    "currentB": {
+      "schemaVersion": 2,
+      "locale": "en",
+      "preferredStationId": "radio-eska",
+      "volume": 58,
+      "brightness": 50,
+      "theme": "light",
+      "nowPlayingVariant": "glance",
+      "display": {"screensaverEnabled":false,"screensaverMode":"orbit","screensaverDelaySeconds":300,"displayOffEnabled":true,"displayOffDelaySeconds":3600},
+      "wifiProfileRefs": ["wifi:home", "wifi:travel"],
+      "bluetoothDeviceRef": null,
+      "city": {"mode": "MANUAL", "label": "Warszawa"},
+      "onboardingComplete": true
+    },
+    "legacy": {
+      "schemaVersion": 1,
+      "language": "pl",
+      "stationId": "radio-zet",
+      "volume": 35,
+      "wifiProfileRef": "wifi:legacy-home",
+      "bluetoothDeviceRef": "bt:legacy-speaker",
+      "cityLabel": null,
+      "onboardingComplete": true
+    },
+    "future": {
+      "schemaVersion": 3,
+      "locale": "pl",
+      "preferredStationId": "rmf-fm",
+      "volume": 50,
+      "brightness": 75,
+      "theme": "dark",
+      "nowPlayingVariant": "editorial",
+      "display": {"screensaverEnabled":true,"screensaverMode":"pulse","screensaverDelaySeconds":120,"displayOffEnabled":true,"displayOffDelaySeconds":1800},
+      "wifiProfileRefs": ["wifi:future"],
+      "bluetoothDeviceRef": null,
+      "city": {"mode": "DISABLED", "label": null},
+      "onboardingComplete": true
+    }
+  }
+}

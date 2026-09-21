@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fiedoruk.pl/open-radio-core2/schemas/ui-command.schema.json",
+  "title": "UiCommand",
+  "oneOf": [
+    {"type":"object","properties":{"type":{"const":"WIFI_CONFIGURED"}},"required":["type"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"CONTINUE_ONBOARDING"}},"required":["type"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"SELECT_CITY"},"city":{"type":"string","minLength":1,"maxLength":64}},"required":["type","city"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"SKIP_CITY"}},"required":["type"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"SELECT_SPEAKER"},"speaker":{"type":"string","minLength":1,"maxLength":96}},"required":["type","speaker"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"SKIP_BLUETOOTH"}},"required":["type"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"NAVIGATE"},"screen":{"enum":["WIFI","CITY","FIRST_SOUND","BLUETOOTH","NOW_PLAYING","STATIONS","SETTINGS","ABOUT","DIAGNOSTICS"]}},"required":["type","screen"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"enum":["NEXT_STATION","PREVIOUS_STATION","WIFI_LOST","WIFI_RECOVERED","BLUETOOTH_LOST","BLUETOOTH_RECOVERED","STATION_FAILED","STATION_RECOVERED","ENTER_SAFE_MODE","RESET_SIMULATOR","LOAD_READY"]}},"required":["type"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"SELECT_STATION"},"index":{"type":"integer","minimum":0,"maximum":8}},"required":["type","index"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"SET_LOCALE"},"locale":{"enum":["pl","en"]}},"required":["type","locale"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"SET_VOLUME"},"volume":{"type":"integer"}},"required":["type","volume"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"SET_BRIGHTNESS"},"brightness":{"type":"integer"}},"required":["type","brightness"],"additionalProperties":false},
+    {"type":"object","properties":{"type":{"const":"SET_THEME"},"theme":{"enum":["dark","light"]}},"required":["type","theme"],"additionalProperties":false}
+  ]
+}

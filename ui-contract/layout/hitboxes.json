@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "minimumTouchTarget": 44,
+  "screens": {
+    "WIFI": [
+      {"id":"wifi-back","rect":[270,0,50,44],"when":"setupComplete","event":{"type":"NAVIGATE","screen":"SETTINGS"},"labelKey":"back"}
+    ],
+    "CITY": [
+      {"repeat":"cities","id":"city-{index}","columns":2,"origin":[8,107],"cell":[154,44],"rect":[0,0,150,44],"event":{"type":"SELECT_CITY","city":"{value}"},"label":"{value}"}
+    ],
+    "FIRST_SOUND": [
+      {"id":"continue-onboarding","rect":[8,188,304,44],"event":{"type":"CONTINUE_ONBOARDING"},"labelKey":"continue"}
+    ],
+    "BLUETOOTH": [
+      {"repeat":"speakers","id":"speaker-{index}","columns":1,"origin":[8,108],"cell":[0,44],"rect":[0,0,226,44],"event":{"type":"SELECT_SPEAKER","speaker":"{value}"},"label":"{value}"},
+      {"id":"skip-bt","rect":[240,112,68,120],"event":{"type":"SKIP_BLUETOOTH"},"labelKey":"skip"}
+    ],
+    "NOW_PLAYING": [
+      {"id":"volume","rect":[244,0,76,44],"event":{"type":"NAVIGATE","screen":"VOLUME"},"label":"Volume"},
+      {"id":"settings","rect":[268,36,44,44],"event":{"type":"NAVIGATE","screen":"SETTINGS"},"labelKey":"settings"},
+      {"id":"previous","rect":[8,188,56,48],"event":{"type":"PREVIOUS_STATION"},"label":"Previous station"},
+      {"id":"stations","rect":[72,188,176,48],"event":{"type":"NAVIGATE","screen":"STATIONS"},"labelKey":"stations"},
+      {"id":"next","rect":[256,188,56,48],"event":{"type":"NEXT_STATION"},"label":"Next station"}
+    ],
+    "VOLUME": [
+      {"id":"volume-back","rect":[268,0,52,48],"event":{"type":"NAVIGATE","screen":"NOW_PLAYING"},"labelKey":"back"},
+      {"id":"volume-slider","rect":[20,78,280,72],"event":{"type":"SET_VOLUME","volume":"{position}"},"label":"Volume slider"},
+      {"id":"volume-down","rect":[8,184,88,56],"event":{"type":"ADJUST_VOLUME","delta":-10},"label":"Volume down"},
+      {"id":"volume-done","rect":[104,184,112,56],"event":{"type":"NAVIGATE","screen":"NOW_PLAYING"},"labelKey":"back"},
+      {"id":"volume-up","rect":[224,184,88,56],"event":{"type":"ADJUST_VOLUME","delta":10},"label":"Volume up"}
+    ],
+    "STATIONS": [
+      {"id":"close-stations","rect":[268,2,44,44],"event":{"type":"NAVIGATE","screen":"NOW_PLAYING"},"labelKey":"back"},
+      {"repeat":"stations","id":"station-{index}","columns":3,"origin":[52,12],"cell":[72,72],"rect":[0,0,72,72],"event":{"type":"SELECT_STATION","index":"{index}"},"label":"{name}"}
+    ],
+    "SETTINGS": [
+      {"id":"close-settings","rect":[268,2,44,44],"event":{"type":"NAVIGATE","screen":"NOW_PLAYING"},"labelKey":"back"},
+      {"repeat":"settings","id":"settings-{index}","columns":2,"origin":[10,54],"cell":[155,58],"rect":[0,0,145,50],"event":"{event}","label":"{label}"}
+    ],
+    "ABOUT": [
+      {"id":"about-back","rect":[12,188,296,44],"event":{"type":"NAVIGATE","screen":"SETTINGS"},"labelKey":"back"}
+    ],
+    "DIAGNOSTICS": [
+      {"id":"diagnostics-back","rect":[12,188,296,44],"event":{"type":"NAVIGATE","screen":"SETTINGS"},"labelKey":"back"}
+    ]
+  }
+}

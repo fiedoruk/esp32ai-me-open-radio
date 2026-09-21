@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fiedoruk.pl/open-radio/schemas/callback-trace.schema.json",
+  "title": "CallbackTraceFixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "generatedFrom", "limits", "traces"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "generatedFrom": {"type": "string", "minLength": 1},
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mailboxCapacity", "producerCount", "rawTickBits", "maximumDrainPerPass"],
+      "properties": {
+        "mailboxCapacity": {"type": "integer", "minimum": 1, "maximum": 64},
+        "producerCount": {"const": 7},
+        "rawTickBits": {"const": 32},
+        "maximumDrainPerPass": {"type": "integer", "minimum": 1, "maximum": 64}
+      }
+    },
+    "traces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "facts", "expected"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "maxLength": 64},
+          "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+          "convergenceGroup": {"type": "string", "minLength": 1, "maxLength": 64},
+          "facts": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["producer", "epoch", "producerSequence", "rawTick", "type"],
+              "properties": {
+                "producer": {"enum": ["STORAGE", "WIFI", "RESOLVER", "STREAM", "BLUETOOTH", "LOCAL_OUTPUT", "POWER"]},
+                "epoch": {"type": "integer", "minimum": 1, "maximum": 4294967295},
+                "producerSequence": {"type": "integer", "minimum": 1, "maximum": 4294967295},
+                "rawTick": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+                "type": {"enum": ["CONFIG_MISSING", "CONFIG_CORRUPT", "CONFIG_READY", "WIFI_CONNECTED", "WIFI_LOST", "RESOLVER_READY", "RESOLVER_UNSUPPORTED", "STREAM_HEALTHY", "STREAM_STALLED", "BLUETOOTH_REMEMBERED", "BLUETOOTH_CONNECTED", "BLUETOOTH_LOST", "LOCAL_OUTPUT_AVAILABLE", "LOCAL_OUTPUT_LOST", "POWER_INTERRUPTED"]}
+              }
+            }
+          },
+          "expected": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["finalState", "finalOutput", "acceptedFacts", "deliveredFacts", "mailboxOverflows", "invalidFacts", "duplicateFacts", "staleFacts", "staleEpochs", "backwardTicks", "rollovers", "maximumMailboxDepth", "deliveryRejected", "runtimeProcessedEvents", "stateHash"],
+            "properties": {
+              "finalState": {"enum": ["CONFIG_REQUIRED", "RECOVERING", "PLAYING", "DEGRADED_PLAYING", "UNSUPPORTED_STATION", "SAFE_MODE"]},
+              "finalOutput": {"enum": ["LOCAL", "BT"]},
+              "acceptedFacts": {"type": "integer", "minimum": 0},
+              "deliveredFacts": {"type": "integer", "minimum": 0},
+              "mailboxOverflows": {"type": "integer", "minimum": 0},
+              "invalidFacts": {"type": "integer", "minimum": 0},
+              "duplicateFacts": {"type": "integer", "minimum": 0},
+              "staleFacts": {"type": "integer", "minimum": 0},
+              "staleEpochs": {"type": "integer", "minimum": 0},
+              "backwardTicks": {"type": "integer", "minimum": 0},
+              "rollovers": {"type": "integer", "minimum": 0},
+              "maximumMailboxDepth": {"type": "integer", "minimum": 0},
+              "deliveryRejected": {"type": "integer", "minimum": 0},
+              "runtimeProcessedEvents": {"type": "integer", "minimum": 0},
+              "stateHash": {"type": "string", "minLength": 16, "maxLength": 16}
+            }
+          }
+        }
+      }
+    }
+  }
+}

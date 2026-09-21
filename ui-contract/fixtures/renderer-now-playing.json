@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "now-playing-rmf-local",
+  "screen": "NOW_PLAYING",
+  "stationIndex": 0,
+  "requestedStationIndex": 0,
+  "wifiOnline": true,
+  "output": "LOCAL",
+  "volume": 42,
+  "degraded": false,
+  "theme": "DARK",
+  "statusKey": "playingLocal"
+}

@@ -1,0 +1,3213 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "runtime/runtime-contract.json",
+  "limits": {
+    "eventQueueCapacity": 16,
+    "timerCapacity": 8,
+    "diagnosticCapacity": 32,
+    "maximumRetryDelayMs": 600000
+  },
+  "soaks": [
+    {
+      "id": "one-hour-recovery",
+      "durationMinutes": 60,
+      "seed": 2703024129,
+      "corruptAtMinute": null,
+      "events": [
+        {
+          "minute": 0,
+          "type": "CONFIG_READY",
+          "sequence": 1
+        },
+        {
+          "minute": 0,
+          "type": "WIFI_CONNECTED",
+          "sequence": 2
+        },
+        {
+          "minute": 0,
+          "type": "RESOLVER_READY",
+          "sequence": 3
+        },
+        {
+          "minute": 0,
+          "type": "STREAM_HEALTHY",
+          "sequence": 4
+        },
+        {
+          "minute": 0,
+          "type": "BLUETOOTH_REMEMBERED",
+          "sequence": 5
+        },
+        {
+          "minute": 0,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 6
+        },
+        {
+          "minute": 0,
+          "type": "LOCAL_OUTPUT_AVAILABLE",
+          "sequence": 7
+        },
+        {
+          "minute": 20,
+          "type": "WIFI_LOST",
+          "sequence": 8
+        },
+        {
+          "minute": 21,
+          "type": "WIFI_CONNECTED",
+          "sequence": 9
+        },
+        {
+          "minute": 21,
+          "type": "RESOLVER_READY",
+          "sequence": 10
+        },
+        {
+          "minute": 21,
+          "type": "STREAM_HEALTHY",
+          "sequence": 11
+        },
+        {
+          "minute": 33,
+          "type": "STREAM_STALLED",
+          "sequence": 12
+        },
+        {
+          "minute": 34,
+          "type": "STREAM_HEALTHY",
+          "sequence": 13
+        },
+        {
+          "minute": 40,
+          "type": "WIFI_LOST",
+          "sequence": 14
+        },
+        {
+          "minute": 41,
+          "type": "WIFI_CONNECTED",
+          "sequence": 15
+        },
+        {
+          "minute": 41,
+          "type": "RESOLVER_READY",
+          "sequence": 16
+        },
+        {
+          "minute": 41,
+          "type": "STREAM_HEALTHY",
+          "sequence": 17
+        },
+        {
+          "minute": 48,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 18
+        },
+        {
+          "minute": 49,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 19
+        }
+      ],
+      "expected": {
+        "eventCount": 19,
+        "finalState": "PLAYING",
+        "finalOutput": "BT",
+        "recoveries": 3,
+        "networkRetries": 2,
+        "streamRetries": 1,
+        "bluetoothRetries": 1,
+        "powerInterruptions": 0,
+        "maximumQueueDepth": 7,
+        "diagnosticsStored": 22,
+        "diagnosticOverwrites": 0,
+        "queueOverflows": 0,
+        "timerOverflows": 0,
+        "stateHash": "cbf24829fd6de695"
+      }
+    },
+    {
+      "id": "two-hour-combined-faults",
+      "durationMinutes": 120,
+      "seed": 2703024130,
+      "corruptAtMinute": null,
+      "events": [
+        {
+          "minute": 0,
+          "type": "CONFIG_READY",
+          "sequence": 1
+        },
+        {
+          "minute": 0,
+          "type": "WIFI_CONNECTED",
+          "sequence": 2
+        },
+        {
+          "minute": 0,
+          "type": "RESOLVER_READY",
+          "sequence": 3
+        },
+        {
+          "minute": 0,
+          "type": "STREAM_HEALTHY",
+          "sequence": 4
+        },
+        {
+          "minute": 0,
+          "type": "BLUETOOTH_REMEMBERED",
+          "sequence": 5
+        },
+        {
+          "minute": 0,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 6
+        },
+        {
+          "minute": 0,
+          "type": "LOCAL_OUTPUT_AVAILABLE",
+          "sequence": 7
+        },
+        {
+          "minute": 17,
+          "type": "WIFI_LOST",
+          "sequence": 8
+        },
+        {
+          "minute": 18,
+          "type": "WIFI_CONNECTED",
+          "sequence": 9
+        },
+        {
+          "minute": 18,
+          "type": "RESOLVER_READY",
+          "sequence": 10
+        },
+        {
+          "minute": 18,
+          "type": "STREAM_HEALTHY",
+          "sequence": 11
+        },
+        {
+          "minute": 33,
+          "type": "STREAM_STALLED",
+          "sequence": 12
+        },
+        {
+          "minute": 34,
+          "type": "WIFI_LOST",
+          "sequence": 13
+        },
+        {
+          "minute": 34,
+          "type": "STREAM_HEALTHY",
+          "sequence": 14
+        },
+        {
+          "minute": 35,
+          "type": "WIFI_CONNECTED",
+          "sequence": 15
+        },
+        {
+          "minute": 35,
+          "type": "RESOLVER_READY",
+          "sequence": 16
+        },
+        {
+          "minute": 35,
+          "type": "STREAM_HEALTHY",
+          "sequence": 17
+        },
+        {
+          "minute": 49,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 18
+        },
+        {
+          "minute": 50,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 19
+        },
+        {
+          "minute": 51,
+          "type": "WIFI_LOST",
+          "sequence": 20
+        },
+        {
+          "minute": 52,
+          "type": "WIFI_CONNECTED",
+          "sequence": 21
+        },
+        {
+          "minute": 52,
+          "type": "RESOLVER_READY",
+          "sequence": 22
+        },
+        {
+          "minute": 52,
+          "type": "STREAM_HEALTHY",
+          "sequence": 23
+        },
+        {
+          "minute": 66,
+          "type": "STREAM_STALLED",
+          "sequence": 24
+        },
+        {
+          "minute": 67,
+          "type": "STREAM_HEALTHY",
+          "sequence": 25
+        },
+        {
+          "minute": 68,
+          "type": "WIFI_LOST",
+          "sequence": 26
+        },
+        {
+          "minute": 69,
+          "type": "WIFI_CONNECTED",
+          "sequence": 27
+        },
+        {
+          "minute": 69,
+          "type": "RESOLVER_READY",
+          "sequence": 28
+        },
+        {
+          "minute": 69,
+          "type": "STREAM_HEALTHY",
+          "sequence": 29
+        },
+        {
+          "minute": 85,
+          "type": "WIFI_LOST",
+          "sequence": 30
+        },
+        {
+          "minute": 86,
+          "type": "WIFI_CONNECTED",
+          "sequence": 31
+        },
+        {
+          "minute": 86,
+          "type": "RESOLVER_READY",
+          "sequence": 32
+        },
+        {
+          "minute": 86,
+          "type": "STREAM_HEALTHY",
+          "sequence": 33
+        },
+        {
+          "minute": 98,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 34
+        },
+        {
+          "minute": 99,
+          "type": "STREAM_STALLED",
+          "sequence": 35
+        },
+        {
+          "minute": 99,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 36
+        },
+        {
+          "minute": 100,
+          "type": "STREAM_HEALTHY",
+          "sequence": 37
+        },
+        {
+          "minute": 102,
+          "type": "WIFI_LOST",
+          "sequence": 38
+        },
+        {
+          "minute": 103,
+          "type": "WIFI_CONNECTED",
+          "sequence": 39
+        },
+        {
+          "minute": 103,
+          "type": "RESOLVER_READY",
+          "sequence": 40
+        },
+        {
+          "minute": 103,
+          "type": "STREAM_HEALTHY",
+          "sequence": 41
+        },
+        {
+          "minute": 119,
+          "type": "WIFI_LOST",
+          "sequence": 42
+        },
+        {
+          "minute": 120,
+          "type": "WIFI_CONNECTED",
+          "sequence": 43
+        },
+        {
+          "minute": 120,
+          "type": "RESOLVER_READY",
+          "sequence": 44
+        },
+        {
+          "minute": 120,
+          "type": "STREAM_HEALTHY",
+          "sequence": 45
+        }
+      ],
+      "expected": {
+        "eventCount": 45,
+        "finalState": "PLAYING",
+        "finalOutput": "BT",
+        "recoveries": 9,
+        "networkRetries": 7,
+        "streamRetries": 3,
+        "bluetoothRetries": 2,
+        "powerInterruptions": 0,
+        "maximumQueueDepth": 7,
+        "diagnosticsStored": 32,
+        "diagnosticOverwrites": 24,
+        "queueOverflows": 0,
+        "timerOverflows": 0,
+        "stateHash": "5c283b9955e6a64a"
+      }
+    },
+    {
+      "id": "eight-hour-power-and-radio",
+      "durationMinutes": 480,
+      "seed": 2703024131,
+      "corruptAtMinute": null,
+      "events": [
+        {
+          "minute": 0,
+          "type": "CONFIG_READY",
+          "sequence": 1
+        },
+        {
+          "minute": 0,
+          "type": "WIFI_CONNECTED",
+          "sequence": 2
+        },
+        {
+          "minute": 0,
+          "type": "RESOLVER_READY",
+          "sequence": 3
+        },
+        {
+          "minute": 0,
+          "type": "STREAM_HEALTHY",
+          "sequence": 4
+        },
+        {
+          "minute": 0,
+          "type": "BLUETOOTH_REMEMBERED",
+          "sequence": 5
+        },
+        {
+          "minute": 0,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 6
+        },
+        {
+          "minute": 0,
+          "type": "LOCAL_OUTPUT_AVAILABLE",
+          "sequence": 7
+        },
+        {
+          "minute": 18,
+          "type": "WIFI_LOST",
+          "sequence": 8
+        },
+        {
+          "minute": 19,
+          "type": "WIFI_CONNECTED",
+          "sequence": 9
+        },
+        {
+          "minute": 19,
+          "type": "RESOLVER_READY",
+          "sequence": 10
+        },
+        {
+          "minute": 19,
+          "type": "STREAM_HEALTHY",
+          "sequence": 11
+        },
+        {
+          "minute": 29,
+          "type": "STREAM_STALLED",
+          "sequence": 12
+        },
+        {
+          "minute": 30,
+          "type": "STREAM_HEALTHY",
+          "sequence": 13
+        },
+        {
+          "minute": 36,
+          "type": "WIFI_LOST",
+          "sequence": 14
+        },
+        {
+          "minute": 37,
+          "type": "WIFI_CONNECTED",
+          "sequence": 15
+        },
+        {
+          "minute": 37,
+          "type": "RESOLVER_READY",
+          "sequence": 16
+        },
+        {
+          "minute": 37,
+          "type": "STREAM_HEALTHY",
+          "sequence": 17
+        },
+        {
+          "minute": 48,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 18
+        },
+        {
+          "minute": 49,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 19
+        },
+        {
+          "minute": 54,
+          "type": "WIFI_LOST",
+          "sequence": 20
+        },
+        {
+          "minute": 55,
+          "type": "WIFI_CONNECTED",
+          "sequence": 21
+        },
+        {
+          "minute": 55,
+          "type": "RESOLVER_READY",
+          "sequence": 22
+        },
+        {
+          "minute": 55,
+          "type": "STREAM_HEALTHY",
+          "sequence": 23
+        },
+        {
+          "minute": 58,
+          "type": "STREAM_STALLED",
+          "sequence": 24
+        },
+        {
+          "minute": 59,
+          "type": "STREAM_HEALTHY",
+          "sequence": 25
+        },
+        {
+          "minute": 72,
+          "type": "WIFI_LOST",
+          "sequence": 26
+        },
+        {
+          "minute": 73,
+          "type": "WIFI_CONNECTED",
+          "sequence": 27
+        },
+        {
+          "minute": 73,
+          "type": "RESOLVER_READY",
+          "sequence": 28
+        },
+        {
+          "minute": 73,
+          "type": "STREAM_HEALTHY",
+          "sequence": 29
+        },
+        {
+          "minute": 87,
+          "type": "STREAM_STALLED",
+          "sequence": 30
+        },
+        {
+          "minute": 88,
+          "type": "STREAM_HEALTHY",
+          "sequence": 31
+        },
+        {
+          "minute": 90,
+          "type": "WIFI_LOST",
+          "sequence": 32
+        },
+        {
+          "minute": 91,
+          "type": "WIFI_CONNECTED",
+          "sequence": 33
+        },
+        {
+          "minute": 91,
+          "type": "RESOLVER_READY",
+          "sequence": 34
+        },
+        {
+          "minute": 91,
+          "type": "STREAM_HEALTHY",
+          "sequence": 35
+        },
+        {
+          "minute": 96,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 36
+        },
+        {
+          "minute": 97,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 37
+        },
+        {
+          "minute": 108,
+          "type": "WIFI_LOST",
+          "sequence": 38
+        },
+        {
+          "minute": 109,
+          "type": "WIFI_CONNECTED",
+          "sequence": 39
+        },
+        {
+          "minute": 109,
+          "type": "RESOLVER_READY",
+          "sequence": 40
+        },
+        {
+          "minute": 109,
+          "type": "STREAM_HEALTHY",
+          "sequence": 41
+        },
+        {
+          "minute": 116,
+          "type": "STREAM_STALLED",
+          "sequence": 42
+        },
+        {
+          "minute": 117,
+          "type": "STREAM_HEALTHY",
+          "sequence": 43
+        },
+        {
+          "minute": 126,
+          "type": "WIFI_LOST",
+          "sequence": 44
+        },
+        {
+          "minute": 127,
+          "type": "WIFI_CONNECTED",
+          "sequence": 45
+        },
+        {
+          "minute": 127,
+          "type": "RESOLVER_READY",
+          "sequence": 46
+        },
+        {
+          "minute": 127,
+          "type": "STREAM_HEALTHY",
+          "sequence": 47
+        },
+        {
+          "minute": 140,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 48
+        },
+        {
+          "minute": 141,
+          "type": "CONFIG_READY",
+          "sequence": 49
+        },
+        {
+          "minute": 141,
+          "type": "WIFI_CONNECTED",
+          "sequence": 50
+        },
+        {
+          "minute": 141,
+          "type": "RESOLVER_READY",
+          "sequence": 51
+        },
+        {
+          "minute": 141,
+          "type": "STREAM_HEALTHY",
+          "sequence": 52
+        },
+        {
+          "minute": 141,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 53
+        },
+        {
+          "minute": 144,
+          "type": "WIFI_LOST",
+          "sequence": 54
+        },
+        {
+          "minute": 144,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 55
+        },
+        {
+          "minute": 145,
+          "type": "WIFI_CONNECTED",
+          "sequence": 56
+        },
+        {
+          "minute": 145,
+          "type": "RESOLVER_READY",
+          "sequence": 57
+        },
+        {
+          "minute": 145,
+          "type": "STREAM_HEALTHY",
+          "sequence": 58
+        },
+        {
+          "minute": 145,
+          "type": "STREAM_STALLED",
+          "sequence": 59
+        },
+        {
+          "minute": 145,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 60
+        },
+        {
+          "minute": 146,
+          "type": "STREAM_HEALTHY",
+          "sequence": 61
+        },
+        {
+          "minute": 162,
+          "type": "WIFI_LOST",
+          "sequence": 62
+        },
+        {
+          "minute": 163,
+          "type": "WIFI_CONNECTED",
+          "sequence": 63
+        },
+        {
+          "minute": 163,
+          "type": "RESOLVER_READY",
+          "sequence": 64
+        },
+        {
+          "minute": 163,
+          "type": "STREAM_HEALTHY",
+          "sequence": 65
+        },
+        {
+          "minute": 174,
+          "type": "STREAM_STALLED",
+          "sequence": 66
+        },
+        {
+          "minute": 175,
+          "type": "STREAM_HEALTHY",
+          "sequence": 67
+        },
+        {
+          "minute": 180,
+          "type": "WIFI_LOST",
+          "sequence": 68
+        },
+        {
+          "minute": 181,
+          "type": "WIFI_CONNECTED",
+          "sequence": 69
+        },
+        {
+          "minute": 181,
+          "type": "RESOLVER_READY",
+          "sequence": 70
+        },
+        {
+          "minute": 181,
+          "type": "STREAM_HEALTHY",
+          "sequence": 71
+        },
+        {
+          "minute": 192,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 72
+        },
+        {
+          "minute": 193,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 73
+        },
+        {
+          "minute": 198,
+          "type": "WIFI_LOST",
+          "sequence": 74
+        },
+        {
+          "minute": 199,
+          "type": "WIFI_CONNECTED",
+          "sequence": 75
+        },
+        {
+          "minute": 199,
+          "type": "RESOLVER_READY",
+          "sequence": 76
+        },
+        {
+          "minute": 199,
+          "type": "STREAM_HEALTHY",
+          "sequence": 77
+        },
+        {
+          "minute": 203,
+          "type": "STREAM_STALLED",
+          "sequence": 78
+        },
+        {
+          "minute": 204,
+          "type": "STREAM_HEALTHY",
+          "sequence": 79
+        },
+        {
+          "minute": 216,
+          "type": "WIFI_LOST",
+          "sequence": 80
+        },
+        {
+          "minute": 217,
+          "type": "WIFI_CONNECTED",
+          "sequence": 81
+        },
+        {
+          "minute": 217,
+          "type": "RESOLVER_READY",
+          "sequence": 82
+        },
+        {
+          "minute": 217,
+          "type": "STREAM_HEALTHY",
+          "sequence": 83
+        },
+        {
+          "minute": 232,
+          "type": "STREAM_STALLED",
+          "sequence": 84
+        },
+        {
+          "minute": 233,
+          "type": "STREAM_HEALTHY",
+          "sequence": 85
+        },
+        {
+          "minute": 234,
+          "type": "WIFI_LOST",
+          "sequence": 86
+        },
+        {
+          "minute": 235,
+          "type": "WIFI_CONNECTED",
+          "sequence": 87
+        },
+        {
+          "minute": 235,
+          "type": "RESOLVER_READY",
+          "sequence": 88
+        },
+        {
+          "minute": 235,
+          "type": "STREAM_HEALTHY",
+          "sequence": 89
+        },
+        {
+          "minute": 240,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 90
+        },
+        {
+          "minute": 241,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 91
+        },
+        {
+          "minute": 252,
+          "type": "WIFI_LOST",
+          "sequence": 92
+        },
+        {
+          "minute": 253,
+          "type": "WIFI_CONNECTED",
+          "sequence": 93
+        },
+        {
+          "minute": 253,
+          "type": "RESOLVER_READY",
+          "sequence": 94
+        },
+        {
+          "minute": 253,
+          "type": "STREAM_HEALTHY",
+          "sequence": 95
+        },
+        {
+          "minute": 261,
+          "type": "STREAM_STALLED",
+          "sequence": 96
+        },
+        {
+          "minute": 262,
+          "type": "STREAM_HEALTHY",
+          "sequence": 97
+        },
+        {
+          "minute": 270,
+          "type": "WIFI_LOST",
+          "sequence": 98
+        },
+        {
+          "minute": 271,
+          "type": "WIFI_CONNECTED",
+          "sequence": 99
+        },
+        {
+          "minute": 271,
+          "type": "RESOLVER_READY",
+          "sequence": 100
+        },
+        {
+          "minute": 271,
+          "type": "STREAM_HEALTHY",
+          "sequence": 101
+        },
+        {
+          "minute": 280,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 102
+        },
+        {
+          "minute": 281,
+          "type": "CONFIG_READY",
+          "sequence": 103
+        },
+        {
+          "minute": 281,
+          "type": "WIFI_CONNECTED",
+          "sequence": 104
+        },
+        {
+          "minute": 281,
+          "type": "RESOLVER_READY",
+          "sequence": 105
+        },
+        {
+          "minute": 281,
+          "type": "STREAM_HEALTHY",
+          "sequence": 106
+        },
+        {
+          "minute": 281,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 107
+        },
+        {
+          "minute": 288,
+          "type": "WIFI_LOST",
+          "sequence": 108
+        },
+        {
+          "minute": 288,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 109
+        },
+        {
+          "minute": 289,
+          "type": "WIFI_CONNECTED",
+          "sequence": 110
+        },
+        {
+          "minute": 289,
+          "type": "RESOLVER_READY",
+          "sequence": 111
+        },
+        {
+          "minute": 289,
+          "type": "STREAM_HEALTHY",
+          "sequence": 112
+        },
+        {
+          "minute": 289,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 113
+        },
+        {
+          "minute": 290,
+          "type": "STREAM_STALLED",
+          "sequence": 114
+        },
+        {
+          "minute": 291,
+          "type": "STREAM_HEALTHY",
+          "sequence": 115
+        },
+        {
+          "minute": 306,
+          "type": "WIFI_LOST",
+          "sequence": 116
+        },
+        {
+          "minute": 307,
+          "type": "WIFI_CONNECTED",
+          "sequence": 117
+        },
+        {
+          "minute": 307,
+          "type": "RESOLVER_READY",
+          "sequence": 118
+        },
+        {
+          "minute": 307,
+          "type": "STREAM_HEALTHY",
+          "sequence": 119
+        },
+        {
+          "minute": 319,
+          "type": "STREAM_STALLED",
+          "sequence": 120
+        },
+        {
+          "minute": 320,
+          "type": "STREAM_HEALTHY",
+          "sequence": 121
+        },
+        {
+          "minute": 324,
+          "type": "WIFI_LOST",
+          "sequence": 122
+        },
+        {
+          "minute": 325,
+          "type": "WIFI_CONNECTED",
+          "sequence": 123
+        },
+        {
+          "minute": 325,
+          "type": "RESOLVER_READY",
+          "sequence": 124
+        },
+        {
+          "minute": 325,
+          "type": "STREAM_HEALTHY",
+          "sequence": 125
+        },
+        {
+          "minute": 336,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 126
+        },
+        {
+          "minute": 337,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 127
+        },
+        {
+          "minute": 342,
+          "type": "WIFI_LOST",
+          "sequence": 128
+        },
+        {
+          "minute": 343,
+          "type": "WIFI_CONNECTED",
+          "sequence": 129
+        },
+        {
+          "minute": 343,
+          "type": "RESOLVER_READY",
+          "sequence": 130
+        },
+        {
+          "minute": 343,
+          "type": "STREAM_HEALTHY",
+          "sequence": 131
+        },
+        {
+          "minute": 348,
+          "type": "STREAM_STALLED",
+          "sequence": 132
+        },
+        {
+          "minute": 349,
+          "type": "STREAM_HEALTHY",
+          "sequence": 133
+        },
+        {
+          "minute": 360,
+          "type": "WIFI_LOST",
+          "sequence": 134
+        },
+        {
+          "minute": 361,
+          "type": "WIFI_CONNECTED",
+          "sequence": 135
+        },
+        {
+          "minute": 361,
+          "type": "RESOLVER_READY",
+          "sequence": 136
+        },
+        {
+          "minute": 361,
+          "type": "STREAM_HEALTHY",
+          "sequence": 137
+        },
+        {
+          "minute": 377,
+          "type": "STREAM_STALLED",
+          "sequence": 138
+        },
+        {
+          "minute": 378,
+          "type": "WIFI_LOST",
+          "sequence": 139
+        },
+        {
+          "minute": 378,
+          "type": "STREAM_HEALTHY",
+          "sequence": 140
+        },
+        {
+          "minute": 379,
+          "type": "WIFI_CONNECTED",
+          "sequence": 141
+        },
+        {
+          "minute": 379,
+          "type": "RESOLVER_READY",
+          "sequence": 142
+        },
+        {
+          "minute": 379,
+          "type": "STREAM_HEALTHY",
+          "sequence": 143
+        },
+        {
+          "minute": 384,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 144
+        },
+        {
+          "minute": 385,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 145
+        },
+        {
+          "minute": 396,
+          "type": "WIFI_LOST",
+          "sequence": 146
+        },
+        {
+          "minute": 397,
+          "type": "WIFI_CONNECTED",
+          "sequence": 147
+        },
+        {
+          "minute": 397,
+          "type": "RESOLVER_READY",
+          "sequence": 148
+        },
+        {
+          "minute": 397,
+          "type": "STREAM_HEALTHY",
+          "sequence": 149
+        },
+        {
+          "minute": 406,
+          "type": "STREAM_STALLED",
+          "sequence": 150
+        },
+        {
+          "minute": 407,
+          "type": "STREAM_HEALTHY",
+          "sequence": 151
+        },
+        {
+          "minute": 414,
+          "type": "WIFI_LOST",
+          "sequence": 152
+        },
+        {
+          "minute": 415,
+          "type": "WIFI_CONNECTED",
+          "sequence": 153
+        },
+        {
+          "minute": 415,
+          "type": "RESOLVER_READY",
+          "sequence": 154
+        },
+        {
+          "minute": 415,
+          "type": "STREAM_HEALTHY",
+          "sequence": 155
+        },
+        {
+          "minute": 420,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 156
+        },
+        {
+          "minute": 421,
+          "type": "CONFIG_READY",
+          "sequence": 157
+        },
+        {
+          "minute": 421,
+          "type": "WIFI_CONNECTED",
+          "sequence": 158
+        },
+        {
+          "minute": 421,
+          "type": "RESOLVER_READY",
+          "sequence": 159
+        },
+        {
+          "minute": 421,
+          "type": "STREAM_HEALTHY",
+          "sequence": 160
+        },
+        {
+          "minute": 421,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 161
+        },
+        {
+          "minute": 432,
+          "type": "WIFI_LOST",
+          "sequence": 162
+        },
+        {
+          "minute": 432,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 163
+        },
+        {
+          "minute": 433,
+          "type": "WIFI_CONNECTED",
+          "sequence": 164
+        },
+        {
+          "minute": 433,
+          "type": "RESOLVER_READY",
+          "sequence": 165
+        },
+        {
+          "minute": 433,
+          "type": "STREAM_HEALTHY",
+          "sequence": 166
+        },
+        {
+          "minute": 433,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 167
+        },
+        {
+          "minute": 435,
+          "type": "STREAM_STALLED",
+          "sequence": 168
+        },
+        {
+          "minute": 436,
+          "type": "STREAM_HEALTHY",
+          "sequence": 169
+        },
+        {
+          "minute": 450,
+          "type": "WIFI_LOST",
+          "sequence": 170
+        },
+        {
+          "minute": 451,
+          "type": "WIFI_CONNECTED",
+          "sequence": 171
+        },
+        {
+          "minute": 451,
+          "type": "RESOLVER_READY",
+          "sequence": 172
+        },
+        {
+          "minute": 451,
+          "type": "STREAM_HEALTHY",
+          "sequence": 173
+        },
+        {
+          "minute": 464,
+          "type": "STREAM_STALLED",
+          "sequence": 174
+        },
+        {
+          "minute": 465,
+          "type": "STREAM_HEALTHY",
+          "sequence": 175
+        },
+        {
+          "minute": 468,
+          "type": "WIFI_LOST",
+          "sequence": 176
+        },
+        {
+          "minute": 469,
+          "type": "WIFI_CONNECTED",
+          "sequence": 177
+        },
+        {
+          "minute": 469,
+          "type": "RESOLVER_READY",
+          "sequence": 178
+        },
+        {
+          "minute": 469,
+          "type": "STREAM_HEALTHY",
+          "sequence": 179
+        }
+      ],
+      "expected": {
+        "eventCount": 179,
+        "finalState": "PLAYING",
+        "finalOutput": "BT",
+        "recoveries": 44,
+        "networkRetries": 29,
+        "streamRetries": 16,
+        "bluetoothRetries": 9,
+        "powerInterruptions": 3,
+        "maximumQueueDepth": 7,
+        "diagnosticsStored": 32,
+        "diagnosticOverwrites": 200,
+        "queueOverflows": 0,
+        "timerOverflows": 0,
+        "stateHash": "e2192617a5fc1e32"
+      }
+    },
+    {
+      "id": "twenty-four-hour-safe-mode",
+      "durationMinutes": 1440,
+      "seed": 2703024132,
+      "corruptAtMinute": 1080,
+      "events": [
+        {
+          "minute": 0,
+          "type": "CONFIG_READY",
+          "sequence": 1
+        },
+        {
+          "minute": 0,
+          "type": "WIFI_CONNECTED",
+          "sequence": 2
+        },
+        {
+          "minute": 0,
+          "type": "RESOLVER_READY",
+          "sequence": 3
+        },
+        {
+          "minute": 0,
+          "type": "STREAM_HEALTHY",
+          "sequence": 4
+        },
+        {
+          "minute": 0,
+          "type": "BLUETOOTH_REMEMBERED",
+          "sequence": 5
+        },
+        {
+          "minute": 0,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 6
+        },
+        {
+          "minute": 0,
+          "type": "LOCAL_OUTPUT_AVAILABLE",
+          "sequence": 7
+        },
+        {
+          "minute": 19,
+          "type": "WIFI_LOST",
+          "sequence": 8
+        },
+        {
+          "minute": 20,
+          "type": "WIFI_CONNECTED",
+          "sequence": 9
+        },
+        {
+          "minute": 20,
+          "type": "RESOLVER_READY",
+          "sequence": 10
+        },
+        {
+          "minute": 20,
+          "type": "STREAM_HEALTHY",
+          "sequence": 11
+        },
+        {
+          "minute": 35,
+          "type": "STREAM_STALLED",
+          "sequence": 12
+        },
+        {
+          "minute": 36,
+          "type": "STREAM_HEALTHY",
+          "sequence": 13
+        },
+        {
+          "minute": 38,
+          "type": "WIFI_LOST",
+          "sequence": 14
+        },
+        {
+          "minute": 39,
+          "type": "WIFI_CONNECTED",
+          "sequence": 15
+        },
+        {
+          "minute": 39,
+          "type": "RESOLVER_READY",
+          "sequence": 16
+        },
+        {
+          "minute": 39,
+          "type": "STREAM_HEALTHY",
+          "sequence": 17
+        },
+        {
+          "minute": 47,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 18
+        },
+        {
+          "minute": 48,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 19
+        },
+        {
+          "minute": 57,
+          "type": "WIFI_LOST",
+          "sequence": 20
+        },
+        {
+          "minute": 58,
+          "type": "WIFI_CONNECTED",
+          "sequence": 21
+        },
+        {
+          "minute": 58,
+          "type": "RESOLVER_READY",
+          "sequence": 22
+        },
+        {
+          "minute": 58,
+          "type": "STREAM_HEALTHY",
+          "sequence": 23
+        },
+        {
+          "minute": 70,
+          "type": "STREAM_STALLED",
+          "sequence": 24
+        },
+        {
+          "minute": 71,
+          "type": "STREAM_HEALTHY",
+          "sequence": 25
+        },
+        {
+          "minute": 76,
+          "type": "WIFI_LOST",
+          "sequence": 26
+        },
+        {
+          "minute": 77,
+          "type": "WIFI_CONNECTED",
+          "sequence": 27
+        },
+        {
+          "minute": 77,
+          "type": "RESOLVER_READY",
+          "sequence": 28
+        },
+        {
+          "minute": 77,
+          "type": "STREAM_HEALTHY",
+          "sequence": 29
+        },
+        {
+          "minute": 94,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 30
+        },
+        {
+          "minute": 95,
+          "type": "WIFI_LOST",
+          "sequence": 31
+        },
+        {
+          "minute": 95,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 32
+        },
+        {
+          "minute": 96,
+          "type": "WIFI_CONNECTED",
+          "sequence": 33
+        },
+        {
+          "minute": 96,
+          "type": "RESOLVER_READY",
+          "sequence": 34
+        },
+        {
+          "minute": 96,
+          "type": "STREAM_HEALTHY",
+          "sequence": 35
+        },
+        {
+          "minute": 105,
+          "type": "STREAM_STALLED",
+          "sequence": 36
+        },
+        {
+          "minute": 106,
+          "type": "STREAM_HEALTHY",
+          "sequence": 37
+        },
+        {
+          "minute": 114,
+          "type": "WIFI_LOST",
+          "sequence": 38
+        },
+        {
+          "minute": 115,
+          "type": "WIFI_CONNECTED",
+          "sequence": 39
+        },
+        {
+          "minute": 115,
+          "type": "RESOLVER_READY",
+          "sequence": 40
+        },
+        {
+          "minute": 115,
+          "type": "STREAM_HEALTHY",
+          "sequence": 41
+        },
+        {
+          "minute": 133,
+          "type": "WIFI_LOST",
+          "sequence": 42
+        },
+        {
+          "minute": 134,
+          "type": "WIFI_CONNECTED",
+          "sequence": 43
+        },
+        {
+          "minute": 134,
+          "type": "RESOLVER_READY",
+          "sequence": 44
+        },
+        {
+          "minute": 134,
+          "type": "STREAM_HEALTHY",
+          "sequence": 45
+        },
+        {
+          "minute": 135,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 46
+        },
+        {
+          "minute": 136,
+          "type": "CONFIG_READY",
+          "sequence": 47
+        },
+        {
+          "minute": 136,
+          "type": "WIFI_CONNECTED",
+          "sequence": 48
+        },
+        {
+          "minute": 136,
+          "type": "RESOLVER_READY",
+          "sequence": 49
+        },
+        {
+          "minute": 136,
+          "type": "STREAM_HEALTHY",
+          "sequence": 50
+        },
+        {
+          "minute": 136,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 51
+        },
+        {
+          "minute": 140,
+          "type": "STREAM_STALLED",
+          "sequence": 52
+        },
+        {
+          "minute": 141,
+          "type": "STREAM_HEALTHY",
+          "sequence": 53
+        },
+        {
+          "minute": 141,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 54
+        },
+        {
+          "minute": 142,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 55
+        },
+        {
+          "minute": 152,
+          "type": "WIFI_LOST",
+          "sequence": 56
+        },
+        {
+          "minute": 153,
+          "type": "WIFI_CONNECTED",
+          "sequence": 57
+        },
+        {
+          "minute": 153,
+          "type": "RESOLVER_READY",
+          "sequence": 58
+        },
+        {
+          "minute": 153,
+          "type": "STREAM_HEALTHY",
+          "sequence": 59
+        },
+        {
+          "minute": 171,
+          "type": "WIFI_LOST",
+          "sequence": 60
+        },
+        {
+          "minute": 172,
+          "type": "WIFI_CONNECTED",
+          "sequence": 61
+        },
+        {
+          "minute": 172,
+          "type": "RESOLVER_READY",
+          "sequence": 62
+        },
+        {
+          "minute": 172,
+          "type": "STREAM_HEALTHY",
+          "sequence": 63
+        },
+        {
+          "minute": 175,
+          "type": "STREAM_STALLED",
+          "sequence": 64
+        },
+        {
+          "minute": 176,
+          "type": "STREAM_HEALTHY",
+          "sequence": 65
+        },
+        {
+          "minute": 188,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 66
+        },
+        {
+          "minute": 189,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 67
+        },
+        {
+          "minute": 190,
+          "type": "WIFI_LOST",
+          "sequence": 68
+        },
+        {
+          "minute": 191,
+          "type": "WIFI_CONNECTED",
+          "sequence": 69
+        },
+        {
+          "minute": 191,
+          "type": "RESOLVER_READY",
+          "sequence": 70
+        },
+        {
+          "minute": 191,
+          "type": "STREAM_HEALTHY",
+          "sequence": 71
+        },
+        {
+          "minute": 209,
+          "type": "WIFI_LOST",
+          "sequence": 72
+        },
+        {
+          "minute": 210,
+          "type": "WIFI_CONNECTED",
+          "sequence": 73
+        },
+        {
+          "minute": 210,
+          "type": "RESOLVER_READY",
+          "sequence": 74
+        },
+        {
+          "minute": 210,
+          "type": "STREAM_HEALTHY",
+          "sequence": 75
+        },
+        {
+          "minute": 210,
+          "type": "STREAM_STALLED",
+          "sequence": 76
+        },
+        {
+          "minute": 211,
+          "type": "STREAM_HEALTHY",
+          "sequence": 77
+        },
+        {
+          "minute": 228,
+          "type": "WIFI_LOST",
+          "sequence": 78
+        },
+        {
+          "minute": 229,
+          "type": "WIFI_CONNECTED",
+          "sequence": 79
+        },
+        {
+          "minute": 229,
+          "type": "RESOLVER_READY",
+          "sequence": 80
+        },
+        {
+          "minute": 229,
+          "type": "STREAM_HEALTHY",
+          "sequence": 81
+        },
+        {
+          "minute": 235,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 82
+        },
+        {
+          "minute": 236,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 83
+        },
+        {
+          "minute": 245,
+          "type": "STREAM_STALLED",
+          "sequence": 84
+        },
+        {
+          "minute": 246,
+          "type": "STREAM_HEALTHY",
+          "sequence": 85
+        },
+        {
+          "minute": 247,
+          "type": "WIFI_LOST",
+          "sequence": 86
+        },
+        {
+          "minute": 248,
+          "type": "WIFI_CONNECTED",
+          "sequence": 87
+        },
+        {
+          "minute": 248,
+          "type": "RESOLVER_READY",
+          "sequence": 88
+        },
+        {
+          "minute": 248,
+          "type": "STREAM_HEALTHY",
+          "sequence": 89
+        },
+        {
+          "minute": 266,
+          "type": "WIFI_LOST",
+          "sequence": 90
+        },
+        {
+          "minute": 267,
+          "type": "WIFI_CONNECTED",
+          "sequence": 91
+        },
+        {
+          "minute": 267,
+          "type": "RESOLVER_READY",
+          "sequence": 92
+        },
+        {
+          "minute": 267,
+          "type": "STREAM_HEALTHY",
+          "sequence": 93
+        },
+        {
+          "minute": 270,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 94
+        },
+        {
+          "minute": 271,
+          "type": "CONFIG_READY",
+          "sequence": 95
+        },
+        {
+          "minute": 271,
+          "type": "WIFI_CONNECTED",
+          "sequence": 96
+        },
+        {
+          "minute": 271,
+          "type": "RESOLVER_READY",
+          "sequence": 97
+        },
+        {
+          "minute": 271,
+          "type": "STREAM_HEALTHY",
+          "sequence": 98
+        },
+        {
+          "minute": 271,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 99
+        },
+        {
+          "minute": 280,
+          "type": "STREAM_STALLED",
+          "sequence": 100
+        },
+        {
+          "minute": 281,
+          "type": "STREAM_HEALTHY",
+          "sequence": 101
+        },
+        {
+          "minute": 282,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 102
+        },
+        {
+          "minute": 283,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 103
+        },
+        {
+          "minute": 285,
+          "type": "WIFI_LOST",
+          "sequence": 104
+        },
+        {
+          "minute": 286,
+          "type": "WIFI_CONNECTED",
+          "sequence": 105
+        },
+        {
+          "minute": 286,
+          "type": "RESOLVER_READY",
+          "sequence": 106
+        },
+        {
+          "minute": 286,
+          "type": "STREAM_HEALTHY",
+          "sequence": 107
+        },
+        {
+          "minute": 304,
+          "type": "WIFI_LOST",
+          "sequence": 108
+        },
+        {
+          "minute": 305,
+          "type": "WIFI_CONNECTED",
+          "sequence": 109
+        },
+        {
+          "minute": 305,
+          "type": "RESOLVER_READY",
+          "sequence": 110
+        },
+        {
+          "minute": 305,
+          "type": "STREAM_HEALTHY",
+          "sequence": 111
+        },
+        {
+          "minute": 315,
+          "type": "STREAM_STALLED",
+          "sequence": 112
+        },
+        {
+          "minute": 316,
+          "type": "STREAM_HEALTHY",
+          "sequence": 113
+        },
+        {
+          "minute": 323,
+          "type": "WIFI_LOST",
+          "sequence": 114
+        },
+        {
+          "minute": 324,
+          "type": "WIFI_CONNECTED",
+          "sequence": 115
+        },
+        {
+          "minute": 324,
+          "type": "RESOLVER_READY",
+          "sequence": 116
+        },
+        {
+          "minute": 324,
+          "type": "STREAM_HEALTHY",
+          "sequence": 117
+        },
+        {
+          "minute": 329,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 118
+        },
+        {
+          "minute": 330,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 119
+        },
+        {
+          "minute": 342,
+          "type": "WIFI_LOST",
+          "sequence": 120
+        },
+        {
+          "minute": 343,
+          "type": "WIFI_CONNECTED",
+          "sequence": 121
+        },
+        {
+          "minute": 343,
+          "type": "RESOLVER_READY",
+          "sequence": 122
+        },
+        {
+          "minute": 343,
+          "type": "STREAM_HEALTHY",
+          "sequence": 123
+        },
+        {
+          "minute": 350,
+          "type": "STREAM_STALLED",
+          "sequence": 124
+        },
+        {
+          "minute": 351,
+          "type": "STREAM_HEALTHY",
+          "sequence": 125
+        },
+        {
+          "minute": 361,
+          "type": "WIFI_LOST",
+          "sequence": 126
+        },
+        {
+          "minute": 362,
+          "type": "WIFI_CONNECTED",
+          "sequence": 127
+        },
+        {
+          "minute": 362,
+          "type": "RESOLVER_READY",
+          "sequence": 128
+        },
+        {
+          "minute": 362,
+          "type": "STREAM_HEALTHY",
+          "sequence": 129
+        },
+        {
+          "minute": 376,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 130
+        },
+        {
+          "minute": 377,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 131
+        },
+        {
+          "minute": 380,
+          "type": "WIFI_LOST",
+          "sequence": 132
+        },
+        {
+          "minute": 381,
+          "type": "WIFI_CONNECTED",
+          "sequence": 133
+        },
+        {
+          "minute": 381,
+          "type": "RESOLVER_READY",
+          "sequence": 134
+        },
+        {
+          "minute": 381,
+          "type": "STREAM_HEALTHY",
+          "sequence": 135
+        },
+        {
+          "minute": 385,
+          "type": "STREAM_STALLED",
+          "sequence": 136
+        },
+        {
+          "minute": 386,
+          "type": "STREAM_HEALTHY",
+          "sequence": 137
+        },
+        {
+          "minute": 399,
+          "type": "WIFI_LOST",
+          "sequence": 138
+        },
+        {
+          "minute": 400,
+          "type": "WIFI_CONNECTED",
+          "sequence": 139
+        },
+        {
+          "minute": 400,
+          "type": "RESOLVER_READY",
+          "sequence": 140
+        },
+        {
+          "minute": 400,
+          "type": "STREAM_HEALTHY",
+          "sequence": 141
+        },
+        {
+          "minute": 405,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 142
+        },
+        {
+          "minute": 406,
+          "type": "CONFIG_READY",
+          "sequence": 143
+        },
+        {
+          "minute": 406,
+          "type": "WIFI_CONNECTED",
+          "sequence": 144
+        },
+        {
+          "minute": 406,
+          "type": "RESOLVER_READY",
+          "sequence": 145
+        },
+        {
+          "minute": 406,
+          "type": "STREAM_HEALTHY",
+          "sequence": 146
+        },
+        {
+          "minute": 406,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 147
+        },
+        {
+          "minute": 418,
+          "type": "WIFI_LOST",
+          "sequence": 148
+        },
+        {
+          "minute": 419,
+          "type": "WIFI_CONNECTED",
+          "sequence": 149
+        },
+        {
+          "minute": 419,
+          "type": "RESOLVER_READY",
+          "sequence": 150
+        },
+        {
+          "minute": 419,
+          "type": "STREAM_HEALTHY",
+          "sequence": 151
+        },
+        {
+          "minute": 420,
+          "type": "STREAM_STALLED",
+          "sequence": 152
+        },
+        {
+          "minute": 421,
+          "type": "STREAM_HEALTHY",
+          "sequence": 153
+        },
+        {
+          "minute": 423,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 154
+        },
+        {
+          "minute": 424,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 155
+        },
+        {
+          "minute": 437,
+          "type": "WIFI_LOST",
+          "sequence": 156
+        },
+        {
+          "minute": 438,
+          "type": "WIFI_CONNECTED",
+          "sequence": 157
+        },
+        {
+          "minute": 438,
+          "type": "RESOLVER_READY",
+          "sequence": 158
+        },
+        {
+          "minute": 438,
+          "type": "STREAM_HEALTHY",
+          "sequence": 159
+        },
+        {
+          "minute": 455,
+          "type": "STREAM_STALLED",
+          "sequence": 160
+        },
+        {
+          "minute": 456,
+          "type": "WIFI_LOST",
+          "sequence": 161
+        },
+        {
+          "minute": 456,
+          "type": "STREAM_HEALTHY",
+          "sequence": 162
+        },
+        {
+          "minute": 457,
+          "type": "WIFI_CONNECTED",
+          "sequence": 163
+        },
+        {
+          "minute": 457,
+          "type": "RESOLVER_READY",
+          "sequence": 164
+        },
+        {
+          "minute": 457,
+          "type": "STREAM_HEALTHY",
+          "sequence": 165
+        },
+        {
+          "minute": 470,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 166
+        },
+        {
+          "minute": 471,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 167
+        },
+        {
+          "minute": 475,
+          "type": "WIFI_LOST",
+          "sequence": 168
+        },
+        {
+          "minute": 476,
+          "type": "WIFI_CONNECTED",
+          "sequence": 169
+        },
+        {
+          "minute": 476,
+          "type": "RESOLVER_READY",
+          "sequence": 170
+        },
+        {
+          "minute": 476,
+          "type": "STREAM_HEALTHY",
+          "sequence": 171
+        },
+        {
+          "minute": 490,
+          "type": "STREAM_STALLED",
+          "sequence": 172
+        },
+        {
+          "minute": 491,
+          "type": "STREAM_HEALTHY",
+          "sequence": 173
+        },
+        {
+          "minute": 494,
+          "type": "WIFI_LOST",
+          "sequence": 174
+        },
+        {
+          "minute": 495,
+          "type": "WIFI_CONNECTED",
+          "sequence": 175
+        },
+        {
+          "minute": 495,
+          "type": "RESOLVER_READY",
+          "sequence": 176
+        },
+        {
+          "minute": 495,
+          "type": "STREAM_HEALTHY",
+          "sequence": 177
+        },
+        {
+          "minute": 513,
+          "type": "WIFI_LOST",
+          "sequence": 178
+        },
+        {
+          "minute": 514,
+          "type": "WIFI_CONNECTED",
+          "sequence": 179
+        },
+        {
+          "minute": 514,
+          "type": "RESOLVER_READY",
+          "sequence": 180
+        },
+        {
+          "minute": 514,
+          "type": "STREAM_HEALTHY",
+          "sequence": 181
+        },
+        {
+          "minute": 517,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 182
+        },
+        {
+          "minute": 518,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 183
+        },
+        {
+          "minute": 525,
+          "type": "STREAM_STALLED",
+          "sequence": 184
+        },
+        {
+          "minute": 526,
+          "type": "STREAM_HEALTHY",
+          "sequence": 185
+        },
+        {
+          "minute": 532,
+          "type": "WIFI_LOST",
+          "sequence": 186
+        },
+        {
+          "minute": 533,
+          "type": "WIFI_CONNECTED",
+          "sequence": 187
+        },
+        {
+          "minute": 533,
+          "type": "RESOLVER_READY",
+          "sequence": 188
+        },
+        {
+          "minute": 533,
+          "type": "STREAM_HEALTHY",
+          "sequence": 189
+        },
+        {
+          "minute": 540,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 190
+        },
+        {
+          "minute": 541,
+          "type": "CONFIG_READY",
+          "sequence": 191
+        },
+        {
+          "minute": 541,
+          "type": "WIFI_CONNECTED",
+          "sequence": 192
+        },
+        {
+          "minute": 541,
+          "type": "RESOLVER_READY",
+          "sequence": 193
+        },
+        {
+          "minute": 541,
+          "type": "STREAM_HEALTHY",
+          "sequence": 194
+        },
+        {
+          "minute": 541,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 195
+        },
+        {
+          "minute": 551,
+          "type": "WIFI_LOST",
+          "sequence": 196
+        },
+        {
+          "minute": 552,
+          "type": "WIFI_CONNECTED",
+          "sequence": 197
+        },
+        {
+          "minute": 552,
+          "type": "RESOLVER_READY",
+          "sequence": 198
+        },
+        {
+          "minute": 552,
+          "type": "STREAM_HEALTHY",
+          "sequence": 199
+        },
+        {
+          "minute": 560,
+          "type": "STREAM_STALLED",
+          "sequence": 200
+        },
+        {
+          "minute": 561,
+          "type": "STREAM_HEALTHY",
+          "sequence": 201
+        },
+        {
+          "minute": 564,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 202
+        },
+        {
+          "minute": 565,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 203
+        },
+        {
+          "minute": 570,
+          "type": "WIFI_LOST",
+          "sequence": 204
+        },
+        {
+          "minute": 571,
+          "type": "WIFI_CONNECTED",
+          "sequence": 205
+        },
+        {
+          "minute": 571,
+          "type": "RESOLVER_READY",
+          "sequence": 206
+        },
+        {
+          "minute": 571,
+          "type": "STREAM_HEALTHY",
+          "sequence": 207
+        },
+        {
+          "minute": 589,
+          "type": "WIFI_LOST",
+          "sequence": 208
+        },
+        {
+          "minute": 590,
+          "type": "WIFI_CONNECTED",
+          "sequence": 209
+        },
+        {
+          "minute": 590,
+          "type": "RESOLVER_READY",
+          "sequence": 210
+        },
+        {
+          "minute": 590,
+          "type": "STREAM_HEALTHY",
+          "sequence": 211
+        },
+        {
+          "minute": 595,
+          "type": "STREAM_STALLED",
+          "sequence": 212
+        },
+        {
+          "minute": 596,
+          "type": "STREAM_HEALTHY",
+          "sequence": 213
+        },
+        {
+          "minute": 608,
+          "type": "WIFI_LOST",
+          "sequence": 214
+        },
+        {
+          "minute": 609,
+          "type": "WIFI_CONNECTED",
+          "sequence": 215
+        },
+        {
+          "minute": 609,
+          "type": "RESOLVER_READY",
+          "sequence": 216
+        },
+        {
+          "minute": 609,
+          "type": "STREAM_HEALTHY",
+          "sequence": 217
+        },
+        {
+          "minute": 611,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 218
+        },
+        {
+          "minute": 612,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 219
+        },
+        {
+          "minute": 627,
+          "type": "WIFI_LOST",
+          "sequence": 220
+        },
+        {
+          "minute": 628,
+          "type": "WIFI_CONNECTED",
+          "sequence": 221
+        },
+        {
+          "minute": 628,
+          "type": "RESOLVER_READY",
+          "sequence": 222
+        },
+        {
+          "minute": 628,
+          "type": "STREAM_HEALTHY",
+          "sequence": 223
+        },
+        {
+          "minute": 630,
+          "type": "STREAM_STALLED",
+          "sequence": 224
+        },
+        {
+          "minute": 631,
+          "type": "STREAM_HEALTHY",
+          "sequence": 225
+        },
+        {
+          "minute": 646,
+          "type": "WIFI_LOST",
+          "sequence": 226
+        },
+        {
+          "minute": 647,
+          "type": "WIFI_CONNECTED",
+          "sequence": 227
+        },
+        {
+          "minute": 647,
+          "type": "RESOLVER_READY",
+          "sequence": 228
+        },
+        {
+          "minute": 647,
+          "type": "STREAM_HEALTHY",
+          "sequence": 229
+        },
+        {
+          "minute": 658,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 230
+        },
+        {
+          "minute": 659,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 231
+        },
+        {
+          "minute": 665,
+          "type": "WIFI_LOST",
+          "sequence": 232
+        },
+        {
+          "minute": 665,
+          "type": "STREAM_STALLED",
+          "sequence": 233
+        },
+        {
+          "minute": 666,
+          "type": "WIFI_CONNECTED",
+          "sequence": 234
+        },
+        {
+          "minute": 666,
+          "type": "RESOLVER_READY",
+          "sequence": 235
+        },
+        {
+          "minute": 666,
+          "type": "STREAM_HEALTHY",
+          "sequence": 236
+        },
+        {
+          "minute": 666,
+          "type": "STREAM_HEALTHY",
+          "sequence": 237
+        },
+        {
+          "minute": 675,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 238
+        },
+        {
+          "minute": 676,
+          "type": "CONFIG_READY",
+          "sequence": 239
+        },
+        {
+          "minute": 676,
+          "type": "WIFI_CONNECTED",
+          "sequence": 240
+        },
+        {
+          "minute": 676,
+          "type": "RESOLVER_READY",
+          "sequence": 241
+        },
+        {
+          "minute": 676,
+          "type": "STREAM_HEALTHY",
+          "sequence": 242
+        },
+        {
+          "minute": 676,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 243
+        },
+        {
+          "minute": 684,
+          "type": "WIFI_LOST",
+          "sequence": 244
+        },
+        {
+          "minute": 685,
+          "type": "WIFI_CONNECTED",
+          "sequence": 245
+        },
+        {
+          "minute": 685,
+          "type": "RESOLVER_READY",
+          "sequence": 246
+        },
+        {
+          "minute": 685,
+          "type": "STREAM_HEALTHY",
+          "sequence": 247
+        },
+        {
+          "minute": 700,
+          "type": "STREAM_STALLED",
+          "sequence": 248
+        },
+        {
+          "minute": 701,
+          "type": "STREAM_HEALTHY",
+          "sequence": 249
+        },
+        {
+          "minute": 703,
+          "type": "WIFI_LOST",
+          "sequence": 250
+        },
+        {
+          "minute": 704,
+          "type": "WIFI_CONNECTED",
+          "sequence": 251
+        },
+        {
+          "minute": 704,
+          "type": "RESOLVER_READY",
+          "sequence": 252
+        },
+        {
+          "minute": 704,
+          "type": "STREAM_HEALTHY",
+          "sequence": 253
+        },
+        {
+          "minute": 705,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 254
+        },
+        {
+          "minute": 706,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 255
+        },
+        {
+          "minute": 722,
+          "type": "WIFI_LOST",
+          "sequence": 256
+        },
+        {
+          "minute": 723,
+          "type": "WIFI_CONNECTED",
+          "sequence": 257
+        },
+        {
+          "minute": 723,
+          "type": "RESOLVER_READY",
+          "sequence": 258
+        },
+        {
+          "minute": 723,
+          "type": "STREAM_HEALTHY",
+          "sequence": 259
+        },
+        {
+          "minute": 735,
+          "type": "STREAM_STALLED",
+          "sequence": 260
+        },
+        {
+          "minute": 736,
+          "type": "STREAM_HEALTHY",
+          "sequence": 261
+        },
+        {
+          "minute": 741,
+          "type": "WIFI_LOST",
+          "sequence": 262
+        },
+        {
+          "minute": 742,
+          "type": "WIFI_CONNECTED",
+          "sequence": 263
+        },
+        {
+          "minute": 742,
+          "type": "RESOLVER_READY",
+          "sequence": 264
+        },
+        {
+          "minute": 742,
+          "type": "STREAM_HEALTHY",
+          "sequence": 265
+        },
+        {
+          "minute": 752,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 266
+        },
+        {
+          "minute": 753,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 267
+        },
+        {
+          "minute": 760,
+          "type": "WIFI_LOST",
+          "sequence": 268
+        },
+        {
+          "minute": 761,
+          "type": "WIFI_CONNECTED",
+          "sequence": 269
+        },
+        {
+          "minute": 761,
+          "type": "RESOLVER_READY",
+          "sequence": 270
+        },
+        {
+          "minute": 761,
+          "type": "STREAM_HEALTHY",
+          "sequence": 271
+        },
+        {
+          "minute": 770,
+          "type": "STREAM_STALLED",
+          "sequence": 272
+        },
+        {
+          "minute": 771,
+          "type": "STREAM_HEALTHY",
+          "sequence": 273
+        },
+        {
+          "minute": 779,
+          "type": "WIFI_LOST",
+          "sequence": 274
+        },
+        {
+          "minute": 780,
+          "type": "WIFI_CONNECTED",
+          "sequence": 275
+        },
+        {
+          "minute": 780,
+          "type": "RESOLVER_READY",
+          "sequence": 276
+        },
+        {
+          "minute": 780,
+          "type": "STREAM_HEALTHY",
+          "sequence": 277
+        },
+        {
+          "minute": 798,
+          "type": "WIFI_LOST",
+          "sequence": 278
+        },
+        {
+          "minute": 799,
+          "type": "WIFI_CONNECTED",
+          "sequence": 279
+        },
+        {
+          "minute": 799,
+          "type": "RESOLVER_READY",
+          "sequence": 280
+        },
+        {
+          "minute": 799,
+          "type": "STREAM_HEALTHY",
+          "sequence": 281
+        },
+        {
+          "minute": 799,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 282
+        },
+        {
+          "minute": 800,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 283
+        },
+        {
+          "minute": 805,
+          "type": "STREAM_STALLED",
+          "sequence": 284
+        },
+        {
+          "minute": 806,
+          "type": "STREAM_HEALTHY",
+          "sequence": 285
+        },
+        {
+          "minute": 810,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 286
+        },
+        {
+          "minute": 811,
+          "type": "CONFIG_READY",
+          "sequence": 287
+        },
+        {
+          "minute": 811,
+          "type": "WIFI_CONNECTED",
+          "sequence": 288
+        },
+        {
+          "minute": 811,
+          "type": "RESOLVER_READY",
+          "sequence": 289
+        },
+        {
+          "minute": 811,
+          "type": "STREAM_HEALTHY",
+          "sequence": 290
+        },
+        {
+          "minute": 811,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 291
+        },
+        {
+          "minute": 817,
+          "type": "WIFI_LOST",
+          "sequence": 292
+        },
+        {
+          "minute": 818,
+          "type": "WIFI_CONNECTED",
+          "sequence": 293
+        },
+        {
+          "minute": 818,
+          "type": "RESOLVER_READY",
+          "sequence": 294
+        },
+        {
+          "minute": 818,
+          "type": "STREAM_HEALTHY",
+          "sequence": 295
+        },
+        {
+          "minute": 836,
+          "type": "WIFI_LOST",
+          "sequence": 296
+        },
+        {
+          "minute": 837,
+          "type": "WIFI_CONNECTED",
+          "sequence": 297
+        },
+        {
+          "minute": 837,
+          "type": "RESOLVER_READY",
+          "sequence": 298
+        },
+        {
+          "minute": 837,
+          "type": "STREAM_HEALTHY",
+          "sequence": 299
+        },
+        {
+          "minute": 840,
+          "type": "STREAM_STALLED",
+          "sequence": 300
+        },
+        {
+          "minute": 841,
+          "type": "STREAM_HEALTHY",
+          "sequence": 301
+        },
+        {
+          "minute": 846,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 302
+        },
+        {
+          "minute": 847,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 303
+        },
+        {
+          "minute": 855,
+          "type": "WIFI_LOST",
+          "sequence": 304
+        },
+        {
+          "minute": 856,
+          "type": "WIFI_CONNECTED",
+          "sequence": 305
+        },
+        {
+          "minute": 856,
+          "type": "RESOLVER_READY",
+          "sequence": 306
+        },
+        {
+          "minute": 856,
+          "type": "STREAM_HEALTHY",
+          "sequence": 307
+        },
+        {
+          "minute": 874,
+          "type": "WIFI_LOST",
+          "sequence": 308
+        },
+        {
+          "minute": 875,
+          "type": "WIFI_CONNECTED",
+          "sequence": 309
+        },
+        {
+          "minute": 875,
+          "type": "RESOLVER_READY",
+          "sequence": 310
+        },
+        {
+          "minute": 875,
+          "type": "STREAM_HEALTHY",
+          "sequence": 311
+        },
+        {
+          "minute": 875,
+          "type": "STREAM_STALLED",
+          "sequence": 312
+        },
+        {
+          "minute": 876,
+          "type": "STREAM_HEALTHY",
+          "sequence": 313
+        },
+        {
+          "minute": 893,
+          "type": "WIFI_LOST",
+          "sequence": 314
+        },
+        {
+          "minute": 893,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 315
+        },
+        {
+          "minute": 894,
+          "type": "WIFI_CONNECTED",
+          "sequence": 316
+        },
+        {
+          "minute": 894,
+          "type": "RESOLVER_READY",
+          "sequence": 317
+        },
+        {
+          "minute": 894,
+          "type": "STREAM_HEALTHY",
+          "sequence": 318
+        },
+        {
+          "minute": 894,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 319
+        },
+        {
+          "minute": 910,
+          "type": "STREAM_STALLED",
+          "sequence": 320
+        },
+        {
+          "minute": 911,
+          "type": "STREAM_HEALTHY",
+          "sequence": 321
+        },
+        {
+          "minute": 912,
+          "type": "WIFI_LOST",
+          "sequence": 322
+        },
+        {
+          "minute": 913,
+          "type": "WIFI_CONNECTED",
+          "sequence": 323
+        },
+        {
+          "minute": 913,
+          "type": "RESOLVER_READY",
+          "sequence": 324
+        },
+        {
+          "minute": 913,
+          "type": "STREAM_HEALTHY",
+          "sequence": 325
+        },
+        {
+          "minute": 931,
+          "type": "WIFI_LOST",
+          "sequence": 326
+        },
+        {
+          "minute": 932,
+          "type": "WIFI_CONNECTED",
+          "sequence": 327
+        },
+        {
+          "minute": 932,
+          "type": "RESOLVER_READY",
+          "sequence": 328
+        },
+        {
+          "minute": 932,
+          "type": "STREAM_HEALTHY",
+          "sequence": 329
+        },
+        {
+          "minute": 940,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 330
+        },
+        {
+          "minute": 941,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 331
+        },
+        {
+          "minute": 945,
+          "type": "STREAM_STALLED",
+          "sequence": 332
+        },
+        {
+          "minute": 945,
+          "type": "POWER_INTERRUPTED",
+          "sequence": 333
+        },
+        {
+          "minute": 946,
+          "type": "CONFIG_READY",
+          "sequence": 334
+        },
+        {
+          "minute": 946,
+          "type": "WIFI_CONNECTED",
+          "sequence": 335
+        },
+        {
+          "minute": 946,
+          "type": "RESOLVER_READY",
+          "sequence": 336
+        },
+        {
+          "minute": 946,
+          "type": "STREAM_HEALTHY",
+          "sequence": 337
+        },
+        {
+          "minute": 946,
+          "type": "STREAM_HEALTHY",
+          "sequence": 338
+        },
+        {
+          "minute": 946,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 339
+        },
+        {
+          "minute": 950,
+          "type": "WIFI_LOST",
+          "sequence": 340
+        },
+        {
+          "minute": 951,
+          "type": "WIFI_CONNECTED",
+          "sequence": 341
+        },
+        {
+          "minute": 951,
+          "type": "RESOLVER_READY",
+          "sequence": 342
+        },
+        {
+          "minute": 951,
+          "type": "STREAM_HEALTHY",
+          "sequence": 343
+        },
+        {
+          "minute": 969,
+          "type": "WIFI_LOST",
+          "sequence": 344
+        },
+        {
+          "minute": 970,
+          "type": "WIFI_CONNECTED",
+          "sequence": 345
+        },
+        {
+          "minute": 970,
+          "type": "RESOLVER_READY",
+          "sequence": 346
+        },
+        {
+          "minute": 970,
+          "type": "STREAM_HEALTHY",
+          "sequence": 347
+        },
+        {
+          "minute": 980,
+          "type": "STREAM_STALLED",
+          "sequence": 348
+        },
+        {
+          "minute": 981,
+          "type": "STREAM_HEALTHY",
+          "sequence": 349
+        },
+        {
+          "minute": 987,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 350
+        },
+        {
+          "minute": 988,
+          "type": "WIFI_LOST",
+          "sequence": 351
+        },
+        {
+          "minute": 988,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 352
+        },
+        {
+          "minute": 989,
+          "type": "WIFI_CONNECTED",
+          "sequence": 353
+        },
+        {
+          "minute": 989,
+          "type": "RESOLVER_READY",
+          "sequence": 354
+        },
+        {
+          "minute": 989,
+          "type": "STREAM_HEALTHY",
+          "sequence": 355
+        },
+        {
+          "minute": 1007,
+          "type": "WIFI_LOST",
+          "sequence": 356
+        },
+        {
+          "minute": 1008,
+          "type": "WIFI_CONNECTED",
+          "sequence": 357
+        },
+        {
+          "minute": 1008,
+          "type": "RESOLVER_READY",
+          "sequence": 358
+        },
+        {
+          "minute": 1008,
+          "type": "STREAM_HEALTHY",
+          "sequence": 359
+        },
+        {
+          "minute": 1015,
+          "type": "STREAM_STALLED",
+          "sequence": 360
+        },
+        {
+          "minute": 1016,
+          "type": "STREAM_HEALTHY",
+          "sequence": 361
+        },
+        {
+          "minute": 1026,
+          "type": "WIFI_LOST",
+          "sequence": 362
+        },
+        {
+          "minute": 1027,
+          "type": "WIFI_CONNECTED",
+          "sequence": 363
+        },
+        {
+          "minute": 1027,
+          "type": "RESOLVER_READY",
+          "sequence": 364
+        },
+        {
+          "minute": 1027,
+          "type": "STREAM_HEALTHY",
+          "sequence": 365
+        },
+        {
+          "minute": 1034,
+          "type": "BLUETOOTH_LOST",
+          "sequence": 366
+        },
+        {
+          "minute": 1035,
+          "type": "BLUETOOTH_CONNECTED",
+          "sequence": 367
+        },
+        {
+          "minute": 1045,
+          "type": "WIFI_LOST",
+          "sequence": 368
+        },
+        {
+          "minute": 1046,
+          "type": "WIFI_CONNECTED",
+          "sequence": 369
+        },
+        {
+          "minute": 1046,
+          "type": "RESOLVER_READY",
+          "sequence": 370
+        },
+        {
+          "minute": 1046,
+          "type": "STREAM_HEALTHY",
+          "sequence": 371
+        },
+        {
+          "minute": 1050,
+          "type": "STREAM_STALLED",
+          "sequence": 372
+        },
+        {
+          "minute": 1051,
+          "type": "STREAM_HEALTHY",
+          "sequence": 373
+        },
+        {
+          "minute": 1064,
+          "type": "WIFI_LOST",
+          "sequence": 374
+        },
+        {
+          "minute": 1065,
+          "type": "WIFI_CONNECTED",
+          "sequence": 375
+        },
+        {
+          "minute": 1065,
+          "type": "RESOLVER_READY",
+          "sequence": 376
+        },
+        {
+          "minute": 1065,
+          "type": "STREAM_HEALTHY",
+          "sequence": 377
+        },
+        {
+          "minute": 1080,
+          "type": "CONFIG_CORRUPT",
+          "sequence": 378
+        }
+      ],
+      "expected": {
+        "eventCount": 378,
+        "finalState": "SAFE_MODE",
+        "finalOutput": "LOCAL",
+        "recoveries": 90,
+        "networkRetries": 63,
+        "streamRetries": 30,
+        "bluetoothRetries": 22,
+        "powerInterruptions": 7,
+        "maximumQueueDepth": 7,
+        "diagnosticsStored": 32,
+        "diagnosticOverwrites": 460,
+        "queueOverflows": 0,
+        "timerOverflows": 0,
+        "stateHash": "8a5e427c04e23350"
+      }
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "target": {
+    "device": "m5stack-core2",
+    "controller": "ILI9342C",
+    "physicalDiagonalInches": 2.0,
+    "width": 320,
+    "height": 240,
+    "pixelFormat": "RGB565",
+    "orientation": "landscape"
+  },
+  "defaultTheme": "dark",
+  "availableThemes": ["dark", "light"],
+  "geometrySemantics": "touch rectangles are exact; non-interactive and inset drawing rectangles use Visual suffixes",
+  "grid": {
+    "unit": 2,
+    "safeInset": 8,
+    "minimumTouch": 44,
+    "statusBarHeight": 28,
+    "contentTop": 28,
+    "contentBottom": 184,
+    "bottomBarTop": 184,
+    "bottomBarHeight": 56
+  },
+  "typography": {
+    "fontPlan": "bundled-offline-generated-atlas",
+    "browserFamily": "none-framebuffer-only",
+    "firmwareFamily": "Inter 600",
+    "source": "third_party/fonts/inter/InterVariable.ttf",
+    "license": "OFL-1.1",
+    "coverage": "ASCII_LATIN1_LATIN_EXTENDED_A_SELECTED_PUNCTUATION",
+    "unsupportedScriptPolicy": "VISIBLE_FALLBACK_FUTURE_BUDGETED_ATLAS_PACK",
+    "runtimeDownload": false,
+    "externalLicenseRequired": true,
+    "caption": {"size": 12, "lineHeight": 15, "weight": 600},
+    "label": {"size": 12, "lineHeight": 15, "weight": 600},
+    "body": {"size": 15, "lineHeight": 19, "weight": 600},
+    "title": {"size": 21, "lineHeight": 26, "weight": 600},
+    "hero": {"size": 32, "lineHeight": 39, "weight": 600}
+  },
+  "settingsPolicy": {
+    "pages": ["quick", "system", "display"],
+    "quickActions": ["wifi", "bluetooth", "volume", "brightness", "theme", "language"],
+    "systemActions": ["now-playing-variant", "wifi-networks", "about", "diagnostics", "bluetooth-repair"],
+    "displayActions": ["screensaver-enabled", "screensaver-delay", "screensaver-mode", "display-off-enabled", "display-off-delay", "preview"],
+    "screensaverDelaySeconds": [30, 60, 120, 300, 600],
+    "displayOffDelaySeconds": [900, 1800, 3600],
+    "boundedPercentValues": [25, 50, 75, 100],
+    "localOnly": true,
+    "sourceEditRequired": false,
+    "cloudRequired": false
+  },
+  "themes": {
+    "light": {
+      "canvas": "#F2F5F4",
+      "surface": "#FFFFFF",
+      "raised": "#E7ECEA",
+      "text": "#111820",
+      "muted": "#52616D",
+      "border": "#CAD4D1",
+      "success": "#087A55",
+      "warning": "#9A4A00",
+      "danger": "#B4232A",
+      "shadow": "#24312E",
+      "brand": "#1B8464",
+      "onBrand": "#FFFFFF"
+    },
+    "dark": {
+      "canvas": "#0B1016",
+      "surface": "#131B24",
+      "raised": "#1B2632",
+      "text": "#F7FAFC",
+      "muted": "#A8B5C2",
+      "border": "#2A3948",
+      "success": "#55D6A5",
+      "warning": "#FFB454",
+      "danger": "#FF7D78",
+      "shadow": "#000000",
+      "brand": "#42D8AE",
+      "onBrand": "#081511"
+    }
+  },
+  "screens": {
+    "nowPlaying": {
+      "stationBadgeVisual": {"x": 12, "y": 42, "width": 96, "height": 96, "radius": 24},
+      "stationNameVisual": {"x": 122, "y": 38, "width": 138, "height": 26},
+      "volume": {"x": 244, "y": 0, "width": 76, "height": 44},
+      "volumeVisual": {"x": 260, "y": 11, "width": 52, "height": 5, "radius": 2},
+      "settings": {"x": 268, "y": 34, "width": 44, "height": 44, "radius": 14},
+      "trackCard": {"x": 122, "y": 70, "width": 190, "height": 72, "radius": 16},
+      "statusCardVisual": {"x": 122, "y": 150, "width": 190, "height": 28, "radius": 10},
+      "previous": {"x": 8, "y": 184, "width": 56, "height": 56},
+      "previousVisual": {"x": 8, "y": 190, "width": 52, "height": 44, "radius": 14},
+      "stations": {"x": 64, "y": 184, "width": 192, "height": 56},
+      "stationsVisual": {"x": 68, "y": 190, "width": 184, "height": 44, "radius": 14},
+      "next": {"x": 256, "y": 184, "width": 64, "height": 56},
+      "nextVisual": {"x": 260, "y": 190, "width": 52, "height": 44, "radius": 14}
+    },
+    "volume": {
+      "close": {"x": 268, "y": 0, "width": 52, "height": 48},
+      "slider": {"x": 20, "y": 78, "width": 280, "height": 72},
+      "decrease": {"x": 8, "y": 184, "width": 88, "height": 56},
+      "done": {"x": 104, "y": 184, "width": 112, "height": 56},
+      "increase": {"x": 224, "y": 184, "width": 88, "height": 56}
+    },
+    "nowPlayingGlance": {
+      "stationBadgeVisual": {"x": 10, "y": 10, "width": 48, "height": 48, "radius": 24},
+      "stationNameVisual": {"x": 70, "y": 10, "width": 188, "height": 26},
+      "settings": {"x": 268, "y": 8, "width": 44, "height": 44, "radius": 14},
+      "clockVisual": {"x": 12, "y": 69, "width": 176, "height": 39},
+      "weatherVisual": {"x": 202, "y": 67, "width": 110, "height": 58, "radius": 16},
+      "track": {"x": 12, "y": 132, "width": 188, "height": 44, "radius": 12},
+      "precipitationVisual": {"x": 208, "y": 132, "width": 104, "height": 44, "radius": 12},
+      "previous": {"x": 8, "y": 184, "width": 56, "height": 56},
+      "previousVisual": {"x": 8, "y": 190, "width": 52, "height": 44, "radius": 14},
+      "stations": {"x": 64, "y": 184, "width": 192, "height": 56},
+      "stationsVisual": {"x": 68, "y": 190, "width": 184, "height": 44, "radius": 14},
+      "next": {"x": 256, "y": 184, "width": 64, "height": 56},
+      "nextVisual": {"x": 260, "y": 190, "width": 52, "height": 44, "radius": 14}
+    },
+    "screensaver": {
+      "dismiss": {"x": 0, "y": 0, "width": 320, "height": 240},
+      "station": {"x": 12, "y": 12, "width": 220, "height": 20},
+      "mode": {"x": 244, "y": 8, "width": 68, "height": 24, "radius": 12},
+      "visual": {"x": 24, "y": 40, "width": 272, "height": 152},
+      "track": {"x": 12, "y": 204, "width": 296, "height": 24}
+    },
+    "stations": {
+      "close": {"x": 268, "y": 0, "width": 44, "height": 48},
+      "cards": [
+        {"x": 52, "y": 12, "width": 72, "height": 72},
+        {"x": 124, "y": 12, "width": 72, "height": 72},
+        {"x": 196, "y": 12, "width": 72, "height": 72},
+        {"x": 52, "y": 84, "width": 72, "height": 72},
+        {"x": 124, "y": 84, "width": 72, "height": 72},
+        {"x": 196, "y": 84, "width": 72, "height": 72},
+        {"x": 52, "y": 156, "width": 72, "height": 72},
+        {"x": 124, "y": 156, "width": 72, "height": 72},
+        {"x": 196, "y": 156, "width": 72, "height": 72}
+      ],
+      "cardVisuals": [
+        {"x": 56, "y": 16, "width": 64, "height": 64, "radius": 16},
+        {"x": 128, "y": 16, "width": 64, "height": 64, "radius": 16},
+        {"x": 200, "y": 16, "width": 64, "height": 64, "radius": 16},
+        {"x": 56, "y": 88, "width": 64, "height": 64, "radius": 16},
+        {"x": 128, "y": 88, "width": 64, "height": 64, "radius": 16},
+        {"x": 200, "y": 88, "width": 64, "height": 64, "radius": 16},
+        {"x": 56, "y": 160, "width": 64, "height": 64, "radius": 16},
+        {"x": 128, "y": 160, "width": 64, "height": 64, "radius": 16},
+        {"x": 200, "y": 160, "width": 64, "height": 64, "radius": 16}
+      ]
+    },
+    "settings": {
+      "page": {"x": 0, "y": 184, "width": 320, "height": 56},
+      "close": {"x": 268, "y": 0, "width": 44, "height": 48},
+      "cards": [
+        {"x": 0, "y": 48, "width": 160, "height": 44},
+        {"x": 160, "y": 48, "width": 160, "height": 44},
+        {"x": 0, "y": 92, "width": 160, "height": 44},
+        {"x": 160, "y": 92, "width": 160, "height": 44},
+        {"x": 0, "y": 136, "width": 160, "height": 44},
+        {"x": 160, "y": 136, "width": 160, "height": 44}
+      ],
+      "cardVisuals": [
+        {"x": 8, "y": 50, "width": 148, "height": 40, "radius": 11},
+        {"x": 164, "y": 50, "width": 148, "height": 40, "radius": 11},
+        {"x": 8, "y": 94, "width": 148, "height": 40, "radius": 11},
+        {"x": 164, "y": 94, "width": 148, "height": 40, "radius": 11},
+        {"x": 8, "y": 138, "width": 148, "height": 40, "radius": 11},
+        {"x": 164, "y": 138, "width": 148, "height": 40, "radius": 11}
+      ]
+    },
+    "recovery": {
+      "icon": {"x": 16, "y": 44, "width": 56, "height": 56, "radius": 18},
+      "message": {"x": 84, "y": 44, "width": 220, "height": 64},
+      "detail": {"x": 16, "y": 120, "width": 288, "height": 52, "radius": 16},
+      "primary": {"x": 0, "y": 184, "width": 320, "height": 56}
+    },
+    "onboarding": {
+      "header": {"x": 12, "y": 12, "width": 296, "height": 40},
+      "hero": {"x": 12, "y": 60, "width": 88, "height": 88, "radius": 24},
+      "content": {"x": 116, "y": 60, "width": 192, "height": 112},
+      "secondary": {"x": 0, "y": 184, "width": 104, "height": 56},
+      "primary": {"x": 104, "y": 184, "width": 216, "height": 56}
+    },
+    "bluetoothPairing": {
+      "close": {"x": 268, "y": 0, "width": 44, "height": 48},
+      "cards": [
+        {"x": 0, "y": 58, "width": 320, "height": 56},
+        {"x": 0, "y": 114, "width": 320, "height": 56}
+      ],
+      "primary": {"x": 0, "y": 184, "width": 320, "height": 56}
+    },
+    "diagnostics": {
+      "close": {"x": 268, "y": 0, "width": 44, "height": 48},
+      "detail": {"x": 8, "y": 52, "width": 304, "height": 112, "radius": 16},
+      "primary": {"x": 0, "y": 184, "width": 320, "height": 56}
+    },
+    "about": {
+      "close": {"x": 268, "y": 0, "width": 44, "height": 48},
+      "brand": {"x": 8, "y": 52, "width": 88, "height": 112, "radius": 16},
+      "info": {"x": 104, "y": 52, "width": 208, "height": 112, "radius": 16},
+      "primary": {"x": 0, "y": 184, "width": 320, "height": 56}
+    },
+    "market": {
+      "close": {"x": 268, "y": 0, "width": 44, "height": 48},
+      "detail": {"x": 8, "y": 52, "width": 304, "height": 112, "radius": 16},
+      "primary": {"x": 0, "y": 184, "width": 320, "height": 56}
+    }
+  },
+  "iconSource": {
+    "name": "Tabler Icons",
+    "version": "3.44.0",
+    "tagCommit": "6d128ed935d4546607b1e4d5d08c8b27bdbe7758",
+    "license": "MIT",
+    "viewBox": "0 0 24 24",
+    "strokeWidth": 2,
+    "runtimePolicy": "compile-time-subset-only"
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "fontFamily": "Inter 600",
+  "slots": [
+    {
+      "id": "setup-title",
+      "mode": "single-line",
+      "fontSize": 22,
+      "maxWidth": 288,
+      "minimumScale": 0.82,
+      "sources": [
+        "copy:setupWifiTitle",
+        "copy:cityTitle",
+        "copy:bluetoothTitle"
+      ]
+    },
+    {
+      "id": "wifi-body",
+      "mode": "wrapped",
+      "fontSize": 12,
+      "maxWidth": 176,
+      "maxLines": 4,
+      "sources": [
+        "copy:setupWifiBody"
+      ]
+    },
+    {
+      "id": "optional-body",
+      "mode": "wrapped",
+      "fontSize": 11,
+      "maxWidth": 288,
+      "maxLines": 2,
+      "sources": [
+        "copy:cityBody",
+        "copy:bluetoothBody"
+      ]
+    },
+    {
+      "id": "station-title",
+      "mode": "single-line",
+      "fontSize": 20,
+      "maxWidth": 174,
+      "minimumScale": 0.82,
+      "sources": [
+        "station:name"
+      ]
+    },
+    {
+      "id": "status-copy",
+      "mode": "single-line",
+      "fontSize": 13,
+      "maxWidth": 172,
+      "minimumScale": 0.72,
+      "sources": [
+        "copy:playingLocal",
+        "copy:playingBluetooth",
+        "copy:retrying",
+        "copy:stationFallback",
+        "copy:safeMode"
+      ]
+    },
+    {
+      "id": "city-status",
+      "mode": "single-line",
+      "fontSize": 10,
+      "maxWidth": 104,
+      "minimumScale": 0.72,
+      "sources": [
+        "city:value"
+      ]
+    },
+    {
+      "id": "speaker-status",
+      "mode": "single-line",
+      "fontSize": 9,
+      "maxWidth": 54,
+      "minimumScale": 0.62,
+      "sources": [
+        "speaker:value",
+        "literal:CORE2"
+      ]
+    },
+    {
+      "id": "glance-status-value",
+      "mode": "single-line",
+      "fontSize": 20,
+      "maxWidth": 92,
+      "minimumScale": 0.82,
+      "sources": [
+        "literal:LOCAL",
+        "literal:BT"
+      ]
+    },
+    {
+      "id": "settings-label",
+      "mode": "single-line",
+      "fontSize": 11,
+      "maxWidth": 118,
+      "minimumScale": 0.72,
+      "sources": [
+        "copy:cityTitle",
+        "copy:language",
+        "copy:about",
+        "copy:diagnostics",
+        "literal:Bluetooth",
+        "literal:Wi-Fi"
+      ]
+    },
+    {
+      "id": "primary-button",
+      "mode": "single-line",
+      "fontSize": 13,
+      "maxWidth": 160,
+      "minimumScale": 0.8,
+      "sources": [
+        "copy:stations"
+      ]
+    },
+    {
+      "id": "sensor-label",
+      "mode": "single-line",
+      "fontSize": 11,
+      "maxWidth": 128,
+      "minimumScale": 0.72,
+      "sources": [
+        "copy:sensorsTemperature",
+        "copy:sensorsHumidity",
+        "copy:sensorsPressure",
+        "copy:sensorsGas"
+      ]
+    },
+    {
+      "id": "sensor-status",
+      "mode": "single-line",
+      "fontSize": 11,
+      "maxWidth": 300,
+      "minimumScale": 0.72,
+      "sources": [
+        "copy:sensorsNoModule",
+        "copy:sensorsConnect",
+        "copy:sensorsWarming",
+        "copy:sensorsIsolated"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "frozenAt": "open-radio-0-1",
+  "verifiedIdenticalToTag": "2026-07-21",
+  "rationale": "Frozen because these files carry the sound. Every file was byte-identical to tag open-radio-0-1 when the lock was created; entries that have moved since are listed in exceptions with the reason and the release that moved them.",
+  "files": [
+    {
+      "path": "firmware/public-candidate/src/public_audio_pipeline.hpp",
+      "sha256": "a2623c650f1b63c8d1655c87caa7b8c565019a1d30f76c37da0d807742dcc24e",
+      "frozenSha256": "a2623c650f1b63c8d1655c87caa7b8c565019a1d30f76c37da0d807742dcc24e"
+    },
+    {
+      "path": "firmware/public-candidate/src/async_icy_stream_source.hpp",
+      "sha256": "6a4b16020ea5d8ef32affea5e736015629e8c606d0208e917fba7ef6771cdfbe",
+      "frozenSha256": "62bbac547234f2482a556002458be1fa6209b1c5db0f99301171b90ecac844d1"
+    },
+    {
+      "path": "firmware/public-candidate/src/hls_aac_source.hpp",
+      "sha256": "f55d5c35835d8de75eb9e345483caf077acd0184ffacd8b67e6053490c297e6a",
+      "frozenSha256": "f55d5c35835d8de75eb9e345483caf077acd0184ffacd8b67e6053490c297e6a"
+    },
+    {
+      "path": "firmware/common/include/open_radio/spsc_byte_ring.hpp",
+      "sha256": "fd08fce18a3a55bc4380230defc26749b12d826aeb348f3fce6bebb3e6f41f39",
+      "frozenSha256": "fd08fce18a3a55bc4380230defc26749b12d826aeb348f3fce6bebb3e6f41f39"
+    },
+    {
+      "path": "firmware/common/include/open_radio/bluetooth_profile_gate.hpp",
+      "sha256": "b39deb9764f452faed622a1bb5a9123f95341f046199cc466387c6ad525742d2",
+      "frozenSha256": "b39deb9764f452faed622a1bb5a9123f95341f046199cc466387c6ad525742d2"
+    },
+    {
+      "path": "firmware/common/include/open_radio/local_noise_source.hpp",
+      "sha256": "1d0f71ee6e257f7b866f9de5575402832c2c56ae909b6142fa921c56f48bd3ad",
+      "frozenSha256": "1d0f71ee6e257f7b866f9de5575402832c2c56ae909b6142fa921c56f48bd3ad"
+    },
+    {
+      "path": "firmware/public-candidate/src/device_network_runtime.hpp",
+      "sha256": "1b5aaef7c2a02d485f24fd41a5344c92f617f66812c3909cb4a655e2384e1c09",
+      "frozenSha256": "e36ff2a31c1ea3584e6dff962241202505d934909949503e5d9d840c63472677"
+    },
+    {
+      "path": "firmware/public-candidate/src/logo_store.hpp",
+      "sha256": "303b406aef17bf3c0c0b2816b6118b11bd4f319f759a26c624453d86ef98f8f9",
+      "frozenSha256": "7a3228e2f27ae7a62b0fc13bff39630e3a6d0b1f0408fea0b92c647455f4bdd8"
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "sha256": "9e9d5cf3160627e74c3cd66a39a8bd0348ab2f7dc65ada3bdbd0262c6455f666",
+      "frozenSha256": "f8bc20670a0ef4bf4ebfeb5b73a8e05557893fd203dc4e92277e7ba7147cc925"
+    },
+    {
+      "path": "firmware/public-candidate/src/station_slots.hpp",
+      "sha256": "9f1a77278ed8dfc2b91d358e5956c675908969094bcc9e45e7d3dd3e31888047",
+      "frozenSha256": "0ecdfc85442c6df691c0af8101a3ea7a851aeea52df1cab355ee2a1102a4c58e"
+    }
+  ],
+  "invariants": [
+    {
+      "path": "firmware/public-candidate/src/main.cpp",
+      "requiredSubstring": "esp_coex_preference_set(ESP_COEX_PREFER_BALANCE)",
+      "reason": "PREFER_WIFI starved A2DP TX on the weaker speaker link; BALANCE was chosen after an owner A/B on 2026-07-17"
+    },
+    {
+      "path": "firmware/public-candidate/src/public_audio_pipeline.hpp",
+      "requiredSubstring": "kFramesPerOwnerLoop = 8192",
+      "reason": "tripling this budget lengthened loop runs and broke touch without adding a single frame"
+    },
+    {
+      "path": "firmware/public-candidate/src/public_audio_pipeline.hpp",
+      "requiredSubstring": "kDecodedPcmFrames = 262144",
+      "reason": "burst-equilibrium reserve; every threshold in docs/104 sits below it"
+    },
+    {
+      "path": "firmware/public-candidate/src/public_audio_pipeline.hpp",
+      "requiredSubstring": "kBluetoothPcmFrames = 262144",
+      "reason": "burst-equilibrium reserve on the sink side"
+    }
+  ],
+  "exceptions": [
+    {
+      "path": "firmware/public-candidate/src/station_slots.hpp",
+      "movedIn": "0.3",
+      "date": "2026-07-29",
+      "fromSha256": "0ecdfc85442c6df691c0af8101a3ea7a851aeea52df1cab355ee2a1102a4c58e",
+      "toSha256": "60153146137ccb2c59272fbc5ac93e3a401305443bcebeb0f4626641c488c668",
+      "reason": "docs/124 T2b. A saved tile stored only an int16 index into the compiled directory. The directory is sorted partly by vote count, so a catalog refresh reorders it, the stored index stays in range, and the tile silently plays a different station. Format 2 stores the stable id next to the index and resolves through open_radio/station_binding.hpp: same index means keep, moved id means repoint, missing id means fall back to the factory station rather than guess. Format 1 records are migrated in place, not discarded.",
+      "verification": "host type-check and round-trip against a Preferences stub, plus a format-1 migration test proving all saved choices survive and the second boot takes the fast path; station_binding host tests cover reorder, removal, legacy and hostile input"
+    },
+    {
+      "path": "firmware/public-candidate/src/station_slots.hpp",
+      "movedIn": "0.3",
+      "date": "2026-07-29",
+      "fromSha256": "60153146137ccb2c59272fbc5ac93e3a401305443bcebeb0f4626641c488c668",
+      "toSha256": "e805ce19f97c7674635cec62168eaf3cb87bd5bc018847341128dd2fef002442",
+      "reason": "Format 2 stored an id beside the index, but the format-1 MIGRATION captured no id at all: an upgrading cube reached format 2 with empty ids, which is format 1 under a new version number. The next catalog refresh would have moved its tiles exactly as before, so the fix reached only owners who re-picked their stations by hand. Worse, the legacy path honoured the raw index against TODAY directory, and the directory is sorted by vote count — adding one popular station shifts every index below it, so 0.3 could not add a station without silently repointing every upgraded cube. The migration now translates the stored index through the pinned 0.2.1 order (firmware/manifests/legacy-station-index.json, compiled in as kLegacyDirectoryIds) and resolves by identity; an index that order cannot explain falls back to the factory station instead of to whatever sits there now.",
+      "verification": "Host migration test extended to four cases against the real 218-entry directory: choices preserved, identity captured asserted on the stored BYTES, a simulated catalog re-sort (every index shifted by one, ids intact) resolving all four tiles back to their original stations with repointed=4, and an out-of-range legacy index refused to the factory station. Gate check:catalog-continuity ties the pin to the compiled map and was falsified twice (edited id, and a re-sorted pin with a recomputed sha) — both exit 1."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_slots.hpp",
+      "movedIn": "0.3",
+      "date": "2026-07-29",
+      "fromSha256": "e805ce19f97c7674635cec62168eaf3cb87bd5bc018847341128dd2fef002442",
+      "toSha256": "06761cfaa3239cd4f0ca4ec4e348cd44e83102020925ce3234f6649e646f0849",
+      "reason": "store() — the path a console pick takes — wrote the chosen indices with EMPTY ids, so a deliberate choice reached format 2 carrying format 1 semantics and would be moved by the next catalog refresh exactly like an unmigrated record. Found while answering an owner question about a tile playing the wrong station. The console offers the current directory, so the current id at the chosen index is precisely what was picked, and it is now stored beside the index. A slot left on the factory station stores no id, because it named no station.",
+      "verification": "Host test extended to six cases: a console assignment is asserted on the stored BYTES to carry the id of the station at each chosen index, then put through a simulated catalog re-sort and required to come back to the same three stations; a factory slot is asserted to invent no identity. The legacy assertions were moved from position to identity in the same pass — they were asserting that a migrated index came back unchanged, which only held while the catalog never moved, and this release moves it."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "fromSha256": "f8bc20670a0ef4bf4ebfeb5b73a8e05557893fd203dc4e92277e7ba7147cc925",
+      "toSha256": "62a56f82d0ba76560d37a2ff3dcf6d8b462b9b72d8ee3fa4a8d617eb7ca8c028",
+      "reason": "0.4.1. The last-known-good endpoint cache was keyed by TILE alone (lkg3_0..8) and erased only when build_sha changed. Swap the station in a tile without reflashing and the tile reopened the endpoint remembered for the station the owner had just replaced: it played the wrong radio, silently. The key still names the tile, because the upgrade deletion loop enumerates lkg4_0..8 and a key that varied with content could not be enumerated at all; what changed is that the VALUE now carries the directory index the endpoint was proven for, and a reader that does not recognise it treats the cache as absent. Same failure shape as Pogoda 07-17 and Jedynka's 192 kb/s mount, both of which were answered by bumping the prefix — which fixes the image that ships and nothing the owner does afterwards.",
+      "verification": "Host: all firmware host tests pass, and upgrade-policy-tests gained cases asserting lkg4_* classifies as Erase while the retired lkg3_* still does, since the deletion loop only enumerates the current prefix. Static: every access to the key is routed through readLastKnownGood/writeLastKnownGood — verified by asserting zero raw getString/putString on lastKnownGoodKey() outside those two helpers. All four audio invariants (coex preference, kFramesPerOwnerLoop, kDecodedPcmFrames, kBluetoothPcmFrames) unchanged. DEVICE: pending the 0.4.1 full-wipe flash, where the reproduction is set a tile, play, reassign that tile, reboot without reflashing, and confirm the new station plays."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "fromSha256": "62a56f82d0ba76560d37a2ff3dcf6d8b462b9b72d8ee3fa4a8d617eb7ca8c028",
+      "toSha256": "2cf14d52d35e1b8855b9f0f5873b5d756c42c98869a28ffcecfecc72ed64bc84",
+      "reason": "0.4.1, drugie ogniwo. Stempel stacji porównywany jako TEKST, nie przez toInt(). Arduino String::toInt() to atol(): pomija białe znaki, zatrzymuje się na pierwszym nie-cyfrowym i zwraca 0, gdy cyfr nie ma wcale. Więc \"aac\" parsowało się jako 0 — a wartość w POPRZEDNIM formacie, wartość zaczynająca się od \"aac\", potem kreska i adres, była akceptowana na każdym kaflu o indeksie katalogowym 0 i oddawała adres innej stacji. Dwie niezależne recenzje znalazły to tego samego popołudnia, z różnych stron: jedna przez śmieciowy stempel, druga przez realny kształt starego formatu.",
+      "verification": "Test kontraktu w firmware-fault-matrix wymaga teraz porównania przez String(boundDirectoryIndex()) i ZAKAZUJE toInt() w tej funkcji, po odcięciu komentarzy — bo akapit obok wyjaśnia właśnie, dlaczego toInt() jest złe, i sprawdzian czytający prozę zapalałby się na wyjaśnieniu. Sprawdzone, że pada po powrocie do wersji liczbowej. Wszystkie 18 testów hosta i 242 testy node przechodzą. Cztery niezmienniki audio nietknięte. URZĄDZENIE: czeka na wgranie z pełnym czyszczeniem. Komentarz przeformułowany, bo zawierał wzorzec adresu i bramka powierzchni firmware'u słusznie go odrzuciła — skanuje źródła pod kątem wbudowanych adresów i żąda, żeby każdy dał się sparsować i był na liście zatwierdzonych."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_slots.hpp",
+      "fromSha256": "06761cfaa3239cd4f0ca4ec4e348cd44e83102020925ce3234f6649e646f0849",
+      "toSha256": "9f1a77278ed8dfc2b91d358e5956c675908969094bcc9e45e7d3dd3e31888047",
+      "reason": "0.4.1. `assigned_` było zerowane, więc PRZED load() każdy kafel czytał się jako indeks katalogowy 0 — prawdziwa stacja — zamiast jako fabryczny. Dziś nic nie woła select() tak wcześnie, ale klasa nie powinna zależeć od tego, że main.cpp utrzyma tę kolejność; składało się to też z liberalnym parsowaniem stempla w station_runtime w gorszy przypadek.",
+      "verification": "Inicjalizacja przez constexpr unassigned() wypełniające kBuiltIn. Testy migracji slotów: 6/6, w tym reorder_survived i corrupt_refused. Kompiluje się pod C++17."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "reason": "Wstrzykiwana bramka TLS (setTlsGate/tlsGate_) i jej sprawdzenie w fetchJson. WYLACZNIE dodatki: 22 linie, zero zmian w logice dzwieku, zero usuniec. fetchJson to jedyne drzwi do TLS w tej klasie, a resolveRmf otwieral handshake przy pustym cache w trakcie asynchronicznego wstawania Bluedroida - czyli w oknie paniki z 01.08. Pusty wynik byl juz obsluzona sciezka: resolveEndpoint schodzi na przypiety mount po zwyklym HTTP. Komentarze przetlumaczone na angielski zgodnie z AGENTS.md (source code: English); tresc zmiany bez zmian.",
+      "movedIn": "0.4.1",
+      "date": "2026-08-02",
+      "fromSha256": "2cf14d52d35e1b8855b9f0f5873b5d756c42c98869a28ffcecfecc72ed64bc84",
+      "toSha256": "c314926e677984bccb1c6102599224700fb5f32d953fc5035d1301f390c120cf",
+      "verification": "Wszystkie piec wariantow firmware buduje sie (5/5), a nowy test w firmware-fault-matrix liczy zagniezdzenie dyrektyw przy definicji predykatu i pada, gdy wroci ona w glab bloku wariantu. Diff to wylacznie dodatki: 22 linie, zero usuniec, zero zmian w istniejacej logice dzwieku."
+    },
+    {
+      "path": "firmware/public-candidate/src/device_network_runtime.hpp",
+      "movedIn": "0.4.1",
+      "date": "2026-08-02",
+      "fromSha256": "e36ff2a31c1ea3584e6dff962241202505d934909949503e5d9d840c63472677",
+      "toSha256": "8a29d0b22beadf3ae4c7d5d8b77732b711dcd1c7420ff9767113cdc7eaec9517",
+      "reason": "Setup portal idle timeout now keeps the portal open while there is no WORKING connection, not merely while there are no saved profiles. Found on a box-fresh cube on 2026-08-01: a Wi-Fi profile that saved but never connected left profileCount_ above zero, so the portal closed on schedule while the screen went on showing the QR code - indistinguishable from a hang, with a power cycle the only way out. The adjacent branch already existed to prevent exactly that fault for an unprovisioned device; this reaches it by the other door. One condition changed, nothing removed.",
+      "verification": "All five firmware variants build. A new test in tests/network-onboarding.test.mjs pins both the widened condition and the surviving close branch, so the portal still closes once the radio is actually online."
+    },
+    {
+      "path": "firmware/public-candidate/src/logo_store.hpp",
+      "movedIn": "0.4.1",
+      "date": "2026-08-02",
+      "fromSha256": "7a3228e2f27ae7a62b0fc13bff39630e3a6d0b1f0408fea0b92c647455f4bdd8",
+      "toSha256": "ef10d7cbf4a927f43541d22fa3830f2cb696943f266ec958b9aa1a5451f818c8",
+      "reason": "A response with no Content-Length is chunked, and getStreamPtr() hands back the raw socket, so the chunk-size lines travelled with the body. The buffer then began \"cbf\\r\\n\" instead of the PNG signature and a perfectly good icon was rejected as reason=dims, every boot, for every station whose CDN chunks - measured on Radio Wnet, which serves Transfer-Encoding: chunked to HTTP/1.1 clients. The chunked branch now uses HTTPClient::writeToStream(), the library reader that strips the framing, into a fixed-capacity Stream sink that refuses to write past the end rather than truncating. The known-length path is untouched: it works, it bounds itself on Content-Length, and moving every station onto new code an hour before a release is not a trade worth making. This file is frozen because it carries sound; this change touches only icon download and cannot reach the audio path.",
+      "verification": "Root cause MEASURED on the owner device, not inferred: logo_fetch slot=8 result=skip reason=dims, twice in one boot (passes 2 and 3), deterministic. Server behaviour measured with curl --http1.1 against the same URL: HTTP/1.1 200, Content-Type: image/png, Transfer-Encoding: chunked, no Content-Length — the exact condition the new branch is selected on. The downloaded file is a valid 145x145 PNG, so parseImageDimensions would have accepted it had the framing not been in front of it. All five build variants compile. VERIFIED ON HARDWARE 2026-08-02, cut a9d17ffa: all nine tiles fetched, logo_fetch slot=0..8 result=ok, on a device flashed from an erased flash. Slot 8 had returned skip reason=dims on every pass of the previous build. The claim above was filed as reasoned-not-demonstrated and is now demonstrated. It cannot touch the audio path: the change is inside fetchOne(), which runs on the logo task before Bluetooth exists and writes only into the download buffer."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-08",
+      "fromSha256": "c314926e677984bccb1c6102599224700fb5f32d953fc5035d1301f390c120cf",
+      "toSha256": "e75303239a84bbfd80ae3d81e481c7f82faf9cde4f24bff0046e70b51a01df5d",
+      "reason": "V1-01/V1-08 (audit 2026-09-08). fetchJson set no TLS handshake timeout, so the framework default of 120 s applied on the owner task under its 30-second watchdog, at every Wi-Fi connect; a peer accepting TCP and stalling the handshake rebooted the radio in a loop. setHandshakeTimeout(5) as logo_store.hpp already does. prefetchRmfPools now runs from the logo-fetch task (same heap window, no watchdog), so the pool bodies gained a FreeRTOS mutex (PoolLock) around assignment and candidate extraction. No change to resolution order, candidates, rotation or audio.",
+      "verification": "host compile of the public lane; node tests (firmware-fault-matrix, network-onboarding); device run with the 0.4.2 lab image still owed: stream_stage stage=resolver result=pools-cached must appear from the logo task and RMF FM must start from a pinned mount while the prefetch is in flight"
+    },
+    {
+      "path": "firmware/public-candidate/src/device_network_runtime.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-08",
+      "fromSha256": "8a29d0b22beadf3ae4c7d5d8b77732b711dcd1c7420ff9767113cdc7eaec9517",
+      "toSha256": "1b5aaef7c2a02d485f24fd41a5344c92f617f66812c3909cb4a655e2384e1c09",
+      "reason": "V1-02/V3-01/V3-02, Kimi F1, Codex F12 (audit 2026-09-08). POST /api/config-form was accepted from any host on the home network during a console session, with the CSRF token handed out by GET /api/session to the same hosts; a guest or a compromised LAN device could re-provision the radio onto its own access point inside the 15-minute window. Credentials are now accepted from the setup portal only (softAP client), and console requests must carry a Host header naming the device (its STA address or open-radio.local), closing DNS rebinding. Portal behaviour, captive-portal redirect and the console station flow are unchanged.",
+      "verification": "tests/network-onboarding.test.mjs pins both guards; host compile of the public lane; device run owed: console session still saves slots, a foreign Host gets 403, config-form from the console gets 403 reason=portal-only"
+    },
+    {
+      "path": "firmware/public-candidate/src/logo_store.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-08",
+      "fromSha256": "ef10d7cbf4a927f43541d22fa3830f2cb696943f266ec958b9aa1a5451f818c8",
+      "toSha256": "303b406aef17bf3c0c0b2816b6118b11bd4f319f759a26c624453d86ef98f8f9",
+      "reason": "Codex F02/F03/F04 (audit 2026-09-08). (1) HTTPClient was declared before the WiFiClient/WiFiClientSecure it was begun with, so its destructor called stop() on a destroyed client on the disconnected/reuse path; declaration order reversed. (2) The chunked/unknown-length body went through writeToStream, whose inner loop has no deadline: a server holding the socket open after a chunk header parked the logo task and deferred Bluetooth for ever; the request is now HTTP/1.0 (no chunked coding) and one bounded loop reads both length- and close-delimited bodies under the existing 8-second deadline. (3) A PNG chunk declaring more bytes than the buffer holds walked the decoder skip pointer past the 96 KiB download allocation; pngChunksWellFormed() (open_radio/image_dims.hpp, host-tested) refuses it before pngle runs. Decoding, storage and monogram fallback unchanged.",
+      "verification": "host tests image-dims (4 new cases); host compile of the public lane; device run owed: nine tile logos out of nine on a full-wipe boot, including the station whose CDN chunked under HTTP/1.1"
+    },
+    {
+      "path": "firmware/public-candidate/src/async_icy_stream_source.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-08",
+      "fromSha256": "62bbac547234f2482a556002458be1fa6209b1c5db0f99301171b90ecac844d1",
+      "toSha256": "6a4b16020ea5d8ef32affea5e736015629e8c606d0208e917fba7ef6771cdfbe",
+      "reason": "V1-06 (audit 2026-09-08). open() called close() and ignored its result before deleting upstream_; close() returns false when the worker did not stop within 1500 ms and the worker still owns upstream_. open() now refuses instead. Unreachable today (non-blocking reads, ICY metadata wait bounded to 500 ms) — the guard exists so a future library or patch change cannot turn it into a use-after-free. Ring, worker and metadata mailbox unchanged.",
+      "verification": "host compile of the public lane; node fault-matrix test; behaviour identical on every path where close() succeeds"
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-09",
+      "fromSha256": "e75303239a84bbfd80ae3d81e481c7f82faf9cde4f24bff0046e70b51a01df5d",
+      "toSha256": "6fbda789527166c7d79124a1937830226e7f7b8084387edad3f78ce9a77ca4d3",
+      "reason": "Instrumentation only, no change to what is fetched or played. Every failure inside fetchJson() returned {} in silence, so three failed pool discoveries produced one terse 'pools-missing' and no reason. On 2026-09-09 the RMF pool came back empty for the first time in the project's logged history (every 0.3/0.4 log shows pools-cached), the owner heard the stream cut out under Bluetooth reconnection load, and the log could not say whether the newly added 5-second handshake budget, the internal heap or the peer was to blame. The three return paths and the success path now emit 'rmf discovery_failed reason=<token> ...' / 'rmf discovery_ok ...' with an elapsed_ms, which is what tells a 5000 ms budget expiry apart from an immediate refusal. The reason is a short token and never the endpoint, so the soak sanitizer still passes the line; control flow, timeouts, buffer sizes and return values are byte-for-byte the same decisions.",
+      "verification": "Device-lane build of core2-hardware-lab SUCCESS (esptool image created, +416 B, sha256 d32e0a34…); npm run check green including the soak-evidence tests, which assert the new 'rmf discovery_failed' / 'rmf discovery_ok' lines survive the sanitizer while a URL- or endpoint-bearing variant is still dropped whole. NOT MEASURED: this build has not run on hardware — the image on the owner's Core2 v1.3 is still 00c9119c… (archived in output/flashed/). The instrumentation exists precisely to be measured on the next flash."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-09",
+      "fromSha256": "6fbda789527166c7d79124a1937830226e7f7b8084387edad3f78ce9a77ca4d3",
+      "toSha256": "57fc7bb02f7939051c6c21c6c7366a735f3b386ba6dd62e0bbeb3f1420cd9893",
+      "reason": "Instrumentation only, second pass. The 2026-09-09 playback review could close every hypothesis for an empty RMF pool except one: internal-heap exhaustion during the depth-3 chain verification. The TLS gate tests Bluetooth flags and never actual free memory, and nothing sampled the heap at the moment a discovery failed, so the hypothesis could not be settled from any log the firmware produces. Every 'rmf discovery_failed' line and the success line now carry heap_largest, the largest free internal 8-bit block read once before the request begins. No control flow, no timeout, no buffer and no return value changes; the reading is taken outside the request and used only in printf arguments.",
+      "verification": "Device-lane build of core2-hardware-lab SUCCESS; soak sanitizer accepts both new line shapes (checked directly against sanitizeHardwareLine) while URL- and endpoint-bearing variants are still dropped; npm run check green. NOT MEASURED: not yet run on hardware. The cube still carries 00c9119c."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-09",
+      "fromSha256": "57fc7bb02f7939051c6c21c6c7366a735f3b386ba6dd62e0bbeb3f1420cd9893",
+      "toSha256": "92ca3387700c5327492626e021c3552b70f2e4abfbfd2d1eb2e414c7ac3f89c4",
+      "reason": "Three changes, all argued from measurement. (1) The TLS handshake budget becomes a parameter of fetchJson instead of one constant for both callers. The gate lives in fetchJson by design, so a single value governed two tasks with opposite constraints: resolveRmf runs on the owner loop under a 30-second task watchdog and keeps five seconds, because a twenty-second handshake would put its worst case near 31 s and reboot the radio, and because resolveEndpoint falls back to a pinned mount so audio survives a lost discovery; prefetchRmfPools runs on logoFetchTask, which is not watchdog-subscribed and which nothing waits on, and gets twenty seconds because it is the pass that fills the rotation pool. Cold-start measurement of 2026-09-09: four discoveries failed at 6153/6354/6037/6064 ms, one on the owner loop and three on the logo task, with heap_largest 110580 on the first two against a stated need near 40 KB — so the five-second cap, not memory, is what they ran into. (2) PoolLock tolerates a null mutex and prefetchRmfPools stands down when there is none, rather than tripping a FreeRTOS assertion on xSemaphoreTake(nullptr) or racing an unguarded String; dram_min reached 13992 bytes on this device, so the allocation failing is not theoretical. (3) The resolver line's tokens are renamed to pools-pass-filled / pools-pass-empty because the old ones survived a semantic change in f0e50be and invited an invalid comparison across releases, which was made and produced a wrong regression claim.",
+      "verification": "Device-lane build SUCCESS (2 655 728 B, sha 2bc39b93…); soak sanitizer accepts the three new line shapes; npm run check green. Full icon catalogue measured from the host for the companion risks: 45 unique URLs, all HTTP 200 over HTTP/1.0, zero PNGs missing IEND, so neither the HTTP/1.0 downgrade nor the new chunk validator rejects anything 0.4.1 accepted. Hardware run of THIS image still owed: the exit gate is rmf discovery_ok with elapsed_ms above 5000 from the logo task, and pools-pass-filled instead of pools-pass-empty."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-09",
+      "fromSha256": "92ca3387700c5327492626e021c3552b70f2e4abfbfd2d1eb2e414c7ac3f89c4",
+      "toSha256": "7d2afe9e6d3a6f5304f18fdaadbcaf12656b3f5b278285042b73e78224940361",
+      "reason": "A discovery response without a Content-Length is no longer discarded. HTTPClient's getSize() returns -1 for a chunked answer, and the guard rejected that the same way it rejects a genuine zero, so one of the three RMF pools could never be cached whatever the handshake budget was. Found by the instrumentation added earlier the same day: on the 2026-09-09 device run the middle discovery answered HTTP 200 with len=-1 after 6312 ms and was thrown away, costing a third of the rotation permanently. An unknown length is not an error; the bound moves to the body, where getString() is already checked against kDiscoveryResponseBytes, and the read itself is already bounded by setTimeout(kDiscoveryTimeoutMs). A declared length over the cap is still rejected before the body is read.",
+      "verification": "Device-lane build SUCCESS. Measured on hardware immediately before this change, image 4f94d17d at commit c14e936: owner path failed at 5210 ms under the five-second cap while the prefetch succeeded at 5645 ms under twenty, with heap_largest 110580 on both, and the pass ended pools-pass-filled — so the budget split works and this fix targets the one pool it could not reach. NOT YET ON HARDWARE: the exit gate for this change is three discovery_ok lines in one pass instead of two."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-09",
+      "fromSha256": "7d2afe9e6d3a6f5304f18fdaadbcaf12656b3f5b278285042b73e78224940361",
+      "toSha256": "2aa1891767a4324bca631b5291bfffa836dd4e04fe3019c891cc63737ea21c7e",
+      "reason": "Two release-blocking defects from the Codex pre-release review, both pre-existing and both about time nobody was bounding. (1) The owner loop no longer opens TLS at all. resolveRmf used to run a name lookup, a TCP connect, a handshake and a body read inside one iteration of a task subscribed to a 30-second watchdog; three of those we bound ourselves, the name lookup we do not, because the core resolves through getaddrinfo asking for both A and AAAA and nothing in our code caps it. Rather than argue the total stays under thirty seconds, the owner stops reaching for the network: it reads the cached pool or falls back to the pinned mount, which is what already happened on the 2026-09-09 run when this call failed at 5210 ms and the station started one second later anyway. The pool is filled by prefetchRmfPools on the unsubscribed logo task and refills at every Wi-Fi connect, so the handshake budget collapses back to one value, twenty seconds, with one caller. (2) The body read no longer uses getString(). The pinned core's body loop consults no clock — with nothing available it calls delay(1) and spins, and setTimeout does not reach it — so a peer that completes TLS, answers 200 and then goes quiet hangs the call forever: a watchdog reboot on the owner loop, or on the logo task a Bluetooth auto-start gate that is never released. The read now carries its own deadline and its own byte cap, and reports reason=body-deadline or reason=oversize instead of hanging. I had claimed in writing that setTimeout covered this; it does not.",
+      "verification": "Device-lane build SUCCESS; firmware-fault-matrix rewritten around the new invariant and asserting it structurally — exactly one fetchJson call site, none of it in resolveRmf, no getString in the gate, deadline and oversize paths present; npm run check green. Hardware exit gate for this cut: pools-pass-filled with three discovery_ok lines, and no rmf line at all before the logo task starts."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.2",
+      "date": "2026-09-09",
+      "fromSha256": "2aa1891767a4324bca631b5291bfffa836dd4e04fe3019c891cc63737ea21c7e",
+      "toSha256": "9e9d5cf3160627e74c3cd66a39a8bd0348ab2f7dc65ada3bdbd0262c6455f666",
+      "reason": "Discovery requests go out as HTTP/1.0, for the same reason logo_store.hpp already does. Reading the body under our own deadline means reading the raw socket, and on HTTP/1.1 that carries chunk framing rather than the body — and a keep-alive peer never closes, so a loop waiting for the data to stop waits out its entire deadline with the complete answer already in hand. That is not a hypothetical: the first device run of the bounded read reported reason=body-deadline with len=1271, threw away a full response, and the two discoveries after it failed at the connect timeout on a client left in a bad state, ending the pass pools-pass-empty where the cut before it had ended pools-pass-filled. Under 1.0 the server sends a length or closes, so the read ends when the answer does and a closed connection with an empty buffer is the normal successful exit.",
+      "verification": "Device-lane build SUCCESS; npm run check green. The defect this repairs was found on hardware, not reasoned about: log cube-v13-lab4-final-2026-09-09. Exit gate for this cut: pools-pass-filled with three discovery_ok lines and no body-deadline line."
+    }
+  ],
+  "exceptionsNote": "An exception is the AUDIT TRAIL of a reviewed change, never a bypass. Until 2026-07-29 the checker excused a path by name, which meant one entry silently unfroze that file forever — and 0.3 plans to touch five frozen files. The hash check is now unconditional; an exception must name the exact from/to transition and its toSha256 must equal the current lock entry, so the record cannot drift from the file either.",
+  "frozenSha256Note": "frozenSha256 is the hash this file had when it was first frozen and is NEVER rewritten by --write. Whenever sha256 differs from it, the exceptions for that path must form an unbroken chain from frozenSha256 to the current sha256 — so a lock rewrite without a reviewed exception fails the gate instead of passing silently."
+}

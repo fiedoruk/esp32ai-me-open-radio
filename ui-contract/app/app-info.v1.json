@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "productName": "Open Radio Core2",
+  "version": "0.1.0-dev",
+  "channel": "SOFTWARE-ONLY",
+  "buildIdentity": "SOURCE-LOCKED",
+  "hardwareStatus": "NOT_MEASURED",
+  "telemetry": false,
+  "outboundAnalytics": false,
+  "localDiagnostics": true,
+  "founder": "Tomasz Fiedoruk",
+  "website": "open-radio.me"
+}

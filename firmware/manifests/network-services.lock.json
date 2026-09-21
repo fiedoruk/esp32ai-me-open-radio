@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "rmfon-discovery",
+      "scheme": "https",
+      "host": "api.rmfon.pl",
+      "baseUrl": "https://api.rmfon.pl/stations/",
+      "purpose": "OFFICIAL_STATION_DISCOVERY",
+      "authentication": "USERTRUST_ECC_ROOT_CA"
+    },
+    {
+      "id": "streamtheworld-mp3-redirect",
+      "scheme": "http",
+      "host": "playerservices.streamtheworld.com",
+      "baseUrl": "http://playerservices.streamtheworld.com/api/livestream-redirect/",
+      "purpose": "PUBLIC_MP3_AUDIO_REDIRECT",
+      "authentication": "NONE_PUBLIC_AUDIO"
+    },
+    {
+      "id": "zpr-eska-hls",
+      "scheme": "https",
+      "host": "liveradio.timesa.pl",
+      "baseUrl": "https://liveradio.timesa.pl/2980-1.aac/",
+      "purpose": "PUBLIC_HLS_HE_AAC_AUDIO",
+      "authentication": "TLS_TRANSPORT_PUBLIC_AUDIO"
+    },
+    {
+      "id": "zpr-eska-icecast-mp3",
+      "scheme": "http",
+      "host": "ic1.smcdn.pl",
+      "baseUrl": "http://ic1.smcdn.pl/2980-1.mp3",
+      "purpose": "PUBLIC_MP3_AUDIO_WITH_ICY_METADATA",
+      "authentication": "NONE_PUBLIC_AUDIO"
+    },
+    {
+      "id": "zpr-eska-icecast-mp3-ic2",
+      "scheme": "http",
+      "host": "ic2.smcdn.pl",
+      "baseUrl": "http://ic2.smcdn.pl/2980-1.mp3",
+      "purpose": "PUBLIC_MP3_AUDIO_WITH_ICY_METADATA_FALLBACK",
+      "authentication": "NONE_PUBLIC_AUDIO"
+    },
+    {
+      "id": "rmfstream-edge-rs102",
+      "scheme": "http",
+      "host": "rs102-krk.rmfstream.pl",
+      "baseUrl": "http://rs102-krk.rmfstream.pl/",
+      "purpose": "PUBLIC_MP3_AUDIO_WITH_ICY_METADATA_FALLBACK",
+      "authentication": "NONE_PUBLIC_AUDIO"
+    },
+    {
+      "id": "rmfstream-edge-rs202",
+      "scheme": "http",
+      "host": "rs202-krk.rmfstream.pl",
+      "baseUrl": "http://rs202-krk.rmfstream.pl/",
+      "purpose": "PUBLIC_MP3_AUDIO_WITH_ICY_METADATA_FALLBACK",
+      "authentication": "NONE_PUBLIC_AUDIO"
+    },
+    {
+      "id": "agora-radiostream-mp3",
+      "scheme": "http",
+      "host": "radiostream.pl",
+      "baseUrl": "http://radiostream.pl/",
+      "purpose": "PUBLIC_MP3_AUDIO_WITH_ICY_METADATA",
+      "authentication": "NONE_PUBLIC_AUDIO"
+    },
+    {
+      "id": "agora-radiostream-s30-mp3",
+      "scheme": "http",
+      "host": "stream30.radiostream.pl",
+      "baseUrl": "http://stream30.radiostream.pl/",
+      "purpose": "PUBLIC_MP3_AUDIO_WITH_ICY_METADATA",
+      "authentication": "NONE_PUBLIC_AUDIO"
+    },
+    {
+      "id": "eurozet-cdn-plus-mp3",
+      "scheme": "http",
+      "host": "pl02.cdn.eurozet.pl",
+      "baseUrl": "http://pl02.cdn.eurozet.pl/",
+      "purpose": "PUBLIC_MP3_AUDIO_WITH_ICY_METADATA",
+      "authentication": "NONE_PUBLIC_AUDIO"
+    }
+  ]
+}

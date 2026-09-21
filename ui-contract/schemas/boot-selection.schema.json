@@ -1,0 +1,28 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://fiedoruk.pl/open-radio-core2/schemas/boot-selection.schema.json",
+  "title":"BootSelection",
+  "type":"object",
+  "required":["schemaVersion","status","selectedSlotId","selectedGeneration","configSchemaVersion","migratedFromVersion","rejections"],
+  "properties":{
+    "schemaVersion":{"const":1},
+    "status":{"enum":["BOOTABLE","SAFE_MODE"]},
+    "selectedSlotId":{"enum":["A","B",null]},
+    "selectedGeneration":{"type":["integer","null"],"minimum":1},
+    "configSchemaVersion":{"type":["integer","null"],"minimum":1},
+    "migratedFromVersion":{"type":["integer","null"],"minimum":1},
+    "rejections":{
+      "type":"array","minItems":0,"maxItems":2,
+      "items":{
+        "type":"object",
+        "required":["slotId","reason"],
+        "properties":{
+          "slotId":{"enum":["A","B"]},
+          "reason":{"type":"string","minLength":3,"maxLength":64}
+        },
+        "additionalProperties":false
+      }
+    }
+  },
+  "additionalProperties":false
+}

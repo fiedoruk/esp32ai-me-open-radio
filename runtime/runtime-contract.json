@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "limits": {
+    "eventQueueCapacity": 16,
+    "timerCapacity": 8,
+    "diagnosticCapacity": 32,
+    "maximumRetryDelayMs": 600000
+  },
+  "soaks": [
+    {"id": "one-hour-recovery", "durationMinutes": 60, "seed": 2703024129, "corruptAtMinute": null},
+    {"id": "two-hour-combined-faults", "durationMinutes": 120, "seed": 2703024130, "corruptAtMinute": null},
+    {"id": "eight-hour-power-and-radio", "durationMinutes": 480, "seed": 2703024131, "corruptAtMinute": null},
+    {"id": "twenty-four-hour-safe-mode", "durationMinutes": 1440, "seed": 2703024132, "corruptAtMinute": 1080}
+  ]
+}

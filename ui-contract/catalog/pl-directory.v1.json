@@ -1,0 +1,5584 @@
+{
+  "schemaVersion": 1,
+  "directoryId": "pl-verified-2026-07-21",
+  "countryCode": "PL",
+  "probedAt": "2026-07-21",
+  "evidence": "socket-probe-2026-07-21",
+  "note": "Every endpoint here both answered our raw-socket probe AND delivered with measured headroom: sustained >= 1.1x realtime and a 3-second burst >= 1.5x the stream's own need, at <= 128 kb/s. Admission only rejects streams that cannot hold realtime with slack or exceed 128 kb/s; burst and sustained figures are kept per endpoint to rank alternates by recovery speed. Shipping is decided by tier, which is judged against an anchor measured in the same run — see tierRule.",
+  "stations": [
+    {
+      "id": "radiopartypldjmixesparty",
+      "name": "Radioparty.pl Dj Mixes Party",
+      "votes": 13765,
+      "favicon": "http://radioparty.pl//favicon.ico",
+      "endpoints": [
+        {
+          "url": "http://djmixes.radioparty.pl:8035/",
+          "bitrateKbps": 128,
+          "burst3KBps": 35.6,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "tokfm",
+      "name": "TOK FM",
+      "votes": 9533,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba10-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        },
+        {
+          "url": "http://radiostream.pl/tuba10-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        },
+        {
+          "url": "http://radiostream.pl/tuba10-2.mp3",
+          "bitrateKbps": 64,
+          "burst3KBps": 28.3,
+          "avgKBps": 11.8,
+          "xRealtime": 1.52
+        },
+        {
+          "url": "http://stream30.radiostream.pl/tuba10-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.197
+    },
+    {
+      "id": "eskarock",
+      "name": "ESKA ROCK",
+      "votes": 8011,
+      "favicon": "https://static.mytuner.mobi/media/tvos_radios/2LqeyZhdFq.png",
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/5380-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.5,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/5380-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 49,
+          "avgKBps": 22.4,
+          "xRealtime": 1.43
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.126
+    },
+    {
+      "id": "wnet",
+      "name": "Radio Wnet",
+      "votes": 6908,
+      "favicon": "https://wnet.fm/wp-content/uploads/2019/03/cropped-favikon-145x145.png",
+      "endpoints": [
+        {
+          "url": "http://audio.radiownet.pl:8000/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992,
+      "tierEvidence": "BASIS FOR TIER B: the owner played it on hardware. Reported 2026-08-02 as confirmed the previous day and lasting hours - a 0.4.1 candidate on a Core2, the station selected on a tile and left playing. This is the clause this field exists for: a person heard it. WHAT IT DOES NOT ESTABLISH. Nobody logged a counter, so there is no audio_qc series, no underrun count and no soak file behind it; the duration is the owner's recollection, not a timestamp range. It says the station plays, not how close to the edge it plays. The exact application image is not recorded either, and does not need to be: the directory entry, and with it the endpoint http://audio.radiownet.pl:8000/stream at 128 kbps, is unchanged across every 0.4.1 candidate, so the report is about the station rather than about a binary. WHY IT NEEDED THIS AT ALL. It reads 0.992x the anchor against a 1x bar, short by 0.008. Four back-to-back 15 s probes of one stream spanned 1.237-1.248, so the instrument's spread is about +-0.01 and the miss sits inside it; this station and the anchor both measure 1.24. That was an argument about the measurement, which is why it shipped on request from 2026-08-01 under provisional-admissions.lock.json with a floor of 0.99, blocking publication until somebody played it. Somebody did, so the provisional entry is retired in this same change - a station may not carry both, and leaving the weaker claim beside the stronger one is how a temporary door becomes permanent."
+    },
+    {
+      "id": "rmffm",
+      "name": "RMF FM",
+      "votes": 5785,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.7/rmf_fm",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://31.192.216.8/rmf_fm",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.8,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs101-krk.rmfstream.pl/rmf_fm",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_fm",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.8,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_fm",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.8,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "nowywiat",
+      "name": "Radio Nowy Świat",
+      "votes": 5707,
+      "favicon": "https://nowyswiat.online/assets/favicons/apple-icon-180x180.png",
+      "endpoints": [
+        {
+          "url": "http://stream.rcs.revma.com/ypqt40u0x1zuv",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.1,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.094
+    },
+    {
+      "id": "radio357",
+      "name": "Radio 357",
+      "votes": 9668,
+      "favicon": "https://radio357.pl/wp-content/uploads/2022/04/c5399c0d-1b8e-43d5-b23b-e5cef1857856.png",
+      "endpoints": [
+        {
+          "url": "http://stream.rcs.revma.com/an1ugyygzk8uv",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "tierEvidence": "ANCHOR for tiering since 2026-08-01 (see tierRule): this station's reading in a run sets the bar that run judges the others against, so a probe cannot move it in either direction - only hardware can. BASIS FOR TIER B: the owner device-proof clause invoked 30.07 (three probes x=1.27/1.27/1.27, burst 2.3x need) and the owner's confirmation on 01.08 that the station plays in the shipped 0.4. NOT the soak log. SOAK 31.07 - WHAT IT OBSERVES, AND NOTHING MORE. File: output/hardware-soaks/2026-07-31-release-0-4-install.log. It spans 8 h but the device reported for ~2 h (14:15:17-16:15:14, 121 audio_qc samples); the rest is supervisor lines. bt_active_silence_frames counts PCM frames the A2DP callback filled with zeros - a firmware counter, not an acoustic measurement. It rose 3 times. In each of those one-minute buckets stream_starts also rose by 1, bt_media_starts did not move, and input_underruns rose (+123, +18, +122). Across 118 comparable buckets input_underruns rose in 70 and the silence counter in 3, and those 3 are a subset of the 70. route=local at 15:05 and 15:11 follows 'boot reason=1' - those are reboots, not link drops; the one unambiguous fallback during playback is 15:22:52. The log records no station identity, so it cannot say which stations were playing at any point. WHAT IT DOES NOT ESTABLISH: cause. One-minute buckets cannot order events inside them, so co-occurrence of a silence rise with a stream start and with input underruns is not evidence that either produced it. TWO EARLIER VERSIONS OF THIS NOTE WERE WRONG and are recorded here so the pattern is visible rather than repeated. The 30.07 text ended 'keep B only if the pacing-aware prebuffer closes the BT case; otherwise C' - docs/142 retracted that on 31.07, but it was still read as current on 01.08 and produced the opposite conclusion. The first 01.08 rewrite then claimed '8 h', 'each at the start of a Bluetooth session', 'the defect is the link, not the stream', 'the buffer was full', 'underruns rose without accompanying silence' and 'the link dropped twice'. Independent review checked each against the log: all were wrong. The common error both times was reading causation out of once-a-minute counters. INSTRUMENT, 01.08 - FIGURES CORRECTED, see below. Five stations on four unrelated CDNs, re-measured sequentially in the same 15 s window, using THIS script's own arithmetic (avg = bytes/elapsed/1024, need = kbps*1000/8/1024): RMF 1.63->1.60, TOK FM 1.52->1.48, Dj Mixes 1.27->1.26, Wnet 1.26->1.24, this station 1.27->1.24. Drift is -0.009..-0.035 across hosts that share nothing, which is consistent with a shared run/network effect rather than the stations changing. Repeatability was measured too: four back-to-back 15 s probes of one stream gave 1.237-1.248, so the instrument's own spread is about +-0.01. Sending 'Icy-MetaData: 1' or not made no measurable difference (+0.000, -0.011), so interleaved metadata is not inflating these figures. WHY THIS MATTERS: tier C spans 1.24-1.29 - a band 0.05 wide - and the between-run drift reaches 0.035 of it. Measured today this station reads 1.24, the same as Radio Wnet, which the fixed bar excludes. A station that ships and plays is indistinguishable from one that does not ship. That is what anchoring fixes, and it is the whole argument; the soak is not. A FIRST VERSION OF THIS PARAGRAPH OVERSTATED THE DRIFT ROUGHLY TWOFOLD (-0.04..-0.07) because the manual probe divided by 128/8 = 16 KB/s while the script divides by 128*1000/8/1024 = 15.625 KB/s. Recorded because the conclusion survived the correction but the numbers did not, and a reader is entitled to know which is which. FIELD REPORTS 2026-08-01: five owners running the published 0.4 told the owner this station plays for them. That is five reports, not five measurements - nobody logged a counter and nobody stated for how long - but it is the anchor being heard on hardware the project does not control, which is a wider basis than one bench and is the exact kind of evidence this field is for.",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "silesia",
+      "name": "Radio Silesia",
+      "votes": 5019,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7926/",
+          "bitrateKbps": 128,
+          "burst3KBps": 108.4,
+          "avgKBps": 40,
+          "xRealtime": 2.56
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 2.016
+    },
+    {
+      "id": "radiopartyplenergy2000",
+      "name": "Radioparty.pl Energy2000",
+      "votes": 4953,
+      "favicon": "http://www.radioparty.pl/favicon.ico",
+      "endpoints": [
+        {
+          "url": "http://energy2000.radioparty.pl:8005/",
+          "bitrateKbps": 128,
+          "burst3KBps": 35.6,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmf24",
+      "name": "RMF24",
+      "votes": 4524,
+      "favicon": "https://www.rmf24.pl/i/2022/favicon/apple-icon-120x120.png",
+      "endpoints": [
+        {
+          "url": "http://rmfstream1.interia.pl/rmf_24",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "rockradio",
+      "name": "Rock Radio",
+      "votes": 4058,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba8-1.mp3?cache=1650763965",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "plus",
+      "name": "Radio Plus",
+      "votes": 3970,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/4990-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.9,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/4990-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.9,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://pl02.cdn.eurozet.pl/plu-waw.mp3?redirected=02",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "radiopartyplvocaltrance",
+      "name": "Radioparty.pl Vocal Trance",
+      "votes": 3928,
+      "favicon": "https://radioparty.pl/favicon.ico",
+      "endpoints": [
+        {
+          "url": "http://s2.radioparty.pl:8025/vocaltrance",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.9,
+          "avgKBps": 20,
+          "xRealtime": 1.28
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.008
+    },
+    {
+      "id": "krakw",
+      "name": "Radio Kraków",
+      "votes": 3182,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream3.nadaje.com:9116/radiokrakow",
+          "bitrateKbps": 128,
+          "burst3KBps": 52,
+          "avgKBps": 35.3,
+          "xRealtime": 2.26
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.78
+    },
+    {
+      "id": "radiopartypl",
+      "name": "Radioparty.pl",
+      "votes": 2906,
+      "favicon": "http://radioparty.pl/favicon.ico",
+      "endpoints": [
+        {
+          "url": "http://s7.radioparty.pl:8000/",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.9,
+          "avgKBps": 19.5,
+          "xRealtime": 1.25
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.984
+    },
+    {
+      "id": "voxfm",
+      "name": "VOX FM",
+      "votes": 2769,
+      "favicon": "https://www.voxfm.pl/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/3990-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.8,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        },
+        {
+          "url": "http://ic2.smcdn.pl/3990-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.3,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.094
+    },
+    {
+      "id": "eskakrakw",
+      "name": "Radio Eska Kraków",
+      "votes": 2474,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2070-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.8,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2070-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.3,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.118
+    },
+    {
+      "id": "polskieradiokatowice",
+      "name": "Polskie Radio Katowice",
+      "votes": 2391,
+      "favicon": "https://www.radio.katowice.pl/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:9212/radiokatowice",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "eskagorca100",
+      "name": "ESKA GORĄCA 100",
+      "votes": 2297,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6120-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.4,
+          "avgKBps": 22.2,
+          "xRealtime": 1.42
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6120-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.6,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.118
+    },
+    {
+      "id": "parkfm",
+      "name": "Radio Park FM",
+      "votes": 2225,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://sluchaj.radiopark.com.pl:8048/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.2,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "gratorun",
+      "name": "Radio Gra Torun",
+      "votes": 2083,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://31.192.216.7:8000/radio_gra",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs102-krk.rmfstream.pl/radio_gra",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.8,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs103-krk.rmfstream.pl/radio_gra",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.8,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/radio_gra",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "zoteprzeboje",
+      "name": "radio złote przeboje",
+      "votes": 1818,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba8904-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        },
+        {
+          "url": "http://radiostream.pl/tuba8928-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "kampus",
+      "name": "Radio Kampus",
+      "votes": 1739,
+      "favicon": "https://radiokampus.fm/logo192.png",
+      "endpoints": [
+        {
+          "url": "http://193.0.98.66:8005/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.4,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.614
+    },
+    {
+      "id": "pogodapozna",
+      "name": "Radio Pogoda Poznań",
+      "votes": 1731,
+      "favicon": "https://gfx.radiopogoda.pl/extension/radiopogoda/design/standard/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://stream30.radiostream.pl/tuba138-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmfclassic",
+      "name": "RMF Classic",
+      "votes": 1711,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rmfstream1.interia.pl:8000/rmf_classic",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.5,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs103-krk-cyfronet.rmfstream.pl/rmf_classic",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs9-krk2.rmfstream.pl/rmf_classic",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "partykanagwny",
+      "name": "Radio Party - Kanał Główny",
+      "votes": 1701,
+      "favicon": "https://radioparty.pl/assets/img/logo.png",
+      "endpoints": [
+        {
+          "url": "http://s2.radioparty.pl:8015/stream?nocache=4171",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.6,
+          "avgKBps": 20,
+          "xRealtime": 1.28
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.008
+    },
+    {
+      "id": "wroclaw",
+      "name": "Radio Wroclaw",
+      "votes": 1680,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:9240/prw",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "em",
+      "name": "Radio eM",
+      "votes": 1566,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://194.181.177.253:8000/",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.7,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "zoteprzebojebiaystok",
+      "name": "Radio Złote Przeboje Białystok",
+      "votes": 1463,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba8900-1.mp3?cache=1647512038",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "zoteprzebojepozna",
+      "name": "Złote Przeboje Poznań",
+      "votes": 1363,
+      "favicon": "http://static.fm.tuba.pl/stations/_img/zlote-przeboje_512.png",
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba8926-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "eskaimpreska",
+      "name": "ESKA IMPRESKA",
+      "votes": 1288,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6030-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.9,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6030-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 49.3,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "parada9600fm",
+      "name": "Radio Parada 96.00 fm",
+      "votes": 1243,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:15274/live",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "zoteprzebojewrocaw",
+      "name": "Radio Złote Przeboje Wrocław",
+      "votes": 1232,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba9-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmfdance",
+      "name": "RMF Dance",
+      "votes": 1155,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://rmfstream1.interia.pl:8000/rmf_dance",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_dance",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.8,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs103-krk.rmfstream.pl/rmf_dance",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.5,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_dance",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.8,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "rmfpolskirock",
+      "name": "RMF Polski Rock",
+      "votes": 1139,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://195.150.20.9/rmf_polski_rock",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "voxfmdisco90",
+      "name": "VOX FM DISCO 90",
+      "votes": 934,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6170-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.4,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6170-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.4,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.094
+    },
+    {
+      "id": "eskagorca20",
+      "name": "ESKA GORĄCA 20",
+      "votes": 910,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6130-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.1,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6130-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.1,
+          "avgKBps": 22.2,
+          "xRealtime": 1.42
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.118
+    },
+    {
+      "id": "chilloutradio",
+      "name": "Chillout Radio",
+      "votes": 899,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://panel.nadaje.com:9004/",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "polskieradiopozna",
+      "name": "Polskie Radio Poznań",
+      "votes": 886,
+      "favicon": "https://radiopoznan.fm/v3/img/logo.png",
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:8578/poznan",
+          "bitrateKbps": 96,
+          "burst3KBps": 32.4,
+          "avgKBps": 15.8,
+          "xRealtime": 1.35
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.063
+    },
+    {
+      "id": "zetdance",
+      "name": "ZET DANCE",
+      "votes": 830,
+      "favicon": "https://gfx.radiozet.pl/extension/radiozet/design/standard/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://pl01.cdn.eurozet.pl/ZETDAN.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "rmfmaxxx997pomorze",
+      "name": "RMF MAXXX 99.7 Pomorze",
+      "votes": 785,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs202-krk-cyfronet.rmfstream.pl/rmf_maxxx?aw_0_1st.playerid=RMF_TuneIn&skey=1616600473",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "chillizetdeep",
+      "name": "Chilli ZET Deep",
+      "votes": 693,
+      "favicon": "https://gfx.chillizet.pl/extension/chillizet/design/standard/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://ch02.cdn.eurozet.pl/CHIDEP.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.4,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "pogoda",
+      "name": "Radio Pogoda",
+      "votes": 679,
+      "favicon": "https://gfx.radiopogoda.pl/extension/radiopogoda/design/standard/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba140-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "meloradiohotdance",
+      "name": "MELORADIO HOT DANCE",
+      "votes": 653,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ml02.cdn.eurozet.pl/MELHDN.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.4,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "zloteprzebojewroclaw",
+      "name": "Radio Zlote Przeboje Wroclaw",
+      "votes": 633,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba8940-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmfmuzykafilmowa",
+      "name": "RMF Muzyka_Filmowa",
+      "votes": 625,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://rs203-krk-cyfronet.rmfstream.pl/rmf_muzyka_filmowa",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmfdiscopolo",
+      "name": "RMF Disco polo",
+      "votes": 607,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs201-krk-cyfronet.rmfstream.pl/rmf_disco_polo",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "voxfmhit22",
+      "name": "VOX FM HIT 22",
+      "votes": 548,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6020-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.3,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6020-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.8,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.094
+    },
+    {
+      "id": "voxfmdiscoparty",
+      "name": "VOX FM DISCO PARTY",
+      "votes": 534,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6180-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 49.5,
+          "avgKBps": 21.8,
+          "xRealtime": 1.4
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6180-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.6,
+          "avgKBps": 21.8,
+          "xRealtime": 1.4
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.102
+    },
+    {
+      "id": "alex",
+      "name": "Radio Alex",
+      "votes": 528,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://frradioq.radioca.st/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 91,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        },
+        {
+          "url": "http://proxima.shoutca.st:9045/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "bontonchem",
+      "name": "Bonton Chełm",
+      "votes": 523,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://streaming.inten.pl:8022/bonton.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmf70sdisco",
+      "name": "RMF 70s disco",
+      "votes": 471,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://217.74.72.6/rmf_70s_disco",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.4,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "leliwa",
+      "name": "Radio Leliwa",
+      "votes": 448,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://streaming.g-news.pl:8050/leliwa",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.1,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        },
+        {
+          "url": "http://streaming.g-news.pl:8050/leliwa?1605899747",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.1,
+          "avgKBps": 20,
+          "xRealtime": 1.28
+        },
+        {
+          "url": "http://streaming.g-news.pl/radio/8050/leliwa",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.4,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.008
+    },
+    {
+      "id": "plusgdansk",
+      "name": "Radio Plus Gdansk",
+      "votes": 448,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://pl05.cdn.eurozet.pl/plu-gdn.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.6,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "afera",
+      "name": "Radio Afera",
+      "votes": 444,
+      "favicon": "https://www.afera.com.pl/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://radio.afera.com.pl/afera128.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmfclassicrock",
+      "name": "RMF Classic Rock",
+      "votes": 442,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_classic_rock",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs201-krk.rmfstream.pl/rmf_classic_rock",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_classic_rock",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "centrum",
+      "name": "Radio Centrum",
+      "votes": 435,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://shot4.inten.pl:8888/rcfm.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "zetnarower",
+      "name": "Radio Zet na Rower",
+      "votes": 433,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://zt06.cdn.eurozet.pl/ZETNAR.mp3?t=1709720397160?redirected=06",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.6,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "slonskieradiohitmix",
+      "name": "Slonskie Radio Hitmix",
+      "votes": 432,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7294/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        },
+        {
+          "url": "http://s1.slotex.pl:7294/stream/1/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "modfm",
+      "name": "ModFM",
+      "votes": 424,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radio.modules.pl:8500/;",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.2,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "pluskrakow",
+      "name": "Radio Plus Krakow",
+      "votes": 424,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/4070-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.3,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        },
+        {
+          "url": "http://ic2.smcdn.pl/4070-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.118
+    },
+    {
+      "id": "rmfpolskihiphop",
+      "name": "RMF Polski Hip Hop",
+      "votes": 406,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://217.74.72.10/rmf_trend_sounds",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "antyradiomadeinpoland",
+      "name": "Antyradio Made In Poland",
+      "votes": 404,
+      "favicon": "https://gfx-player.antyradio.pl/design/player_antyradio/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://an04.cdn.eurozet.pl/ANTPOL.mp3?t=1668748669557?redirected=04",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "akadera",
+      "name": "Radio AKADERA",
+      "votes": 364,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:11846/;",
+          "bitrateKbps": 128,
+          "burst3KBps": 36,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "baobab",
+      "name": "Radio Baobab",
+      "votes": 355,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream.radiobaobab.pl:8000/radiobaobab.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "polkajammerstation",
+      "name": "Polka Jammer Station",
+      "votes": 344,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://199.58.161.66/",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.8,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "eska2rzeszw",
+      "name": "ESKA 2 RZESZÓW",
+      "votes": 332,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/1240-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.8,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/1240-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.1,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "eskarzeszw",
+      "name": "Eska - Rzeszów",
+      "votes": 326,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2240-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 46.6,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2240-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 46.6,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "radio",
+      "name": "radio",
+      "votes": 320,
+      "favicon": "http://teoriachaosu.info/wp-content/plugins/under-construction-page/themes/images/favicon.png",
+      "endpoints": [
+        {
+          "url": "http://c16.radioboss.fm:18014/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.6,
+          "avgKBps": 20,
+          "xRealtime": 1.28
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.008
+    },
+    {
+      "id": "rmfnajwiekszepolskieprzeboje",
+      "name": "RMF Najwieksze Polskie Przeboje",
+      "votes": 318,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs202-krk-cyfronet.rmfstream.pl/npp_rmf_on",
+          "bitrateKbps": 128,
+          "burst3KBps": 64.5,
+          "avgKBps": 25,
+          "xRealtime": 1.6
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.26
+    },
+    {
+      "id": "karolinka",
+      "name": "Radio Karolinka",
+      "votes": 308,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://91.232.4.33:8358/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.614
+    },
+    {
+      "id": "rmfgold",
+      "name": "RMF Gold",
+      "votes": 296,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs203-krk-cyfronet.rmfstream.pl/rmf_gold",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "planetafm",
+      "name": "PLANETA FM",
+      "votes": 293,
+      "favicon": "https://www.planetafm.pl/wp-content/uploads/2018/08/planeta-ikona.png",
+      "endpoints": [
+        {
+          "url": "http://pl01.cdn.eurozet.pl/pla-net.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "stargard903fmtwojepierwszeradio",
+      "name": "Radio Stargard 90,3 FM - Twoje pierwsz",
+      "votes": 290,
+      "favicon": "https://twojeradio.fm/twojeradio2018/pliki/2020/02/twojeradio-logo.png",
+      "endpoints": [
+        {
+          "url": "http://51.77.59.65:8100/stream.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "meloradiowrocaw",
+      "name": "Meloradio Wrocław",
+      "votes": 289,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ml02.cdn.eurozet.pl/mel-wro.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "rmfmaxxhopbc",
+      "name": "RMF MAXX Hop bęc\"",
+      "votes": 287,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.244/rmf_hop_bec",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.5,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "ram",
+      "name": "Radio RAM",
+      "votes": 282,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:9220/ram",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "zet2000",
+      "name": "Radio ZET - 2000",
+      "votes": 278,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://zt04.cdn.eurozet.pl/ZET200.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.8,
+          "avgKBps": 32.4,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "rmfmaxx",
+      "name": "RMFmaxx",
+      "votes": 276,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs202-krk-cyfronet.rmfstream.pl/rmf_maxxx",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "eskazamo",
+      "name": "Eska zamość",
+      "votes": 268,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2230-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.3,
+          "avgKBps": 21.8,
+          "xRealtime": 1.4
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2230-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.3,
+          "avgKBps": 21.8,
+          "xRealtime": 1.4
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.102
+    },
+    {
+      "id": "szczecinextra",
+      "name": "Radio Szczecin Extra",
+      "votes": 263,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream3.nadaje.com:8200/szczecinfm",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.6,
+          "xRealtime": 1.25
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.984
+    },
+    {
+      "id": "damismaniadjradio",
+      "name": "Damismania Dj Radio",
+      "votes": 261,
+      "favicon": "http://damisdjs.forumgreek.com/images/icons-120.png",
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7512/",
+          "bitrateKbps": 96,
+          "burst3KBps": 95.7,
+          "avgKBps": 28.4,
+          "xRealtime": 2.42
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.906
+    },
+    {
+      "id": "raniec",
+      "name": "Radio Różaniec",
+      "votes": 256,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radio2.rozaniec.info:5696/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32.1,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "voxfmbestlista",
+      "name": "VOX FM BEST LISTA",
+      "votes": 256,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6100-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 49.1,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6100-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.4,
+          "avgKBps": 21.9,
+          "xRealtime": 1.4
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "eskadopracy",
+      "name": "ESKA DO PRACY",
+      "votes": 253,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6140-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.2,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6140-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.6,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "zet90s",
+      "name": "Zet 90s",
+      "votes": 252,
+      "favicon": "https://gfx-player.radiozet.pl/design/player_radiozet/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://zt02.cdn.eurozet.pl/ZET090.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "gdyniaradio",
+      "name": "Gdynia Radio",
+      "votes": 246,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://51.255.8.139:8064/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 31.9,
+          "xRealtime": 2.04
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.606
+    },
+    {
+      "id": "hit",
+      "name": "Radio Hit",
+      "votes": 238,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://46.170.199.85:8000/",
+          "bitrateKbps": 128,
+          "burst3KBps": 97.4,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "rmfmuzykaklasyczna",
+      "name": "RMF Muzyka Klasyczna",
+      "votes": 229,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs201-krk.rmfstream.pl/rmf_muzyka_klasyczna",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_muzyka_klasyczna",
+          "bitrateKbps": 128,
+          "burst3KBps": 66,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "mojepolskieradio",
+      "name": "MojePolskieRadio - РАДИО ПОЛЬША",
+      "votes": 226,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream3.polskieradio.pl:8914/",
+          "bitrateKbps": 128,
+          "burst3KBps": 39.7,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.614
+    },
+    {
+      "id": "ostrowiec952fm",
+      "name": "Radio Ostrowiec 95.2 FM",
+      "votes": 224,
+      "favicon": "https://radioostrowiec.pl/wp-content/uploads/2017/05/cropped-ikona-180x180.png",
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7050/stream/1/;?type=http",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.8,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "zet",
+      "name": "Radio ZET",
+      "votes": 223,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://n-11-21.dcs.redcdn.pl/sc/o2/Eurozet/live/audio.livx?audio=5",
+          "bitrateKbps": 128,
+          "burst3KBps": 35.1,
+          "avgKBps": 19.4,
+          "xRealtime": 1.24
+        },
+        {
+          "url": "http://zt01.cdn.eurozet.pl/zet-net.mp3?redirected=01",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        },
+        {
+          "url": "http://zt02.cdn.eurozet.pl/zet-old.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "malbork",
+      "name": "Radio Malbork",
+      "votes": 204,
+      "favicon": "https://static2.radiomalbork.fm/data/wysiwig/532169_492610320769907_254398773_n.png",
+      "endpoints": [
+        {
+          "url": "http://stream3.nadaje.com:9022/",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.6,
+          "xRealtime": 1.25
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.984
+    },
+    {
+      "id": "antyradiomakak",
+      "name": "Antyradio Makak",
+      "votes": 199,
+      "favicon": "https://gfx-player.antyradio.pl/design/player_antyradio/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://an05.cdn.eurozet.pl/ANTMAK.mp3?redirected=05",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "danielka",
+      "name": "Radio Danielka",
+      "votes": 193,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7088/",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.7,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.614
+    },
+    {
+      "id": "discopartylata90",
+      "name": "Disco Party - Lata 90.",
+      "votes": 191,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7170/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "goldlive",
+      "name": "Radio Gold Live",
+      "votes": 190,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7062/;",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.2,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "meloradiopozna",
+      "name": "MELORADIO POZNAŃ",
+      "votes": 186,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ml03.cdn.eurozet.pl/mel-poz.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.4,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "wroclawkultura",
+      "name": "Radio Wroclaw Kultura",
+      "votes": 183,
+      "favicon": "http://www.radiowroclawkultura.pl/images/favicon/apple-touch-icon-144x144.png",
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:9230/rwkultura",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "meloradiolskkatowice",
+      "name": "Melo Radio Śląsk (Katowice)",
+      "votes": 177,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ml01.cdn.eurozet.pl/mel-ktw.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "rmf80sdisco",
+      "name": "RMF 80s disco",
+      "votes": 175,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_80s_disco",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_80s_disco",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "jutrzenka",
+      "name": "Radio Jutrzenka",
+      "votes": 167,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://sluchaj.radiojutrzenka.waw.pl:12854/test",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmf4dancernb",
+      "name": "RMF 4 DANCE & RNB",
+      "votes": 165,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_4",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_4",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs6-krk2.rmfstream.pl/rmf_4",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "pogodagdask",
+      "name": "Radio Pogoda Gdańsk",
+      "votes": 164,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba145-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "vanessa",
+      "name": "Radio Vanessa",
+      "votes": 162,
+      "favicon": "https://cdn.onlineradiobox.com/img/l/5/1425.v5.png",
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7358/;;",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.6,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "kujawy",
+      "name": "Radio Kujawy",
+      "votes": 157,
+      "favicon": "https://www.kujawy.info/wp-content/uploads/www/favicon-150x150.png",
+      "endpoints": [
+        {
+          "url": "http://radio.kujawy.info:9940/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.4,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "zninfm",
+      "name": "Radio Znin FM",
+      "votes": 155,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:8052/",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.1,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "polskieradiodlazagranicy",
+      "name": "Polskie Radio Dla Zagranicy",
+      "votes": 154,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream3.polskieradio.pl:8908/",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.4,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.614
+    },
+    {
+      "id": "eskalublin",
+      "name": "Eska Lublin",
+      "votes": 150,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2130-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.5,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2130-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 49.4,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.118
+    },
+    {
+      "id": "antyradiogreatest",
+      "name": "Antyradio Greatest",
+      "votes": 148,
+      "favicon": "https://gfx-player.antyradio.pl/design/player_antyradio/images/favicon/favicon-32x32.png",
+      "endpoints": [
+        {
+          "url": "http://an02.cdn.eurozet.pl/ANTGRE.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "d",
+      "name": "Radio Łódź",
+      "votes": 148,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://217.113.224.171/RadioLodz-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "antyradio",
+      "name": "Antyradio",
+      "votes": 147,
+      "favicon": "https://gfx.antyradio.pl/design/antyradio/src/images/favicon/favicon_180x180.png",
+      "endpoints": [
+        {
+          "url": "http://an02.cdn.eurozet.pl/ant-web.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 101.2,
+          "avgKBps": 32.6,
+          "xRealtime": 2.09
+        },
+        {
+          "url": "http://n-4-2.dcs.redcdn.pl/sc/o2/Eurozet/live/antyradio.livx?audio=5",
+          "bitrateKbps": 128,
+          "burst3KBps": 39.9,
+          "avgKBps": 20.5,
+          "xRealtime": 1.31
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "eskaszczecin",
+      "name": "Eska Szczecin",
+      "votes": 139,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2260-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.6,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2260-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.1,
+          "avgKBps": 21.8,
+          "xRealtime": 1.4
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "pielgrzymkazania",
+      "name": "Radio Pielgrzym Kazania",
+      "votes": 139,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiointernetowe.net:9450/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "pasjachillout",
+      "name": "Radio Pasja - Chillout",
+      "votes": 135,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://91.232.4.33:8108/",
+          "bitrateKbps": 64,
+          "burst3KBps": 90.7,
+          "avgKBps": 24.5,
+          "xRealtime": 3.14
+        },
+        {
+          "url": "http://91.232.4.33:8108/stream2",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 2.472
+    },
+    {
+      "id": "rmfpolskaprywatka",
+      "name": "RMF Polska prywatka",
+      "votes": 133,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs102-krk-cyfronet.rmfstream.pl/rmf_polska_prywatka",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "sud",
+      "name": "Radio SUD",
+      "votes": 131,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream2.nadaje.com:8012/",
+          "bitrateKbps": 128,
+          "burst3KBps": 36,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "zetlove",
+      "name": "Radio Zet Love",
+      "votes": 130,
+      "favicon": "https://gfx-player.radiozet.pl/var/player/storage/images/player-radio-zet/kanaly-muzyczne/radio-zet-love/684881-14-pol-PL/Radio-ZET-Love_social_share.png",
+      "endpoints": [
+        {
+          "url": "http://zt06.cdn.eurozet.pl/ZETLOV.mp3?t=1709719922445?redirected=06",
+          "bitrateKbps": 128,
+          "burst3KBps": 101.2,
+          "avgKBps": 32.6,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "chillizetladies",
+      "name": "Chillizet Ladies",
+      "votes": 128,
+      "favicon": "https://gfx-player.chillizet.pl/var/player/storage/images/player-chillizet/kanaly-muzyczne/chillizet-ladies/710371-2-pol-PL/Chillizet-Ladies_social_share.jpg",
+      "endpoints": [
+        {
+          "url": "http://ch01.cdn.eurozet.pl/CHILAD.mp3?t=1709721264195?redirected=01",
+          "bitrateKbps": 128,
+          "burst3KBps": 101.2,
+          "avgKBps": 32.7,
+          "xRealtime": 2.09
+        },
+        {
+          "url": "http://ch03.cdn.eurozet.pl/CHILAD.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.6,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "jpeg",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "meloradiofastsongs",
+      "name": "MELORADIO FAST SONGS",
+      "votes": 127,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ml02.cdn.eurozet.pl/MELFST.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.4,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "akord",
+      "name": "Radio Akord",
+      "votes": 125,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7122/",
+          "bitrateKbps": 64,
+          "burst3KBps": 50.5,
+          "avgKBps": 16.3,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "rmfmaxxxkrosno",
+      "name": "RMF MAXXX KROSNO",
+      "votes": 123,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs6-krk2.rmfstream.pl/rmf_maxxx_ksn",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.7,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "meloradiokielce",
+      "name": "Meloradio Kielce",
+      "votes": 122,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ml03.cdn.eurozet.pl/mel-klc.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "antyradiohard",
+      "name": "Antyradio Hard",
+      "votes": 117,
+      "favicon": "https://gfx-player.radiozet.pl/var/player/storage/images/player-antyradio/kanaly-muzyczne/antyradio-hard/710016-10-pol-PL/Antyradio-Hard_size-228x228.jpg",
+      "endpoints": [
+        {
+          "url": "http://an01.cdn.eurozet.pl/ANTHAR.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        },
+        {
+          "url": "http://an05.cdn.eurozet.pl/ANTHAR.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "jpeg",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "slask",
+      "name": "Radio Slask",
+      "votes": 116,
+      "favicon": "http://radioslask.pl/templates/img/rs-icona.jpg",
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7022/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "jpeg",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "antyradiounplugged",
+      "name": "Antyradio Unplugged",
+      "votes": 115,
+      "favicon": "https://gfx-player.antyradio.pl/design/player_antyradio/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://an05.cdn.eurozet.pl/ANTUNP.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.4,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "fama",
+      "name": "Radio FAMA",
+      "votes": 115,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream2.nadaje.com:8076/",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.8,
+          "avgKBps": 19.8,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "warta",
+      "name": "RADIO WARTA",
+      "votes": 112,
+      "favicon": "https://uradio-staticfiles.s3.amazonaws.com/radioapp/images/apple-icon.png",
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7446/;",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.9,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "rmfsloneczneprzeboje",
+      "name": "RMF Sloneczne Przeboje",
+      "votes": 112,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs201-krk-cyfronet.rmfstream.pl/rmf_sloneczne_przeboje",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmfballady",
+      "name": "Rmf Ballady",
+      "votes": 109,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_nostalgia",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_nostalgia",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs203-krk.rmfstream.pl/rmf_nostalgia",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rockradiokrakw",
+      "name": "Rock Radio - Kraków",
+      "votes": 108,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba9000-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmf",
+      "name": "rmf",
+      "votes": 107,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.242:8000/rmf_fm",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "folkradio",
+      "name": "Folk Radio",
+      "votes": 105,
+      "favicon": "https://folkradio.pl/images/logo.png",
+      "endpoints": [
+        {
+          "url": "http://streaming.g-news.pl:8030/fr1",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.1,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "bestradio",
+      "name": "BEST Radio",
+      "votes": 101,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream.radiobest.eu:8000/128",
+          "bitrateKbps": 128,
+          "burst3KBps": 55.6,
+          "avgKBps": 23.4,
+          "xRealtime": 1.5
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.181
+    },
+    {
+      "id": "chrystusakrla",
+      "name": "Radio Chrystusa Króla",
+      "votes": 100,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiochrystusakrola.pl:8080/;stream.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 99,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.614
+    },
+    {
+      "id": "rmf60s",
+      "name": "RMF 60s",
+      "votes": 98,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.242:8000/rmf_60s",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmfsmoothjazz",
+      "name": "RMF Smooth jazz",
+      "votes": 98,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs101-krk-cyfronet.rmfstream.pl/rmf_smooth_jazz",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "grawroclaw",
+      "name": "Radio Gra Wroclaw",
+      "votes": 97,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rmfstream2.interia.pl:8000/radio_gra",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "supernovagdask",
+      "name": "supernova Gdańsk",
+      "votes": 95,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/1170-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.4,
+          "avgKBps": 21.9,
+          "xRealtime": 1.4
+        },
+        {
+          "url": "http://ic2.smcdn.pl/1170-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.4,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "pasjarelaks",
+      "name": "Radio Pasja - Relaks",
+      "votes": 93,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://91.232.4.33:8102/",
+          "bitrateKbps": 64,
+          "burst3KBps": 85,
+          "avgKBps": 24.5,
+          "xRealtime": 3.14
+        },
+        {
+          "url": "http://91.232.4.33:8102/stream2",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 2.472
+    },
+    {
+      "id": "antyradiokatowice",
+      "name": "Antyradio (Katowice)",
+      "votes": 92,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://an01.cdn.eurozet.pl/ant-kat.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        },
+        {
+          "url": "http://ml02.cdn.eurozet.pl/ant-kat.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 101.6,
+          "avgKBps": 32.6,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "pasjadance",
+      "name": "Radio Pasja - Dance",
+      "votes": 92,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://91.232.4.33:9466/",
+          "bitrateKbps": 64,
+          "burst3KBps": 90.7,
+          "avgKBps": 24.4,
+          "xRealtime": 3.12
+        },
+        {
+          "url": "http://91.232.4.33:9466/stream2",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 31.9,
+          "xRealtime": 2.04
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 2.457
+    },
+    {
+      "id": "meloradioopole",
+      "name": "Meloradio Opole",
+      "votes": 91,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ml02.cdn.eurozet.pl/mel-opl.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "opole2",
+      "name": "Radio Opole 2",
+      "votes": 89,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://193.47.151.4:8045/1",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.2,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "plusbydgoszcz",
+      "name": "Radio Plus Bydgoszcz",
+      "votes": 88,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://pl04.cdn.eurozet.pl/plu-bdg.mp3?redirected=04",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "tonpl",
+      "name": "RADIO TON PL",
+      "votes": 88,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7310/;",
+          "bitrateKbps": 128,
+          "burst3KBps": 99,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "kaszb",
+      "name": "Radio Kaszëbë",
+      "votes": 86,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://x.radiokaszebe.pl:9000/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.1,
+          "avgKBps": 32.1,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "zoteprzebojebydgoszcz",
+      "name": "Złote Przeboje Bydgoszcz",
+      "votes": 86,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba8902-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "eskago",
+      "name": "ESKA GO",
+      "votes": 84,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6200-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 50.2,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6200-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.8,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "gniezno",
+      "name": "Radio Gniezno",
+      "votes": 82,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream3.nadaje.com:8012/;",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.9,
+          "avgKBps": 19.6,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "supernovawrocaw",
+      "name": "supernova Wrocław",
+      "votes": 82,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/1180-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.4,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/1180-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.6,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "neuralradio",
+      "name": "neural radio",
+      "votes": 80,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://cast.magicstreams.gr:9111/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "rmf90sdance",
+      "name": "RMF 90s dance",
+      "votes": 80,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs103-krk-cyfronet.rmfstream.pl/rmf_90s_dance",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.4,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmfmaxxxmazowsze",
+      "name": "RMF MAXXX Mazowsze",
+      "votes": 79,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs101-krk.rmfstream.pl/rmf_maxxx_cie",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.7,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_maxxx_cie",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_maxxx_cie",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "polskieradiogdask",
+      "name": "Polskie Radio Gdańsk",
+      "votes": 78,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream.task.gda.pl:8000/rg1",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "oceandusz",
+      "name": "Radio Ocean Dusz",
+      "votes": 76,
+      "favicon": "https://radiooceandusz.panelradiowy.pl//images/appleicon72.png",
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7022/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.4,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "rmfclub",
+      "name": "RMF Club",
+      "votes": 75,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://217.74.72.6/rmf_club",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmfmaxxpodlasie",
+      "name": "RMF MAXX Podlasie",
+      "votes": 74,
+      "favicon": "https://i.ytimg.com/vi/Jr7C7LQYssM/maxresdefault.jpg",
+      "endpoints": [
+        {
+          "url": "http://rs101-krk.rmfstream.pl/rmf_maxxx_lom",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_maxxx_lom",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.7,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_maxxx_lom",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.7,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "jpeg",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "wesoeslonzoki",
+      "name": "Radio Wesołe Slonzoki",
+      "votes": 73,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://51.255.8.139:8380/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.614
+    },
+    {
+      "id": "paranormalium",
+      "name": "Radio Paranormalium",
+      "votes": 71,
+      "favicon": "https://ilustracje.paranormalium.pl/favicon-apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://azuracast.paranormalium.pl/listen/radio_paranormalium/1",
+          "bitrateKbps": 128,
+          "burst3KBps": 38.1,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rtotrance",
+      "name": "RADIO RTO TRANCE",
+      "votes": 71,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7056/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.2,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "antyradioclassicrock",
+      "name": "Antyradio Classic Rock",
+      "votes": 70,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://an01.cdn.eurozet.pl/ANTCLA.mp3?redirected=01",
+          "bitrateKbps": 128,
+          "burst3KBps": 101.2,
+          "avgKBps": 32.6,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "supernovatrzebnica",
+      "name": "super nova trzebnica",
+      "votes": 67,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/1510-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.9,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/1510-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 46.6,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "polskieradioszczecin92fm",
+      "name": "Polskie Radio Szczecin 92FM",
+      "votes": 66,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:11986/prs",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmflatino",
+      "name": "RMF Latino",
+      "votes": 66,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_latino",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs103-krk.rmfstream.pl/rmf_latino",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.4,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_latino",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.4,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmfmaxxxszczecin",
+      "name": "RMF MAXXX Szczecin",
+      "votes": 65,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://217.74.72.10/rmf_maxxx_szc",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "rmftop30pop",
+      "name": "RMF TOP 30 POP",
+      "votes": 65,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.245/rmf_top_5_pop",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmfgamemusic",
+      "name": "RMF Game Music",
+      "votes": 64,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://195.150.20.243:8000/rmf_gamemusic",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "muzykadwochserc",
+      "name": "Muzyka Dwoch Serc",
+      "votes": 63,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7272/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.2,
+          "avgKBps": 32.4,
+          "xRealtime": 2.07
+        },
+        {
+          "url": "http://s3.slotex.pl:7272/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.2,
+          "avgKBps": 32.4,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "rmfmaxxwocawek",
+      "name": "RMF Maxx Włocławek",
+      "votes": 63,
+      "favicon": "https://www.rmfmaxx.pl/assets-22/images/logo-pink.png",
+      "endpoints": [
+        {
+          "url": "http://rs102-krk-cyfronet.rmfstream.pl/rmf_maxxx_wlc",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.7,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "rmfstyl",
+      "name": "RMF Styl",
+      "votes": 63,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_styl",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_styl",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmffrancais",
+      "name": "RMF Francais",
+      "votes": 61,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://rs101-krk.rmfstream.pl/rmf_francais",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.4,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_francais",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.5,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_francais",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "pik",
+      "name": "Radio PiK",
+      "votes": 60,
+      "favicon": "https://www.radiopik.pl/assets/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://stream.radiopik.pl:9004/",
+          "bitrateKbps": 128,
+          "burst3KBps": 36,
+          "avgKBps": 19.6,
+          "xRealtime": 1.25
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.984
+    },
+    {
+      "id": "rmfpobudka",
+      "name": "RMF Pobudka",
+      "votes": 60,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://rs201-krk.rmfstream.pl/rmf_pobudka",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_pobudka",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmffitnessfakty",
+      "name": "RMF FITNESS FAKTY",
+      "votes": 59,
+      "favicon": "https://rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://195.150.20.7/rmf_fitness_f",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "forever",
+      "name": "Radio Forever",
+      "votes": 58,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7134/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "polskifm",
+      "name": "Polski FM",
+      "votes": 56,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://usa8.fastcast4u.com/proxy/live?mp=/1",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "eskastarachowice",
+      "name": "Radio Eska Starachowice",
+      "votes": 54,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic2.smcdn.pl/2400-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.5,
+          "avgKBps": 22.4,
+          "xRealtime": 1.43
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.126
+    },
+    {
+      "id": "pasjaklubowa",
+      "name": "Radio Pasja - Klubowa",
+      "votes": 54,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://91.232.4.33:9460/",
+          "bitrateKbps": 64,
+          "burst3KBps": 90.3,
+          "avgKBps": 24.5,
+          "xRealtime": 3.14
+        },
+        {
+          "url": "http://91.232.4.33:9460/stream2",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 31.9,
+          "xRealtime": 2.04
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 2.472
+    },
+    {
+      "id": "rmfrelaks",
+      "name": "RMF Relaks",
+      "votes": 54,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_relaks",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_relaks",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "grawrocaw",
+      "name": "Gra Wrocław",
+      "votes": 53,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rmfstream2.interia.pl:8000/radio_gra_wroc",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.8,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "hitradio",
+      "name": "Hit Radio",
+      "votes": 53,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://51.255.8.139:9090/;",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        },
+        {
+          "url": "http://51.255.8.139:9090/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "forte",
+      "name": "Radio Forte",
+      "votes": 52,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7856/",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.1,
+          "avgKBps": 32.3,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "pallotyskieradioewangelizacyjnepallottif",
+      "name": "Pallotyńskie Radio Ewangelizacyjne Pal",
+      "votes": 47,
+      "favicon": "https://pallotti.fm/wp-content/uploads/2019/11/logo-pallotti-fm-przezroczyste-1-e1664286376152.jpg",
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7074/stream/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "jpeg",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "puzzle",
+      "name": "Radio Puzzle",
+      "votes": 47,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7572/",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.8,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "rmfparty",
+      "name": "RMF Party",
+      "votes": 46,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://31.192.216.5/rmf_party",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "supernovajeleniagra",
+      "name": "supernova Jelenia Góra",
+      "votes": 46,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/1480-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 50.3,
+          "avgKBps": 21.9,
+          "xRealtime": 1.4
+        },
+        {
+          "url": "http://ic2.smcdn.pl/1480-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.5,
+          "avgKBps": 21.9,
+          "xRealtime": 1.4
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.102
+    },
+    {
+      "id": "horyzont",
+      "name": "Radio Horyzont",
+      "votes": 44,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7328/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.7,
+          "avgKBps": 32.4,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "afera986mhz",
+      "name": "Radio Afera 98,6 MHz",
+      "votes": 43,
+      "favicon": "https://www.afera.com.pl/templates/lenor/images/logo.png",
+      "endpoints": [
+        {
+          "url": "http://radio.afera.com.pl/afera128.mp3?no_cache=0.982752767360271",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "naszhajmat",
+      "name": "Nasz Hajmat",
+      "votes": 42,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7126/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.9,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "eskawrocaw",
+      "name": "Radio Eska - Wrocław",
+      "votes": 42,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2180-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.9,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2180-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.1,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "pasja",
+      "name": "Radio Pasja",
+      "votes": 42,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://91.232.4.33:8049/",
+          "bitrateKbps": 64,
+          "burst3KBps": 88,
+          "avgKBps": 24.5,
+          "xRealtime": 3.14
+        },
+        {
+          "url": "http://91.232.4.33:8049/stream2",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 2.472
+    },
+    {
+      "id": "rmfszanty",
+      "name": "Rmf Szanty",
+      "votes": 41,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_szanty",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.5,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs201-krk.rmfstream.pl/rmf_szanty",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.1,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_szanty",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.5,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "rmftop30dance",
+      "name": "RMF Top 30 dance",
+      "votes": 41,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.244/rmf_top_5_dance",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs102-krk-cyfronet.rmfstream.pl/rmf_top_5_dance",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.9,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "supernovaszczecin",
+      "name": "supernova Szczecin",
+      "votes": 41,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic2.smcdn.pl/1260-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.2,
+          "avgKBps": 21.8,
+          "xRealtime": 1.39
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.094
+    },
+    {
+      "id": "pasjapop",
+      "name": "Radio Pasja - Pop",
+      "votes": 40,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://91.232.4.33:8084/",
+          "bitrateKbps": 64,
+          "burst3KBps": 90.7,
+          "avgKBps": 24.5,
+          "xRealtime": 3.14
+        },
+        {
+          "url": "http://91.232.4.33:8084/stream2",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 2.472
+    },
+    {
+      "id": "rmfchillout",
+      "name": "RMF Chillout",
+      "votes": 40,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_chillout",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs103-krk.rmfstream.pl/rmf_chillout",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_chillout",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "chillizetsalonpolski",
+      "name": "Chilli ZET Salon polski",
+      "votes": 39,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ch03.cdn.eurozet.pl/CHIPOL.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "pallottifm",
+      "name": "Pallotti.fm",
+      "votes": 39,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7074/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.3,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "lagoonfm",
+      "name": "Radio LagoonFm",
+      "votes": 39,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7828/",
+          "bitrateKbps": 128,
+          "burst3KBps": 100,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "rmfpiosenkafilmowa",
+      "name": "RMF PIOSENKA FILMOWA",
+      "votes": 38,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://217.74.72.10/rmf_piosenka_filmowa",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_piosenka_filmowa",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs201-krk.rmfstream.pl/rmf_piosenka_filmowa",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_piosenka_filmowa",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rmf5lagodneprzeboje",
+      "name": "RMF 5 Lagodne Przeboje",
+      "votes": 37,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs102-krk.rmfstream.pl/rmf_5",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs201-krk.rmfstream.pl/rmf_5",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.5,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        },
+        {
+          "url": "http://rs202-krk.rmfstream.pl/rmf_5",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.9,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "strefafm",
+      "name": "Radio Strefa FM",
+      "votes": 36,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://play.strefa.fm:8000/strefa.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "rmfhotnew",
+      "name": "RMF HOT NEW",
+      "votes": 36,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.245/rmf_hot_new",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "rp",
+      "name": "rp",
+      "votes": 36,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.radioparty.pl:8000/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.6,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "sizeer",
+      "name": "Sizeer",
+      "votes": 35,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://rs103-krk-cyfronet.rmfstream.pl/sizeer_fm",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "opatw",
+      "name": "Radio Opatów",
+      "votes": 34,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream2.nadaje.com:11144/;stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.8,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "rmfdancefakty",
+      "name": "RMF DANCE FAKTY",
+      "votes": 34,
+      "favicon": "https://rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://195.150.20.7/rmf_dance_f",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "supernovakielce",
+      "name": "supernova Kielce",
+      "votes": 34,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/1050-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.4,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        },
+        {
+          "url": "http://ic2.smcdn.pl/1050-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.4,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.094
+    },
+    {
+      "id": "park",
+      "name": "park",
+      "votes": 33,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://sluchaj1.radiopark.biz.pl:8048/",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.8,
+          "avgKBps": 32.3,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "chillizetcovers",
+      "name": "Chilli ZET Covers",
+      "votes": 29,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ch02.cdn.eurozet.pl/CHICOV.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 101.2,
+          "avgKBps": 32.6,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "fitnessmusic",
+      "name": "Fitness Music",
+      "votes": 29,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7414/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.1,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "muzycznyzaktek",
+      "name": "Radio Muzyczny Zakątek",
+      "votes": 29,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7336/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.9,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "biedrzychowice",
+      "name": "Radio Biedrzychowice",
+      "votes": 28,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.164.158.230:9070/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.7,
+          "avgKBps": 31.8,
+          "xRealtime": 2.04
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.606
+    },
+    {
+      "id": "pogodapoznan",
+      "name": "Radio Pogoda Poznan",
+      "votes": 28,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radiostream.pl/tuba138-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmftop4",
+      "name": "RMF TOP4",
+      "votes": 27,
+      "favicon": "https://www.rmfon.pl/assets/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://rs102-krk-cyfronet.rmfstream.pl/rmf_top4",
+          "bitrateKbps": 128,
+          "burst3KBps": 65,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "tangouno",
+      "name": "Radio Tango Uno",
+      "votes": 26,
+      "favicon": "https://radiotangouno.pl/wp-content/uploads/2021/12/Radio-Tango-Uno.png",
+      "endpoints": [
+        {
+          "url": "http://radiotangouno-online.pl/radio/8000/radio.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "hitradio1067",
+      "name": "Hitradio 106.7",
+      "votes": 24,
+      "favicon": "https://www.radiohit.net.pl/wp-content/uploads/2018/05/cropped-logo-180x180.png",
+      "endpoints": [
+        {
+          "url": "http://46.170.199.85:8000/;",
+          "bitrateKbps": 128,
+          "burst3KBps": 85.4,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "freee",
+      "name": "Radio Freee",
+      "votes": 24,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://212.244.54.195:8000/radiofreee",
+          "bitrateKbps": 128,
+          "burst3KBps": 79.9,
+          "avgKBps": 28.2,
+          "xRealtime": 1.81
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.425
+    },
+    {
+      "id": "radioradiofm",
+      "name": "RadioRadio.FM",
+      "votes": 24,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://c16.radioboss.fm/stream/14",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.6,
+          "avgKBps": 20.1,
+          "xRealtime": 1.29
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.016
+    },
+    {
+      "id": "rmftop30pl",
+      "name": "RMF TOP 30 PL",
+      "votes": 24,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.244/rmf_top_5_pl",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "nowinki",
+      "name": "Radio Nowinki",
+      "votes": 23,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://nowinki.pk.edu.pl:8000/nowinki",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmfpoplista",
+      "name": "RMF POPLISTA",
+      "votes": 23,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.242:8000/rmf_poplista",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "wesoa43",
+      "name": "Wesoła 43",
+      "votes": 23,
+      "favicon": "https://panelradiowy.pl/images/playfacebook.png",
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7650/stream",
+          "bitrateKbps": 64,
+          "burst3KBps": 50.6,
+          "avgKBps": 16.3,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "rmfpiosenkaliteracka",
+      "name": "RMF Piosenka literacka",
+      "votes": 22,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs202-krk-cyfronet.rmfstream.pl/rmf_piosenka_literacka",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.6,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "fsspxradio",
+      "name": "FSSPX Radio",
+      "votes": 20,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radio.fsspx.pl:8000/radio.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 36,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "krupskimyn",
+      "name": "Radio Krupski Młyn",
+      "votes": 20,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7346/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.9,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "rmffunk",
+      "name": "RMF Funk",
+      "votes": 20,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs101-krk-cyfronet.rmfstream.pl/rmf_funk",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.4,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "borowiaczek",
+      "name": "Radio Borowiaczek",
+      "votes": 19,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7228/stream",
+          "bitrateKbps": 64,
+          "burst3KBps": 50.5,
+          "avgKBps": 16.2,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "pioch",
+      "name": "Radio Śpioch",
+      "votes": 19,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7138/",
+          "bitrateKbps": 96,
+          "burst3KBps": 94.9,
+          "avgKBps": 28.3,
+          "xRealtime": 2.41
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.898
+    },
+    {
+      "id": "rmfaclassic",
+      "name": "rmfa classic",
+      "votes": 17,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://195.150.20.242:8000/rmf_classic",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.8,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "futrzakfm",
+      "name": "FUTRZAK.FM",
+      "votes": 16,
+      "favicon": "https://play.futrzak.fm/favicon.png",
+      "endpoints": [
+        {
+          "url": "http://audio.futrzak.fm/futrzakfm-128",
+          "bitrateKbps": 128,
+          "burst3KBps": 35.9,
+          "avgKBps": 19.4,
+          "xRealtime": 1.24
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.976
+    },
+    {
+      "id": "muzycznybeatfm",
+      "name": "Muzyczny Beat FM",
+      "votes": 16,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7034/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.8,
+          "avgKBps": 32.3,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "margaretkafm",
+      "name": "Margaretka FM",
+      "votes": 15,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7260/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.5,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.614
+    },
+    {
+      "id": "supernovasuper13",
+      "name": "Supernova Super 13",
+      "votes": 15,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6230-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.5,
+          "avgKBps": 21.8,
+          "xRealtime": 1.4
+        },
+        {
+          "url": "http://ic2.smcdn.pl/6230-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 49.9,
+          "avgKBps": 21.8,
+          "xRealtime": 1.4
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.102
+    },
+    {
+      "id": "ftm",
+      "name": "Radio FTM",
+      "votes": 14,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7792/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "magma",
+      "name": "Radio MagMa",
+      "votes": 14,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7180/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "niepokalanw1027fm",
+      "name": "Radio Niepokalanów 102.7FM",
+      "votes": 14,
+      "favicon": "https://i1.wp.com/radioniepokalanow.pl/wp-content/uploads/2019/07/cropped-10359521_935362439830611_7037695156798127756_n.jpg?fit=32%2C32&ssl=1",
+      "endpoints": [
+        {
+          "url": "http://88-199-169-10.tktelekom.pl:8000/",
+          "bitrateKbps": 64,
+          "burst3KBps": 48,
+          "avgKBps": 16.3,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "jpeg",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "bohemaradio",
+      "name": "Bohema Radio",
+      "votes": 13,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7262/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.2,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "kcikrodzinny",
+      "name": "Radio Kącik Rodzinny",
+      "votes": 13,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7374/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.1,
+          "avgKBps": 32.3,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "muzycznaoaza",
+      "name": "Muzyczna Oaza",
+      "votes": 12,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7100/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.1,
+          "avgKBps": 32.1,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "mbox",
+      "name": "Radio Mbox",
+      "votes": 11,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://panel.radiombox.pl/radio/8000/RadioMbox128",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.5,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "rockradiopl",
+      "name": "Rock Radio PL",
+      "votes": 11,
+      "favicon": "https://gfx.rockradio.pl/extension/rockradio/design/standard/images/favicon/apple-touch-icon.png",
+      "endpoints": [
+        {
+          "url": "http://25633.live.streamtheworld.com/RADIO_ROCK.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 68.4,
+          "avgKBps": 25.4,
+          "xRealtime": 1.62
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.276
+    },
+    {
+      "id": "eskanewswrocaw",
+      "name": "ESKA NEWS WROCŁAW",
+      "votes": 10,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/6250-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 49.2,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.118
+    },
+    {
+      "id": "musicfamily",
+      "name": "Music Family",
+      "votes": 10,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7216/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "naszeradio",
+      "name": "Nasze RAdio",
+      "votes": 10,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://online.nasze.fm:8000/stream",
+          "bitrateKbps": 96,
+          "burst3KBps": 32.4,
+          "avgKBps": 15.8,
+          "xRealtime": 1.35
+        },
+        {
+          "url": "http://s1.slotex.pl:7146/stream",
+          "bitrateKbps": 96,
+          "burst3KBps": 94.9,
+          "avgKBps": 28.4,
+          "xRealtime": 2.42
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.906
+    },
+    {
+      "id": "brylant",
+      "name": "Radio Brylant",
+      "votes": 10,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7212/stream",
+          "bitrateKbps": 64,
+          "burst3KBps": 50.2,
+          "avgKBps": 16.2,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "famazyrardow",
+      "name": "Radio Fama Zyrardow",
+      "votes": 10,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://stream4.nadaje.com:13770/",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.8,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "thomcarst",
+      "name": "Radio ThomCarst",
+      "votes": 10,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7248/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.9,
+          "avgKBps": 32,
+          "xRealtime": 2.05
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.614
+    },
+    {
+      "id": "lightmotiv",
+      "name": "Radio Light Motiv",
+      "votes": 9,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7226/stream",
+          "bitrateKbps": 64,
+          "burst3KBps": 50.3,
+          "avgKBps": 16.3,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "magicdance",
+      "name": "Radio Magic Dance",
+      "votes": 9,
+      "favicon": "https://panelradiowy.pl/images/playfacebook.png",
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7686/stream",
+          "bitrateKbps": 96,
+          "burst3KBps": 95.5,
+          "avgKBps": 28.4,
+          "xRealtime": 2.42
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.906
+    },
+    {
+      "id": "miosierdzie",
+      "name": "Radio Miłosierdzie",
+      "votes": 9,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://eu1.fastcast4u.com/proxy/milosierdzie?mp=/1",
+          "bitrateKbps": 128,
+          "burst3KBps": 90.7,
+          "avgKBps": 32.3,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "polfan",
+      "name": "Radio Polfan",
+      "votes": 9,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7194/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.1,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "stylfm",
+      "name": "Radio Styl FM",
+      "votes": 9,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7196/stream",
+          "bitrateKbps": 64,
+          "burst3KBps": 50.4,
+          "avgKBps": 16.3,
+          "xRealtime": 2.09
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.646
+    },
+    {
+      "id": "wiatraczek",
+      "name": "Radio Wiatraczek",
+      "votes": 9,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7082/stream",
+          "bitrateKbps": 64,
+          "burst3KBps": 50.3,
+          "avgKBps": 16.3,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "radiocmp3eukanaedmelectronicdancemusic",
+      "name": "RadioCmp3.eu - Kanał EDM - Electronic ",
+      "votes": 8,
+      "favicon": "https://radiocmp3.eu/img/av-app.png",
+      "endpoints": [
+        {
+          "url": "http://s1.cmp3.eu/edm",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "rockfmbydgoszcz",
+      "name": "Rock FM Bydgoszcz",
+      "votes": 8,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://217.182.76.63:8000/rfmweb",
+          "bitrateKbps": 128,
+          "burst3KBps": 36.5,
+          "avgKBps": 19.7,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "chillizetbiega",
+      "name": "Chilli ZET Biega",
+      "votes": 7,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ch03.cdn.eurozet.pl/CHIRUN.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.4,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "chillizetsoul",
+      "name": "Chilli ZET Soul",
+      "votes": 7,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://zt02.cdn.eurozet.pl/CHISOU.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.3,
+          "avgKBps": 32.4,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "modulespl",
+      "name": "modules.pl",
+      "votes": 7,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://radio.modules.pl:8500/;stream/1",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.2,
+          "avgKBps": 19.8,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "rmfmaxxkielce",
+      "name": "RMF Maxx Kielce",
+      "votes": 7,
+      "favicon": "https://static.rmf.pl/portal/stations/covers/rmf_maxxx_kie/20241108100608_rmf_maxxx_kie_600.jpg",
+      "endpoints": [
+        {
+          "url": "http://rs6-krk2.rmfstream.pl/rmf_maxxx_kie",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.1,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "jpeg",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "eskabydgoszcz",
+      "name": "Eska Bydgoszcz",
+      "votes": 6,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2030-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.8,
+          "avgKBps": 21.9,
+          "xRealtime": 1.4
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2030-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.2,
+          "avgKBps": 21.9,
+          "xRealtime": 1.4
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.102
+    },
+    {
+      "id": "eskatarnw",
+      "name": "Radio Eska Tarnów",
+      "votes": 6,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2210-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.5,
+          "avgKBps": 22,
+          "xRealtime": 1.41
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2210-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.5,
+          "avgKBps": 22.1,
+          "xRealtime": 1.41
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.11
+    },
+    {
+      "id": "eskakranik",
+      "name": "Radio Eska Kraśnik",
+      "votes": 5,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2360-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 48.1,
+          "avgKBps": 21.8,
+          "xRealtime": 1.4
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2360-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47,
+          "avgKBps": 21.7,
+          "xRealtime": 1.39
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.102
+    },
+    {
+      "id": "rmfmaxxbydgoszcz",
+      "name": "RMF Maxx Bydgoszcz",
+      "votes": 5,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rmfstream1.interia.pl/rmf_maxxx_byd",
+          "bitrateKbps": 128,
+          "burst3KBps": 66.1,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "tripradio",
+      "name": "trip radio",
+      "votes": 5,
+      "favicon": "https://www.tripradio.net/gfx/favicon/favicon-512x512.png",
+      "endpoints": [
+        {
+          "url": "http://a13.asurahosting.com/listen/trip-radio/radio.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 35.2,
+          "avgKBps": 19.8,
+          "xRealtime": 1.26
+        }
+      ],
+      "tier": "C",
+      "faviconFormat": "png",
+      "xVsAnchor": 0.992
+    },
+    {
+      "id": "mastermxmusic",
+      "name": "MasteRMXMusic",
+      "votes": 4,
+      "favicon": "https://i.postimg.cc/Rh6KMWHq/Logo-radia-mastermxmusic.png",
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7008/stream/1/",
+          "bitrateKbps": 64,
+          "burst3KBps": 50.4,
+          "avgKBps": 16.2,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "q1007fmlokalneradiozkutna",
+      "name": "Radio Q 100,7FM - Lokalne radio z Kutn",
+      "votes": 4,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://79.188.161.82:8020/;stream.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.1,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "kampus971fm",
+      "name": "Radio Kampus 97,1 FM",
+      "votes": 3,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://193.0.98.66:8002/;",
+          "bitrateKbps": 64,
+          "burst3KBps": 50.1,
+          "avgKBps": 16.2,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "sfera",
+      "name": "Radio Sfera",
+      "votes": 3,
+      "favicon": "https://www.sfera.umk.pl/wp-content/uploads/2025/01/cropped-favic_bright1_nobg-192x192.png",
+      "endpoints": [
+        {
+          "url": "http://158.75.34.231:8000/sfera.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 57.9,
+          "avgKBps": 23.8,
+          "xRealtime": 1.52
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.197
+    },
+    {
+      "id": "radiocmp3euelectronicdancemusic",
+      "name": "RadioCmp3.eu - Electronic Dance Music",
+      "votes": 3,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.cmp3.eu:8005/edm",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.1,
+          "avgKBps": 32.3,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "replaynewspolski",
+      "name": "REPLAY NEWS - Polski",
+      "votes": 3,
+      "favicon": "https://www.publicsante.com/BIENVENU/LOGO%20REPLAY%20NEWS-PL.png",
+      "endpoints": [
+        {
+          "url": "http://replaynewspl.ice.infomaniak.ch/replaynewspl-128.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 58.4,
+          "avgKBps": 24,
+          "xRealtime": 1.54
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.213
+    },
+    {
+      "id": "altneu",
+      "name": "ALT!NEU",
+      "votes": 2,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7430/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "chillizetchristmas",
+      "name": "Chilli ZET Christmas",
+      "votes": 2,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ch03.cdn.eurozet.pl/CHISWI.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100.7,
+          "avgKBps": 32.5,
+          "xRealtime": 2.08
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.638
+    },
+    {
+      "id": "fraszka",
+      "name": "Radio Fraszka",
+      "votes": 2,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7132/;",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.5,
+          "avgKBps": 32.4,
+          "xRealtime": 2.07
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.63
+    },
+    {
+      "id": "rzeszw",
+      "name": "Radio Rzeszów",
+      "votes": 2,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://streaming.g-news.pl:8040/rzeszow",
+          "bitrateKbps": 128,
+          "burst3KBps": 37.6,
+          "avgKBps": 19.9,
+          "xRealtime": 1.27
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1
+    },
+    {
+      "id": "radiocmp3eukanagwny",
+      "name": "RadioCmp3.eu - Kanał Główny",
+      "votes": 2,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.cmp3.eu/stream128",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.9,
+          "avgKBps": 32.1,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "naszeradio921fmnostalgicznie",
+      "name": "Nasze Radio 92,1 FM... nostalgicznie",
+      "votes": 1,
+      "favicon": "https://nasze.fm/loga/NRNlogokwadrat.png",
+      "endpoints": [
+        {
+          "url": "http://online.nasze.fm:9210/stream",
+          "bitrateKbps": 96,
+          "burst3KBps": 32.8,
+          "avgKBps": 15.9,
+          "xRealtime": 1.35
+        }
+      ],
+      "tier": "B",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.063
+    },
+    {
+      "id": "quantumwaveradio",
+      "name": "Quantum Wave Radio",
+      "votes": 1,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ec4.yesstreaming.net:2845/stream",
+          "bitrateKbps": 128,
+          "burst3KBps": 58.9,
+          "avgKBps": 24,
+          "xRealtime": 1.54
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.213
+    },
+    {
+      "id": "podlasie2",
+      "name": "Radio Podlasie 2",
+      "votes": 1,
+      "favicon": "https://radiopodlasie2019.panelradiowy.pl/images/logos/71481-58.png",
+      "endpoints": [
+        {
+          "url": "http://s3.slotex.pl:7438/stream/1/",
+          "bitrateKbps": 128,
+          "burst3KBps": 98.7,
+          "avgKBps": 32.2,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "faviconFormat": "png",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "region",
+      "name": "REGION",
+      "votes": 1,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7592/",
+          "bitrateKbps": 128,
+          "burst3KBps": 99.8,
+          "avgKBps": 32.1,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "rmfziom",
+      "name": "RMF Ziom",
+      "votes": 1,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://rs6-krk2.rmfstream.pl/rmf_ziom",
+          "bitrateKbps": 128,
+          "burst3KBps": 65.2,
+          "avgKBps": 25.4,
+          "xRealtime": 1.63
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.283
+    },
+    {
+      "id": "mittendrinpl",
+      "name": "mittendrin.pl",
+      "votes": 0,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://s1.slotex.pl:7592/;type=mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 100,
+          "avgKBps": 32.1,
+          "xRealtime": 2.06
+        }
+      ],
+      "tier": "A",
+      "xVsAnchor": 1.622
+    },
+    {
+      "id": "eskaopole",
+      "name": "Radio Eska Opole",
+      "votes": 0,
+      "favicon": null,
+      "endpoints": [
+        {
+          "url": "http://ic1.smcdn.pl/2120-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.3,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        },
+        {
+          "url": "http://ic2.smcdn.pl/2120-1.mp3",
+          "bitrateKbps": 128,
+          "burst3KBps": 47.3,
+          "avgKBps": 22.1,
+          "xRealtime": 1.42
+        }
+      ],
+      "tier": "B",
+      "xVsAnchor": 1.118
+    }
+  ],
+  "tierRule": "anchor=min(radio357,eskarock) measured in the same run; A when >= 1.15x the anchor, B when >= 1x, otherwise C. The anchor is a station heard playing on real hardware, so the bar lowers only by proving a weaker one on a device — never by editing a constant."
+}

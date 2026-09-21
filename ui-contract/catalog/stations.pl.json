@@ -1,0 +1,154 @@
+{
+  "catalogVersion": 1,
+  "locale": [
+    "pl-PL",
+    "en"
+  ],
+  "artworkPolicy": "project-original-procedural",
+  "stations": [
+    {
+      "id": "rmf-fm",
+      "name": "RMF FM",
+      "short": "RMF",
+      "regionMode": "national",
+      "transport": "MP3",
+      "theme": {
+        "background": "#101820",
+        "surface": "#192832",
+        "primary": "#64D8B4",
+        "secondary": "#FFB36B",
+        "text": "#F5FBF9",
+        "muted": "#9FB8B1",
+        "motif": "orbit"
+      }
+    },
+    {
+      "id": "radio-zet",
+      "name": "Radio ZET",
+      "short": "ZET",
+      "regionMode": "national",
+      "transport": "MP3",
+      "theme": {
+        "background": "#171526",
+        "surface": "#25213B",
+        "primary": "#B7A4FF",
+        "secondary": "#56D6CF",
+        "text": "#FAF8FF",
+        "muted": "#B7B0CD",
+        "motif": "ripples"
+      }
+    },
+    {
+      "id": "tok-fm",
+      "name": "TOK FM",
+      "short": "TOK",
+      "regionMode": "national",
+      "transport": "MP3",
+      "theme": {
+        "background": "#111C1B",
+        "surface": "#1C2D2A",
+        "primary": "#9DD9BD",
+        "secondary": "#D3A6C8",
+        "text": "#F4FCF8",
+        "muted": "#A6BBB1",
+        "motif": "horizon"
+      }
+    },
+    {
+      "id": "antyradio",
+      "name": "Antyradio",
+      "short": "ANTY",
+      "regionMode": "national",
+      "transport": "MP3",
+      "theme": {
+        "background": "#1D1111",
+        "surface": "#302020",
+        "primary": "#FF765F",
+        "secondary": "#F0B35D",
+        "text": "#FFF8F6",
+        "muted": "#C8AEA8",
+        "motif": "signal"
+      }
+    },
+    {
+      "id": "radio-eska",
+      "name": "Radio ESKA",
+      "short": "ESKA",
+      "regionMode": "regional",
+      "transport": "MP3",
+      "theme": {
+        "background": "#21152A",
+        "surface": "#31203C",
+        "primary": "#FF9B62",
+        "secondary": "#79D7F2",
+        "text": "#FFF9F4",
+        "muted": "#C7B5C9",
+        "motif": "grid"
+      }
+    },
+    {
+      "id": "rmf-maxx",
+      "name": "RMF MAXX",
+      "short": "MAXX",
+      "regionMode": "regional",
+      "transport": "MP3",
+      "theme": {
+        "background": "#121625",
+        "surface": "#20263A",
+        "primary": "#48E0D1",
+        "secondary": "#FF7BA8",
+        "text": "#F7FFFF",
+        "muted": "#AABEC3",
+        "motif": "burst"
+      }
+    },
+    {
+      "id": "radio-plus",
+      "name": "Radio Plus",
+      "short": "PLUS",
+      "regionMode": "national",
+      "transport": "MP3",
+      "theme": {
+        "background": "#170F22",
+        "surface": "#2A1C3E",
+        "primary": "#C74BFF",
+        "secondary": "#3EE6C1",
+        "text": "#FBF5FF",
+        "muted": "#B8A6CC",
+        "motif": "burst"
+      }
+    },
+    {
+      "id": "zlote-przeboje",
+      "name": "Złote Przeboje",
+      "short": "ZŁOTE",
+      "regionMode": "regional",
+      "transport": "MP3",
+      "theme": {
+        "background": "#18201F",
+        "surface": "#27302D",
+        "primary": "#E8A76A",
+        "secondary": "#91C7A5",
+        "text": "#FFF9F1",
+        "muted": "#BFB8AA",
+        "motif": "arches"
+      }
+    },
+    {
+      "id": "meloradio",
+      "name": "Meloradio",
+      "short": "MELO",
+      "regionMode": "national",
+      "transport": "MP3",
+      "theme": {
+        "background": "#17142A",
+        "surface": "#28233E",
+        "primary": "#B89CFF",
+        "secondary": "#6DD9D1",
+        "text": "#FCF9FF",
+        "muted": "#BDB4CF",
+        "motif": "ripples"
+      }
+    }
+  ]
+}

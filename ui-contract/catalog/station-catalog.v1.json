@@ -1,0 +1,587 @@
+{
+  "schemaVersion": 1,
+  "catalogId": "pl-owner-nine-2026",
+  "auditedAt": "2026-07-21",
+  "lifecycle": "EMBEDDED_STATIC",
+  "remoteUpdate": false,
+  "bitrateCeilingKbps": 128,
+  "stations": [
+    {
+      "id": "rmf-fm",
+      "displayName": "RMF FM",
+      "operator": "Radio Muzyka Fakty Grupa RMF sp. z o.o. sp. k.",
+      "operatorGroup": "Grupa RMF",
+      "country": "PL",
+      "language": "pl",
+      "regionMode": "national",
+      "regionalSelection": "NONE",
+      "capabilityClass": "MP3_ICY",
+      "firmwareSupport": "MODEL_READY",
+      "artworkRights": "PROJECT_ORIGINAL_ONLY",
+      "nameUse": "IDENTIFICATION_ONLY",
+      "officialSurface": "https://www.rmfon.pl/stacja/rmf-fm",
+      "favicon": "https://www.rmf.fm/assets/images/favicon/apple-icon-120x120.png?3",
+      "candidates": [
+        {
+          "id": "rmf-fm-api",
+          "role": "PRIMARY",
+          "kind": "OFFICIAL_API",
+          "url": "https://api.rmfon.pl/stations/5/streams",
+          "owner": "Grupa RMF",
+          "parser": "RMFON_JSON",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "FEASIBLE",
+          "verifiedAt": "2026-07-13",
+          "evidence": "live-probe-2026-07-13"
+        },
+        {
+          "id": "rmf-fm-player",
+          "role": "ALTERNATE",
+          "kind": "OFFICIAL_PLAYER",
+          "url": "https://www.rmfon.pl/stacja/rmf-fm",
+          "owner": "Grupa RMF",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-13",
+          "evidence": "official-page-2026-07-13"
+        }
+      ],
+      "playback": [
+        {
+          "id": "rmf-fm-pool",
+          "url": "http://rs102-krk.rmfstream.pl/rmf_fm",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "RMFON_POOL",
+          "verifiedAt": "2026-07-21",
+          "evidence": "socket-probe-2026-07-21"
+        }
+      ]
+    },
+    {
+      "id": "radio-zet",
+      "displayName": "Radio ZET",
+      "operator": "Eurozet sp. z o.o.",
+      "operatorGroup": "Eurozet",
+      "country": "PL",
+      "language": "pl",
+      "regionMode": "national",
+      "regionalSelection": "NONE",
+      "capabilityClass": "MP3_ICY",
+      "firmwareSupport": "MODEL_READY",
+      "artworkRights": "PROJECT_ORIGINAL_ONLY",
+      "nameUse": "IDENTIFICATION_ONLY",
+      "officialSurface": "https://player.radiozet.pl/",
+      "favicon": "https://gfx-player.radiozet.pl/design/player_radiozet/images/favicon/apple-touch-icon.png",
+      "candidates": [
+        {
+          "id": "radio-zet-api",
+          "role": "PRIMARY",
+          "kind": "OFFICIAL_API",
+          "url": "https://player.radiozet.pl/api/stations",
+          "owner": "Eurozet",
+          "parser": "EUROZET_JSON",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "FEASIBLE",
+          "verifiedAt": "2026-07-13",
+          "evidence": "live-probe-2026-07-13"
+        },
+        {
+          "id": "radio-zet-player",
+          "role": "ALTERNATE",
+          "kind": "OFFICIAL_PLAYER",
+          "url": "https://player.radiozet.pl/",
+          "owner": "Eurozet",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-13",
+          "evidence": "official-page-2026-07-13"
+        }
+      ],
+      "playback": [
+        {
+          "id": "radio-zet-stw",
+          "url": "http://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_ZET.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "socket-probe-2026-07-21"
+        }
+      ]
+    },
+    {
+      "id": "tok-fm",
+      "displayName": "TOK FM",
+      "operator": "Grupa Radiowa Agory sp. z o.o.",
+      "operatorGroup": "Agora",
+      "country": "PL",
+      "language": "pl",
+      "regionMode": "national",
+      "regionalSelection": "NONE",
+      "capabilityClass": "MP3_ICY",
+      "firmwareSupport": "MODEL_READY",
+      "artworkRights": "PROJECT_ORIGINAL_ONLY",
+      "nameUse": "IDENTIFICATION_ONLY",
+      "officialSurface": "https://www.tokfm.pl/",
+      "favicon": "https://audycje.tokfm.pl/apple-touch-icon.png",
+      "candidates": [
+        {
+          "id": "tok-fm-player",
+          "role": "PRIMARY",
+          "kind": "OFFICIAL_PLAYER",
+          "url": "https://audycje.tokfm.pl/",
+          "owner": "Agora",
+          "parser": "TOKFM_PLAYER",
+          "transportPreference": [
+            "MP3"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "FEASIBLE",
+          "verifiedAt": "2026-07-21",
+          "evidence": "official-page-2026-07-21"
+        },
+        {
+          "id": "tok-fm-page",
+          "role": "ALTERNATE",
+          "kind": "OFFICIAL_PAGE",
+          "url": "https://www.tokfm.pl/",
+          "owner": "Agora",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-21",
+          "evidence": "official-page-2026-07-21"
+        }
+      ],
+      "playback": [
+        {
+          "id": "tok-fm-64",
+          "url": "http://radiostream.pl/tuba10-2.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 64,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "nine-qc-socket-2026-07-21"
+        },
+        {
+          "id": "tok-fm-128",
+          "url": "http://radiostream.pl/tuba10-1.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "nine-qc-socket-2026-07-21"
+        },
+        {
+          "id": "tok-fm-128-s30",
+          "url": "http://stream30.radiostream.pl/tuba10-1.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "nine-qc-socket-2026-07-21"
+        }
+      ]
+    },
+    {
+      "id": "antyradio",
+      "displayName": "Antyradio",
+      "operator": "Eurozet sp. z o.o.",
+      "operatorGroup": "Eurozet",
+      "country": "PL",
+      "language": "pl",
+      "regionMode": "national",
+      "regionalSelection": "NONE",
+      "capabilityClass": "MP3_ICY",
+      "firmwareSupport": "MODEL_READY",
+      "artworkRights": "PROJECT_ORIGINAL_ONLY",
+      "nameUse": "IDENTIFICATION_ONLY",
+      "officialSurface": "https://www.antyradio.pl/",
+      "favicon": "https://gfx-player.antyradio.pl/design/player_antyradio/images/favicon/apple-touch-icon.png",
+      "candidates": [
+        {
+          "id": "antyradio-api",
+          "role": "PRIMARY",
+          "kind": "OFFICIAL_API",
+          "url": "https://player.radiozet.pl/api/stations",
+          "owner": "Eurozet",
+          "parser": "EUROZET_JSON",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "FEASIBLE",
+          "verifiedAt": "2026-07-15",
+          "evidence": "live-probe-2026-07-15"
+        },
+        {
+          "id": "antyradio-player",
+          "role": "ALTERNATE",
+          "kind": "OFFICIAL_PLAYER",
+          "url": "https://player.antyradio.pl/",
+          "owner": "Eurozet",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-15",
+          "evidence": "official-page-2026-07-15"
+        }
+      ],
+      "playback": [
+        {
+          "id": "antyradio-stw",
+          "url": "http://playerservices.streamtheworld.com/api/livestream-redirect/ANTYRADIO.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "socket-probe-2026-07-21"
+        }
+      ]
+    },
+    {
+      "id": "radio-eska",
+      "displayName": "Radio ESKA",
+      "operator": "Grupa ZPR Media",
+      "operatorGroup": "Grupa ZPR Media",
+      "country": "PL",
+      "language": "pl",
+      "regionMode": "regional",
+      "regionalSelection": "OPTIONAL",
+      "capabilityClass": "MP3_ICY",
+      "firmwareSupport": "MODEL_READY",
+      "artworkRights": "PROJECT_ORIGINAL_ONLY",
+      "nameUse": "IDENTIFICATION_ONLY",
+      "officialSurface": "https://player.eska.pl/?stream_uid=radio_eska",
+      "favicon": "https://www.eska.pl/apple-touch-icon.png",
+      "candidates": [
+        {
+          "id": "radio-eska-player",
+          "role": "PRIMARY",
+          "kind": "OFFICIAL_PLAYER",
+          "url": "https://player.eska.pl/?stream_uid=radio_eska",
+          "owner": "Grupa ZPR Media",
+          "parser": "ZPR_PLAYER",
+          "transportPreference": [
+            "MP3"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "FEASIBLE",
+          "verifiedAt": "2026-07-15",
+          "evidence": "mp3-icy-probe-2026-07-15"
+        },
+        {
+          "id": "radio-eska-page",
+          "role": "ALTERNATE",
+          "kind": "OFFICIAL_PAGE",
+          "url": "https://www.eska.pl/news/radio-online-eska-eska2-vox-fm-eska-rock-za-darmo-aa-8aGQ-bcmW-k4zN.html",
+          "owner": "Grupa ZPR Media",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-15",
+          "evidence": "official-page-2026-07-15"
+        }
+      ],
+      "playback": [
+        {
+          "id": "radio-eska-ic1",
+          "url": "http://ic1.smcdn.pl/2980-1.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "socket-probe-2026-07-21"
+        },
+        {
+          "id": "radio-eska-ic2",
+          "url": "http://ic2.smcdn.pl/2980-1.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "socket-probe-2026-07-21"
+        }
+      ]
+    },
+    {
+      "id": "rmf-maxx",
+      "displayName": "RMF MAXX",
+      "operator": "Radio Muzyka Fakty Grupa RMF sp. z o.o. sp. k.",
+      "operatorGroup": "Grupa RMF",
+      "country": "PL",
+      "language": "pl",
+      "regionMode": "regional",
+      "regionalSelection": "OPTIONAL",
+      "capabilityClass": "MP3_ICY",
+      "firmwareSupport": "MODEL_READY",
+      "artworkRights": "PROJECT_ORIGINAL_ONLY",
+      "nameUse": "IDENTIFICATION_ONLY",
+      "officialSurface": "https://www.rmfon.pl/stacja/rmf-maxx",
+      "favicon": "https://www.rmfmaxxx.pl/assets-16/favicons/apple-touch-icon.png?v=lbgkbkbbmq",
+      "candidates": [
+        {
+          "id": "rmf-maxx-api",
+          "role": "PRIMARY",
+          "kind": "OFFICIAL_API",
+          "url": "https://api.rmfon.pl/stations/6/streams",
+          "owner": "Grupa RMF",
+          "parser": "RMFON_JSON",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "FEASIBLE",
+          "verifiedAt": "2026-07-13",
+          "evidence": "live-probe-2026-07-13"
+        },
+        {
+          "id": "rmf-maxx-player",
+          "role": "ALTERNATE",
+          "kind": "OFFICIAL_PLAYER",
+          "url": "https://www.rmfon.pl/stacja/rmf-maxx",
+          "owner": "Grupa RMF",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-13",
+          "evidence": "official-page-2026-07-13"
+        }
+      ],
+      "playback": [
+        {
+          "id": "rmf-maxx-pool",
+          "url": "http://rs202-krk.rmfstream.pl/rmf_maxxx",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "RMFON_POOL",
+          "verifiedAt": "2026-07-21",
+          "evidence": "socket-probe-2026-07-21"
+        }
+      ]
+    },
+    {
+      "id": "radio-plus",
+      "displayName": "Radio Plus",
+      "operator": "Eurozet sp. z o.o.",
+      "operatorGroup": "Eurozet",
+      "country": "PL",
+      "language": "pl",
+      "regionMode": "national",
+      "regionalSelection": "NONE",
+      "capabilityClass": "MP3_ICY",
+      "firmwareSupport": "MODEL_READY",
+      "artworkRights": "PROJECT_ORIGINAL_ONLY",
+      "nameUse": "IDENTIFICATION_ONLY",
+      "officialSurface": "https://radioplus.pl/",
+      "favicon": "https://www.radioplus.pl/apple-touch-icon.png",
+      "candidates": [
+        {
+          "id": "radio-plus-player",
+          "role": "PRIMARY",
+          "kind": "OFFICIAL_PLAYER",
+          "url": "https://radioplus.pl/",
+          "owner": "Eurozet",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-21",
+          "evidence": "official-page-2026-07-21"
+        },
+        {
+          "id": "radio-plus-page",
+          "role": "ALTERNATE",
+          "kind": "OFFICIAL_PAGE",
+          "url": "https://www.eurozet.pl/",
+          "owner": "Eurozet",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-21",
+          "evidence": "official-page-2026-07-21"
+        }
+      ],
+      "playback": [
+        {
+          "id": "radio-plus-eurozet",
+          "url": "http://pl02.cdn.eurozet.pl/plu-waw.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "nine-qc-socket-2026-07-21"
+        },
+        {
+          "id": "radio-plus-ic2",
+          "url": "http://ic2.smcdn.pl/4990-1.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "nine-qc-socket-2026-07-21"
+        }
+      ]
+    },
+    {
+      "id": "zlote-przeboje",
+      "displayName": "Złote Przeboje",
+      "operator": "Grupa Radiowa Agory sp. z o.o.",
+      "operatorGroup": "Grupa Agora",
+      "country": "PL",
+      "language": "pl",
+      "regionMode": "regional",
+      "regionalSelection": "OPTIONAL",
+      "capabilityClass": "MP3_ICY",
+      "firmwareSupport": "MODEL_READY",
+      "artworkRights": "PROJECT_ORIGINAL_ONLY",
+      "nameUse": "IDENTIFICATION_ONLY",
+      "officialSurface": "https://radio.zloteprzeboje.pl/radio-online-sluchaj-za-darmo",
+      "favicon": "http://static.fm.tuba.pl/stations/_img/zlote-przeboje_512.png",
+      "candidates": [
+        {
+          "id": "zlote-przeboje-api",
+          "role": "PRIMARY",
+          "kind": "OFFICIAL_API",
+          "url": "https://fm.tuba.pl/getp/9/2",
+          "owner": "Grupa Radiowa Agory",
+          "parser": "TUBA_JSON",
+          "transportPreference": [
+            "MP3"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "FEASIBLE",
+          "verifiedAt": "2026-07-13",
+          "evidence": "live-probe-2026-07-13"
+        },
+        {
+          "id": "zlote-przeboje-player",
+          "role": "ALTERNATE",
+          "kind": "OFFICIAL_PLAYER",
+          "url": "https://radio.zloteprzeboje.pl/radio-online-sluchaj-za-darmo",
+          "owner": "Grupa Radiowa Agory",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-13",
+          "evidence": "official-page-2026-07-13"
+        }
+      ],
+      "playback": [
+        {
+          "id": "zlote-przeboje-stw",
+          "url": "http://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_ZLOTE_PRZEBOJE.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "nine-qc-socket-2026-07-21"
+        }
+      ]
+    },
+    {
+      "id": "meloradio",
+      "displayName": "Meloradio",
+      "operator": "Eurozet sp. z o.o.",
+      "operatorGroup": "Eurozet",
+      "country": "PL",
+      "language": "pl",
+      "regionMode": "national",
+      "regionalSelection": "NONE",
+      "capabilityClass": "MP3_ICY",
+      "firmwareSupport": "MODEL_READY",
+      "artworkRights": "PROJECT_ORIGINAL_ONLY",
+      "nameUse": "IDENTIFICATION_ONLY",
+      "officialSurface": "https://player.meloradio.pl/",
+      "favicon": "https://gfx-player.meloradio.pl/design/player_meloradio/images/favicon/apple-touch-icon.png",
+      "candidates": [
+        {
+          "id": "meloradio-api",
+          "role": "PRIMARY",
+          "kind": "OFFICIAL_API",
+          "url": "https://player.radiozet.pl/api/stations",
+          "owner": "Eurozet",
+          "parser": "EUROZET_JSON",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "FEASIBLE",
+          "verifiedAt": "2026-07-15",
+          "evidence": "live-probe-2026-07-15"
+        },
+        {
+          "id": "meloradio-player",
+          "role": "ALTERNATE",
+          "kind": "OFFICIAL_PLAYER",
+          "url": "https://player.meloradio.pl/",
+          "owner": "Eurozet",
+          "parser": "HTML_REFERENCE",
+          "transportPreference": [
+            "MP3",
+            "AAC"
+          ],
+          "persistence": "DISCOVERY_ONLY",
+          "deviceFeasibility": "REFERENCE_ONLY",
+          "verifiedAt": "2026-07-15",
+          "evidence": "official-page-2026-07-15"
+        }
+      ],
+      "playback": [
+        {
+          "id": "meloradio-stw",
+          "url": "http://playerservices.streamtheworld.com/api/livestream-redirect/MELORADIO.mp3",
+          "transport": "MP3_ICY",
+          "bitrateKbps": 128,
+          "resolver": "DIRECT",
+          "verifiedAt": "2026-07-21",
+          "evidence": "nine-qc-socket-2026-07-21"
+        }
+      ]
+    }
+  ]
+}

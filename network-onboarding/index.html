@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0c1014">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="data:,">
+  <title>Konfiguracja Wi-Fi radia</title>
+  <link rel="stylesheet" href="/network-onboarding/styles.css">
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true" focusable="false"><defs>
+    <symbol id="tabler-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18l.01 0"/><path d="M9.172 15.172a4 4 0 0 1 5.656 0"/><path d="M6.343 12.343a8 8 0 0 1 11.314 0"/><path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0"/></symbol>
+    <symbol id="tabler-bluetooth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l10 8l-5 4l0 -16l5 4l-10 8"/></symbol>
+    <symbol id="tabler-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></symbol>
+    <symbol id="tabler-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0"/><path d="M12 16h.01"/></symbol>
+    <symbol id="tabler-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6l6 6"/></symbol>
+    <symbol id="tabler-radio" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l-9.371 3.749a1 1 0 0 0 -.629 .928v11.323a1 1 0 0 0 1 1h14a1 1 0 0 0 1 -1v-11a1 1 0 0 0 -1 -1h-14.5"/><path d="M4 12h16"/><path d="M7 12v-2"/><path d="M17 16v.01"/><path d="M13 16v.01"/></symbol>
+    <symbol id="tabler-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.46 20.846a12 12 0 0 1 -7.96 -14.846a12 12 0 0 0 8.5 -3a12 12 0 0 0 8.5 3a12 12 0 0 1 -.09 7.06"/><path d="M15 19l2 2l4 -4"/></symbol>
+    <symbol id="tabler-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></symbol>
+    </defs></svg>
+  <template id="signal-icon"><svg aria-hidden="true"><use href="#tabler-wifi"/></svg></template>
+  <main class="shell" aria-labelledby="page-title">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" data-copy="localOnly">Lokalna konfiguracja urządzenia</p>
+        <h1 id="page-title" data-copy="title">Połącz radio</h1>
+      </div>
+      <div class="language" role="group" aria-label="Language">
+        <button type="button" data-locale="pl" aria-pressed="true">PL</button>
+        <button type="button" data-locale="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <section class="privacy-strip" aria-label="Privacy">
+      <svg class="glyph" aria-hidden="true"><use href="#tabler-shield-check"/></svg><strong data-copy="privacyTitle">Bez konta i analityki.</strong>
+      <span data-copy="privacyBody">Hasło zostaje w kostce. Radio nie sprawdza lokalizacji ani pogody; godzinę pobiera z internetu, strefa czasowa jest polska.</span>
+    </section>
+
+    <section class="panel" id="choice-panel">
+      <div class="step"><span>1</span><div><h2 data-copy="choiceTitle">Jakie stacje ma grać?</h2><p data-copy="choiceBody">Możesz wziąć gotową dziewiątkę i skończyć w jedną sekundę albo wybrać własne stacje z listy sprawdzonych.</p></div></div>
+      <div class="actions two">
+        <button class="primary" type="button" id="choice-default" data-copy="choiceDefault">Weź gotową dziewiątkę</button>
+        <button type="button" id="choice-custom" data-copy="choiceCustom">Wybiorę sam</button>
+      </div>
+      <ol class="default-nine" id="default-nine"></ol>
+    </section>
+
+    <section class="panel" id="stations-panel" hidden>
+      <button class="back" type="button" id="stations-back" data-copy="back"><svg class="glyph" aria-hidden="true"><use href="#tabler-chevron-left"/></svg>Wstecz</button>
+      <div class="step"><span>1</span><div><h2 data-copy="stationsTitle">Wybierz dziewięć stacji</h2><p id="stations-progress"></p></div></div>
+      <label for="station-search" class="sr-only" data-copy="stationsSearch">Szukaj stacji</label>
+      <input id="station-search" type="search" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="search" placeholder="Szukaj…">
+      <div class="network-list" id="station-list"></div>
+      <p id="station-list-note" class="list-note" hidden></p>
+      <div class="slot-strip" id="slot-strip"></div>
+      <button class="primary" type="button" id="stations-done" data-copy="stationsDone">Gotowe, dalej do Wi-Fi</button>
+    </section>
+
+    <section class="panel" id="networks-panel" hidden>
+      <div class="step"><span>1</span><div><h2 data-copy="networksTitle">Wybierz sieć 2.4 GHz</h2><p data-copy="networksBody">Automatycznie używamy później tylko zatwierdzonych, zabezpieczonych profili.</p></div></div>
+      <div class="network-list" id="network-list"></div>
+      <button class="primary" type="button" id="manual-network" data-copy="manualNetwork">Dodaj hotspot, którego jeszcze nie widać</button>
+    </section>
+
+    <section class="panel" id="credentials-panel" hidden>
+      <button class="back" type="button" id="credentials-back" data-copy="back"><svg class="glyph" aria-hidden="true"><use href="#tabler-chevron-left"/></svg>Wstecz</button>
+      <div class="step"><span>1</span><div><h2 data-copy="passwordTitle">Hasło do sieci</h2><p id="selected-network-label"></p></div></div>
+      <form id="credentials-form" novalidate>
+        <div id="manual-ssid-group" hidden>
+          <label for="network-ssid" data-copy="ssidLabel">Nazwa hotspotu (SSID)</label>
+          <input id="network-ssid" type="text" minlength="1" maxlength="32" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next">
+        </div>
+        <label for="network-password" data-copy="passwordLabel">Hasło Wi-Fi</label>
+        <div class="password-row">
+          <input id="network-password" type="password" minlength="8" maxlength="63" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go" required>
+          <button type="button" id="toggle-password" aria-pressed="false" data-copy="show">Pokaż</button>
+        </div>
+        <p class="error" id="credential-error" role="alert" hidden data-copy="passwordError">Wpisz od 8 do 63 znaków.</p>
+        <button class="primary" type="submit" data-copy="connect">Połącz i uruchom radio</button>
+      </form>
+    </section>
+
+    <section class="panel" id="waiting-hotspot-panel" hidden>
+      <div class="status-icon ok" aria-hidden="true"><svg><use href="#tabler-check"/></svg></div>
+      <h2 data-copy="hotspotReadyTitle">Dane przyjęte. Teraz włącz hotspot.</h2>
+      <p data-copy="hotspotReadyBody">Możesz rozłączyć się z OpenRadio-Setup. Kostka przez 2 minuty szuka podanej, zabezpieczonej sieci i zapisze profil dopiero po udanym połączeniu.</p>
+    </section>
+
+    <section class="panel blocked" id="blocked-panel" hidden>
+      <div class="status-icon" aria-hidden="true"><svg><use href="#tabler-alert-triangle"/></svg></div>
+      <h2 id="blocked-title">Ta sieć wymaga ręcznej decyzji</h2>
+      <p id="blocked-body"></p>
+      <button class="primary" type="button" id="blocked-back" data-copy="chooseAnother">Wybierz inną sieć</button>
+    </section>
+
+    <section class="panel success" id="first-sound-panel" hidden>
+      <div class="now-playing">
+        <div class="pulse" aria-hidden="true"><svg><use href="#tabler-radio"/></svg></div>
+        <div><p data-copy="playingNow">RADIO JUŻ GRA</p><h2>RMF FM</h2><span data-copy="localSpeaker">Głośnik radia · 42%</span></div>
+      </div>
+      <div class="step optional"><span>2</span><div><h2 data-copy="cityTitle"><svg class="glyph" aria-hidden="true"><use href="#tabler-refresh"/></svg>Zegar ustawia się sam</h2><p data-copy="cityBody">Po Wi-Fi radio pobiera godzinę z internetu i pracuje w polskiej strefie czasowej. Miasta ani pogody nie sprawdza.</p></div></div>
+      <div class="actions two">
+        <button class="primary" type="button" id="city-auto" data-copy="cityAuto">Dalej</button>
+        <button type="button" id="city-skip" data-copy="skip">Pomiń</button>
+      </div>
+    </section>
+
+    <section class="panel" id="bluetooth-panel" hidden>
+      <div class="now-playing compact"><div class="pulse" aria-hidden="true"></div><span data-copy="keepsPlaying">Radio nadal gra lokalnie</span></div>
+      <div class="step optional"><span>3</span><div><h2 data-copy="bluetoothTitle"><svg class="glyph" aria-hidden="true"><use href="#tabler-bluetooth"/></svg>Głośnik Bluetooth — opcjonalnie</h2><p data-copy="bluetoothBody">Parowanie nie blokuje radia. Możesz zrobić je później na kostce.</p></div></div>
+      <div class="actions two">
+        <button class="primary" type="button" id="bluetooth-later" data-copy="pairLater">Sparuj później</button>
+        <button type="button" id="bluetooth-skip" data-copy="useLocal">Zostań przy głośniku radia</button>
+      </div>
+    </section>
+
+    <section class="panel complete" id="console-saved-panel" hidden>
+      <div class="status-icon ok" aria-hidden="true"><svg><use href="#tabler-check"/></svg></div>
+      <h2 data-copy="consoleSavedTitle">Zapisano. Radio restartuje się z nowymi stacjami.</h2>
+      <p data-copy="consoleSavedBody">Kostka pobierze logotypy wybranych stacji i wróci do grania. Możesz zamknąć tę kartę.</p>
+    </section>
+
+    <section class="panel complete" id="complete-panel" hidden>
+      <div class="status-icon ok" aria-hidden="true"><svg><use href="#tabler-check"/></svg></div>
+      <h2 data-copy="completeTitle">Gotowe. Następnym razem radio uruchomi się samo.</h2>
+      <p data-copy="completeBody">Zapamiętany został wyłącznie lokalny profil urządzenia. Nie ma konta ani chmury.</p>
+      <dl><div><dt data-copy="wifiStatus">Wi-Fi</dt><dd data-copy="connected">Połączono</dd></div><div><dt data-copy="audioStatus">Dźwięk</dt><dd data-copy="playing">Startuje</dd></div></dl>
+    </section>
+
+    <footer><span data-copy="footer">Open Radio Core2 · Tomasz Fiedoruk · open-radio.me</span><span id="stage-label">NETWORKS</span></footer>
+  </main>
+  <script type="module" src="/network-onboarding/app.mjs"></script>
+</body>
+</html>

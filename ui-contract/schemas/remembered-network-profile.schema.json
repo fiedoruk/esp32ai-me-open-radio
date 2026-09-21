@@ -1,0 +1,19 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://fiedoruk.pl/open-radio-core2/schemas/remembered-network-profile.schema.json",
+  "title":"RememberedNetworkProfile",
+  "type":"object",
+  "required":["schemaVersion","ref","approved","priority","healthScore","consecutiveFailures","quarantineUntilMs","lastSuccessMs","preferred"],
+  "properties":{
+    "schemaVersion":{"const":1},
+    "ref":{"type":"string","minLength":6,"maxLength":53},
+    "approved":{"type":"boolean"},
+    "priority":{"type":"integer","minimum":0,"maximum":100},
+    "healthScore":{"type":"integer","minimum":0,"maximum":100},
+    "consecutiveFailures":{"type":"integer","minimum":0,"maximum":1000},
+    "quarantineUntilMs":{"type":"integer","minimum":0},
+    "lastSuccessMs":{"type":["integer","null"],"minimum":0},
+    "preferred":{"type":"boolean"}
+  },
+  "additionalProperties":false
+}
