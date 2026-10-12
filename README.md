@@ -3,7 +3,7 @@
 <p align="center"><img src="brand/logo-a-signal-cube.svg" width="92" alt="Open Radio — signal cube logo"></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/released-0.4.2-3db8f5" alt="Released 0.4.2">
+  <img src="https://img.shields.io/badge/released-0.4.4-3db8f5" alt="Released 0.4.4">
   <img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue" alt="GPL-3.0-or-later">
   <img src="https://img.shields.io/badge/stations-236_shipped-success" alt="236 stations shipped">
 </p>
@@ -17,12 +17,15 @@
   <img src="https://esp32ai.me/assets/img/or/screen-4.png" height="150" alt="Status card">
 </p>
 
-<p align="center"><b><a href="https://esp32ai.me/radio/install">⚡ Install from the browser</a></b> · <a href="https://fiedoruk.pl/os/open-radio-0-4-2.bin">Download 0.4.2</a> · <a href="https://esp32ai.me/radio/stations">The 236 stations</a></p>
+<p align="center"><b><a href="https://esp32ai.me/radio/install">⚡ Install from the browser</a></b> · <a href="https://fiedoruk.pl/os/open-radio-0-4-4.bin">Download 0.4.4</a> · <a href="https://esp32ai.me/radio/stations">The 236 stations</a></p>
 
-> Released publicly as **Open Radio**. The published release is **0.4.2**
-> (2026-09-21), a security and reliability release on top of 0.4.1: no new
-> features, no new stations, the same 236-station directory. Earlier releases
-> 0.1, 0.2, 0.2.1, 0.4 and 0.4.1 remain downloadable as historical builds.
+> Released publicly as **Open Radio**. The published release is **0.4.4**
+> (2026-10-12), the last release of the 0.4 line: it fixes two faults found in
+> 0.4.2 and brings a Bluetooth speaker that was switched off back in seconds
+> instead of minutes. No new features, no new stations, the same 236-station
+> directory. 0.4.3 was never published on its own; its fixes ship in 0.4.4.
+> Earlier releases 0.1, 0.2, 0.2.1, 0.4, 0.4.1 and 0.4.2 remain downloadable as
+> historical builds.
 > Official binaries come only from `fiedoruk.pl/os/`, linked from
 > [esp32ai.me/radio](https://esp32ai.me/radio), and the corresponding source
 > is published beside each binary under the GPL.
@@ -74,12 +77,15 @@ vendor-specific features. Bluetooth LE Audio-only speakers are outside the
 original ESP32 hardware contract. No claim of universal speaker compatibility
 will be made before physical qualification.
 
-**Known limitation in 0.4.2.** A Bluetooth speaker that was switched off can
-take from 13 seconds to about five minutes to come back. Measured over eight
-power cycles on the release image: 13, 109, 36, 152, 50, 285, 34 and 15
-seconds. The radio keeps playing from its own speaker while it dials, and every
-one of those eight cycles recovered on its own, without a restart and without
-help. It is still too slow, and the fix is planned for 0.4.3.
+**Known limitations in 0.4.4.** A Bluetooth speaker that was switched off now
+comes back in seconds: over ten power cycles on RMF FM with the published bytes,
+3 to 16 seconds after the speaker called the radio, nine of ten within
+10 seconds (0.4.2 took from 13 seconds to about five minutes). That was measured
+on one speaker; a second has not been tested. The speaker often does not answer
+the radio's first call, and the return then takes about five seconds longer.
+The radio's own speaker can stutter on RMF FM while Bluetooth is not playing:
+decoding a 128 kb/s stream runs only about a quarter faster than playback on
+this hardware. Through a Bluetooth speaker no drop was measured.
 
 ## Honest air-sensor promise
 
@@ -123,32 +129,43 @@ audio and does not imply broadcaster endorsement.
 - continuous USB-C power from a power bank
 - Bluetooth Classic A2DP Source output
 
-## What 0.4.2 fixes
+## What 0.4.4 fixes
 
-Four faults, two of them security-relevant. Nothing else changed: no new
-features, no new stations.
+Two faults found in the published 0.4.2, the slow return of a Bluetooth speaker,
+and the fixes of 0.4.3, which was never published on its own. Nothing else
+changed: no new features, no new stations.
 
-- **Anyone on your network could move the radio to another Wi-Fi.** While the
-  settings console was open, any machine on the same network could hand the
-  radio new credentials. Credentials are now accepted only from a client of the
-  radio's own setup access point, and every console route requires a Host
-  header that names the device.
-- **A crafted broadcaster icon could put the radio into a reboot loop.** Eighty
-  bytes of malformed PNG were enough. The pinned PNG decoder is patched at
-  build time.
-- **Station address rotation works again.** A five-second TLS handshake budget
-  made discovery fail every single time. Discovery now runs in the background
-  with twenty seconds, and the audio loop opens no TLS at all.
-- **The pressure tendency arrow can move.** Its history ring was one sample
-  short of three hours, so the comparison it needed never existed. The sensor
-  maths around it is hardened as well.
+- **A missing station icon could reboot the radio at every start.** An icon
+  server that answered `200` with an empty body made the radio call a method on
+  a null pointer. An empty answer is now treated as no icon.
+- **The speaker comes back in seconds.** Four causes are fixed: the radio no
+  longer waits for a full buffer in its own speaker before it reaches for
+  Bluetooth; it closes a link the speaker opens and calls the speaker itself,
+  again at once if that call goes unanswered; a five-second timeout no longer
+  tears working links down; and a link the Bluetooth library lost track of
+  during the call now starts the sound instead of being ignored.
+- **Fewer silences on RMF.** A dead server address no longer counts as the whole
+  station failing. The radio tries the next RMF FM address after one second and
+  waits longer only after all of them failed.
+- **Some stations played with glitches.** Eleven catalogue addresses answer an
+  HTTP/1.1 request with chunked transfer, and the chunk markers ended up in the
+  audio data. Audio is now requested over HTTP/1.0.
+- **Smaller fixes.** A stream title split across two network reads is no longer
+  cut at the seam. The setup code and the home-screen title are drawn whole. The
+  setup screen's code button is a neutral "Change code". Small text and neutral
+  controls are easier to see in the light theme. A pairing tap stops address
+  discovery. A corrupt pressure calibration gives no reading instead of an
+  overflow. The published binary no longer carries the build machine's path.
 
 ## Current status
 
-**The public release is 0.4.2, published 2026-09-21.** It was flashed from an
-erased flash onto a Core2 v1.3 on the same day and confirmed by the owner:
-zero panics and zero unexpected restarts. Bluetooth recovery time is the one
-limitation that stays open, and it is stated above rather than buried.
+**The public release is 0.4.4, published 2026-10-12.** It was installed from an
+erased flash onto a Core2 v1.3 on the same day: onboarding from zero, a speaker
+the cube did not know paired, ten speaker power cycles on RMF FM back 3 to
+16 seconds after the speaker's call, zero panics and zero unexpected restarts.
+Not tested on these bytes: two hours of Bluetooth play, the update path from
+0.4.2 with settings kept, a second speaker, and stations other than RMF FM. The
+limitations that stay open are stated above rather than buried.
 
 Available now:
 
@@ -180,7 +197,8 @@ evidence from more than one unit:
 
 Still open on the release line:
 
-- Bluetooth speaker recovery time, as described above,
+- the Bluetooth items described above: a second speaker, the unanswered first
+  call, and the built-in speaker's stutter on RMF FM,
 - forced-recovery cycles (Wi-Fi, stream, speaker) and the long endurance
   soak, with SD and power-bank behavior,
 - additional Classic Bluetooth A2DP/SBC speaker interoperability,
@@ -188,7 +206,9 @@ Still open on the release line:
 
 The public MP3-only lane is the released lane: 0.4.1, 0.4 and 0.2.1 all
 reproduce byte-for-byte outside their provenance stamp when the documented
-build parameters are honored (see [REPRODUCIBILITY.md](REPRODUCIBILITY.md)).
+build parameters are honored, and a build of 0.4.4 from its published source
+package, outside this repository, gives the release application byte for byte
+(see [REPRODUCIBILITY.md](REPRODUCIBILITY.md)).
 The endurance items above stay open and are listed honestly rather than
 quietly.
 
@@ -221,7 +241,7 @@ Founder and original author: **Tomasz Fiedoruk — [fiedoruk.pl](https://fiedoru
 Software is licensed under `GPL-3.0-or-later`, original documentation and
 artwork under `CC BY-SA 4.0`, and catalog data under `CC0-1.0`. Official station
 logos are not bundled without documented permission. Public firmware releases
-(0.1, 0.2, 0.2.1, 0.4, 0.4.1 and the current 0.4.2) ship from `fiedoruk.pl/os/`;
+(0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2 and the current 0.4.4) ship from `fiedoruk.pl/os/`;
 the corresponding-source archive is published alongside each binary, and every
 release records its provenance in a release manifest. Details:
 [LICENSES.md](LICENSES.md), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)

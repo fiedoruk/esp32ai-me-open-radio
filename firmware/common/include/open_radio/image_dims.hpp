@@ -69,7 +69,7 @@ inline ImageDimensions parseImageDimensions(const std::uint8_t* data,
 // of framing) must fit inside the buffer, and IEND must be reached. Decoders
 // that skip unknown chunks by pointer arithmetic trust the declared length;
 // a favicon fetched without transport integrity must not be allowed to move
-// that pointer past the buffer (Codex F02, audit 2026-09-08). Pure function
+// that pointer past the buffer (audit 2026-09-08). Pure function
 // over bytes; the decoder's own checks still run afterwards.
 inline bool pngChunksWellFormed(const std::uint8_t* data, std::size_t length) {
   if (data == nullptr || length < 8 + 12) return false;

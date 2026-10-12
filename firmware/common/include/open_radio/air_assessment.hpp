@@ -103,7 +103,7 @@ inline std::int32_t absoluteHumidityCentiGramsPerCubicMetre(
 // trend needs and more than a CO2 rate does.
 // N+1 slots hold N minutes of lookback: with exactly 180 the oldest sample was
 // 179 minutes old, so a sample "at least 180 minutes old" never existed and the
-// three-hour tendency stayed absent on every cube (Codex F20, 2026-09-08).
+// three-hour tendency stayed absent on every cube (review of 2026-09-08).
 inline constexpr std::size_t kAirHistorySamples = 181;
 
 class AirHistory {

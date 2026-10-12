@@ -2,7 +2,7 @@
 
 [English version](CONTRIBUTING.md)
 
-Projekt wydaje publiczny firmware (0.1, 0.2, 0.2.1, 0.4, 0.4.1, aktualnie 0.4.2) zwalidowany na realnym sprzęcie.
+Projekt wydaje publiczny firmware (0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2, aktualnie 0.4.4) zwalidowany na realnym sprzęcie.
 Wkład jest przyjmowany jako:
 
 - software na GPL-3.0-or-later,

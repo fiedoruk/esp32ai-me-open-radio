@@ -272,7 +272,7 @@ class NvsAbStorageAdapter {
     }
     // The backend says whether the blob was written in full; a caller that is
     // told "committed" while NVS refused the write assumes success and skips
-    // its failure log (Codex F13, audit 2026-09-08).
+    // its failure log (audit 2026-09-08).
     const bool written = backend_.writeSlot(target, slot);
     return written && phase == WritePhase::AfterCommit;
   }

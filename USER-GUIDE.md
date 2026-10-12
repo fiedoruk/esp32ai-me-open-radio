@@ -4,23 +4,23 @@
 
 ## Current hardware evidence
 
-The current public release is **0.4.2** (2026-09-21), a security and reliability
-release on top of 0.4.1 with no new features and no new stations. Its evidence
-comes from one unit — the owner's Core2 v1.3 — over an interactive session of
-about 22 minutes on the published factory image, installed from a full erase the
-way a buyer installs it: onboarding from zero, audio from the built-in speaker,
-all three station address pools cached, tile logos fetched in one pass, a
-previously unknown Bluetooth speaker paired and confirmed audible, the About
-screen confirmed, eight speaker power cycles, zero panics and zero unexpected
-restarts. The known limitations below include the paths that were not tested on
-hardware at all. No endurance soak has been run on the published 0.4.2 bytes;
-the longest run on any 0.4.2 build is 55.5 minutes, on a lab image.
+The current public release is **0.4.4** (2026-10-12), the last release of the
+0.4 line. It fixes two faults found in 0.4.2 and brings a Bluetooth speaker that
+was switched off back in seconds instead of minutes; it adds no features and no
+stations. Its evidence comes from one unit — the owner's Core2 v1.3 — on the
+published factory image, installed from a full erase the way a buyer installs
+it: onboarding from zero, audio from the built-in speaker, a speaker the cube
+did not know paired, and ten speaker power cycles on RMF FM, back 3 to
+16 seconds after the speaker's call and nine of ten within 10 seconds, with no
+silence on the speaker, no drop on the built-in speaker, zero panics and zero
+unexpected restarts. The known limitations below include the paths that were not tested on
+hardware at all.
 
 **0.2.1 remains the release with the widest hardware evidence**: release-day
 smoke on the owner's Core2 v1.0, an external user who independently installed
 and confirmed it on a factory-fresh v1.1, and a customer who confirmed v1.3 — so
 the whole hardware line has field evidence for that release, and not yet for
-0.4.2. Battery duration is owner-measured (~2.5 h typical, up to ~3 h); power-bank
+0.4.4. Battery duration is owner-measured (~2.5 h typical, up to ~3 h); power-bank
 behaviour and long endurance runs remain unmeasured.
 
 ## First start
@@ -28,6 +28,8 @@ behaviour and long endurance runs remain unmeasured.
 1. Power the radio over USB-C.
 2. If no approved Wi-Fi network is stored, connect a phone to the temporary
    `OpenRadio-Setup` network using the one-time WPA2 code shown on the radio.
+   The code fills two lines on the screen: type it as one word, without spaces,
+   in capitals (`OR-` and twelve characters).
    The captive portal opens locally; if it does not, open `192.168.4.1`.
 3. Add a secured Wi-Fi network. Unknown and open networks are never autojoined.
 4. The built-in speaker starts first so sound does not depend on Bluetooth.
@@ -145,15 +147,24 @@ become playback dependencies.
 
 ## Known limitations
 
-- **A Bluetooth speaker that was switched off can take from 13 seconds to about
-  five minutes to come back.** Measured on the released image over eight power
-  cycles: 13, 109, 36, 152, 50, 285, 34 and 15 seconds. The radio plays from its
-  built-in speaker meanwhile and recovered on its own every time, without a
-  restart. A fix is planned for 0.4.3.
-- Once in those eight cycles the audio start was deferred for lack of memory,
-  and the radio reconnected by itself.
-- The update path that writes the application alone, stations beyond the default
-  nine, and battery duration were not exercised on the published 0.4.2 bytes.
+- **The speaker return was measured on one speaker.** On the published bytes,
+  ten power cycles on RMF FM brought it back 3 to 16 seconds after the speaker's
+  call. A second speaker has not been tested.
+- The speaker often does not answer the radio's first call, because it is still
+  calling the radio at that moment. The second call gets through, and the
+  return takes about five seconds longer.
+- Once in twenty cycles the radio held the sound back for five seconds, because
+  its memory was too fragmented to start Bluetooth audio safely, and then called
+  again: 23 seconds.
+- **The built-in speaker can stutter on RMF FM** while Bluetooth is not playing.
+  Through a Bluetooth speaker no drop was measured.
+- When the speaker's link comes up, the station stream sometimes restarts on the
+  next server within about a second. No silence or drop was measured.
+- Opening a stream on an address that does not answer freezes the screen for up
+  to five seconds, once per dead address.
+- Two hours of Bluetooth play, the update path that writes the application
+  alone over 0.4.2 with settings kept, and stations other than RMF FM were not
+  exercised on the published 0.4.4 bytes.
 - No uninterrupted 60-minute run exists for 0.4. The qualifying session ran 69
   minutes but contained deliberate reboots, which produced recovery evidence
   instead. The historical notes below about a failed 60-minute run describe an
@@ -164,5 +175,5 @@ become playback dependencies.
   can change independently of any firmware release.
 - Official station logos are not publicly bundled without permission.
 - Bluetooth LE Audio-only speakers are outside the Core2 contract.
-- The current public release is 0.4.2; endurance and battery duration are not yet
-  formally qualified, and 0.4.2's hardware evidence comes from a single unit.
+- The current public release is 0.4.4; endurance and battery duration are not yet
+  formally qualified, and 0.4.4's hardware evidence comes from a single unit.

@@ -6,20 +6,27 @@ Archiwa źródłowe są powtarzalne bitowo, a wydany firmware odtwarza się
 bajt-w-bajt poza stemplem pochodzenia przy zachowaniu trzech parametrów builda.
 Zmierzone na 0.2.1 (2026-07-23) i **udowodnione ponownie wykonaniem na 0.4**
 (2026-07-31): opublikowany obraz odbudowano z commitu późniejszego niż własne
-cięcie kodu, stemplując zapisane cięcie, i hash się zgodził.
+cięcie kodu, stemplując zapisane cięcie, i hash się zgodził. Na **0.4.4**
+(12.10.2026) opublikowana paczka odpowiadających źródeł, rozpakowana poza
+repozytorium i zbudowana w świeżym środowisku, dała aplikację wydania bajt
+w bajt.
 
 1. **Piny zależności, po nazwie.** Każda biblioteka z
    `firmware/manifests/dependencies.lock.json` musi rozwiązać się dokładnie
    raz; M5GFX jest przypięty wpisem *nazwanym*
    (`M5GFX=https://github.com/m5stack/M5GFX.git#ad9b814…`, zawartość
    identyczna z rejestrowym 0.2.25).
-2. **Ścieżka katalogu builda — zneutralizowana w 0.4.1.** Dwa stringi assertów
-   frameworka osadzały absolutną ścieżkę katalogu, więc pełna zgodność bajtowa
-   wymagała tej samej ścieżki builda, a opublikowana binarka niosła katalog
-   domowy i nazwę użytkownika maszyny budującej. Skrypt pre-build podaje teraz
-   `-ffile-prefix-map` liczony z drzewa, które akurat buduje, więc te stringi
-   czyta się jako `/open-radio/...` i bajty nie zależą już od miejsca
-   rozpakowania źródeł. Cztery ścieżki nazywające maszynę, która zbudowała
+2. **Ścieżka katalogu builda — zneutralizowana w 0.4.1 i ponownie w 0.4.4.**
+   Dwa stringi assertów frameworka osadzały absolutną ścieżkę katalogu, więc
+   pełna zgodność bajtowa wymagała tej samej ścieżki builda, a opublikowana
+   binarka niosła katalog domowy i nazwę użytkownika maszyny budującej. Skrypt
+   pre-build podaje `-ffile-prefix-map` liczony z drzewa, które akurat buduje,
+   więc te stringi czyta się jako `/open-radio/...`. W 0.4.2 ścieżka toolchainu
+   wróciła do tych dwóch stringów: build szedł ze zmienną `PLATFORMIO_CORE_DIR`
+   wskazującą prawdziwy katalog toolchainu, poza drzewem objętym mapą. Od 0.4.4
+   katalog toolchainu po rozwiązaniu dowiązań jest mapowany na ten sam cel, a
+   build wydania odrzuca obraz, w którym została ścieżka katalogu domowego.
+   Cztery ścieżki nazywające maszynę, która zbudowała
    *toolchain*, zostają w gotowych bibliotekach nieprzebudowywanych przez ten
    projekt; są identyczne dla każdego, kto używa przypiętego toolchainu, więc
    nie wpływają na odtworzenie.

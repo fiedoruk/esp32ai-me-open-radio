@@ -2,8 +2,8 @@
   "spdxVersion": "SPDX-2.3",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "name": "open-radio-core2-0.4.2-release-graph",
-  "documentNamespace": "https://fiedoruk.pl/spdx/open-radio-core2/release-0-4-2",
+  "name": "open-radio-core2-0.4.4-release-graph",
+  "documentNamespace": "https://fiedoruk.pl/spdx/open-radio-core2/release-0-4-4",
   "creationInfo": {
     "created": "2026-08-01T00:00:00Z",
     "creators": [
@@ -15,12 +15,12 @@
     {
       "name": "Open Radio Core2",
       "SPDXID": "SPDXRef-OpenRadio",
-      "versionInfo": "0.4.2",
-      "downloadLocation": "https://fiedoruk.pl/os/open-radio-0-4-2.bin",
+      "versionInfo": "0.4.4",
+      "downloadLocation": "https://fiedoruk.pl/os/open-radio-0-4-4.bin",
       "licenseConcluded": "GPL-3.0-or-later",
       "licenseDeclared": "GPL-3.0-or-later",
       "filesAnalyzed": false,
-      "comment": "Two artifacts carry this software: open-radio-0-4-2.bin is the factory image written from 0x0 and erases stored settings, open-radio-0-4-2-update.bin is the application alone written at 0x10000 and keeps them. Both contain the same application bytes."
+      "comment": "Two artifacts carry this software: open-radio-0-4-4.bin is the factory image written from 0x0 and erases stored settings, open-radio-0-4-4-update.bin is the application alone written at 0x10000 and keeps them. Both contain the same application bytes."
     },
     {
       "name": "Arduino-ESP32",

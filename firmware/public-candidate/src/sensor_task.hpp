@@ -207,7 +207,7 @@ class SensorTask {
     // A calibration block that transferred in full can still be nonsense (a
     // half-reset part, a bus glitch that read as zeros). p1 is a divisor in the
     // pressure compensation; zero there is a division by zero before the
-    // plausibility check ever runs (Codex F10, 2026-09-08).
+    // plausibility check ever runs (review of 2026-09-08).
     if (!bme688CalibrationPlausible(envProCalibration_)) {
       Serial.println("sensor env_pro calibration=implausible treating=absent");
       return false;
@@ -339,7 +339,7 @@ class SensorTask {
       // In 64-bit: the gas formula emits up to 102 400 000 ohm, so the
       // difference times 100 overflows int32 for exactly the swings worth
       // noticing — the same class as the delta*200 fix of 2026-07-30 a few
-      // lines below (audit 2026-09-08, V2-02 / Codex F18).
+      // lines below (audit 2026-09-08).
       derived.gasDeparturePercent = static_cast<std::int32_t>(
           (static_cast<std::int64_t>(pending_.gasResistanceOhm) - gasBaseline) * 100 /
           gasBaseline);
@@ -710,8 +710,8 @@ class SensorTask {
           // Its contribution leaves with it. Without this the ENV Pro leg kept
           // publishing slot 0 as Ok with the SCD4x's LAST CO2 value under a
           // fresh observedAtMs, so the screen showed a dead module's number as
-          // current and the CO2 alerts could never release (audit 2026-09-08,
-          // V2-01 / Codex F19).
+          // current and the CO2 alerts could never release (audit
+          // 2026-09-08).
           pending_.co2Ppm = kAbsentValue;
           pending_.temperatureCentiCelsius = kAbsentValue;
           pending_.humidityCentiPercent = kAbsentValue;
@@ -823,7 +823,7 @@ class SensorTask {
   // In PSRAM, deliberately: 2,884 bytes of minute-by-minute history is the
   // sensor task's own bookkeeping, read in task context only — never from an
   // ISR and never by DMA — so it has no claim on internal DRAM (docs/133 §6.2;
-  // Codex audit #2, 2026-07-30). Placement-new, not `new`: the SDK's
+  // review of 2026-07-30). Placement-new, not `new`: the SDK's
   // SPIRAM_MALLOC_ALWAYSINTERNAL=4096 routes plain allocations of this size
   // into internal DRAM, which is the exact opposite of the point. When PSRAM
   // ever fails to provide it, readings still flow and only the trends stay

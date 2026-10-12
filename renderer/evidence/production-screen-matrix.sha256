@@ -41,10 +41,58 @@
 # lata — nazwisko i domena autora nie wygasaja, wiec pochodzenie jest zakotwiczone
 # w nich. Obie wartosci przeliczone ponownie na wlasnych hostach.
 #
+# Wpis 0.4.3 (2026-09-25): adres projektu na ekranie "O radiu" zmieniony z
+# "open-radio.me" na "esp32ai.me/radio" (renderer.cpp:2867-2868) — projekt
+# mieszka teraz pod tym adresem, a ekran nadal odsylal na poprzedni. Obie
+# wartosci przeliczone: macOS przez `npm run check:renderer`, linuksowa w
+# node:22-bookworm --platform linux/amd64 (g++ 12.2, glibc 2.36) tym samym
+# skryptem; ten sam kontener na drzewie sprzed zmiany odtworzyl poprzednia
+# wartosc linuksowa, wiec nowa nie jest nowym hostem. `--write` NIE uzyty.
+#
+# Wpis 0.4.3 (2026-09-25, druga zmiana): ekran "O radiu" pokazuje note prawna,
+# ktorej wymaga GPL-3.0 §5(d) — "GPL-3.0 · bez gwarancji" w karcie, "© 2026
+# Tomasz Fiedoruk · fiedoruk.pl" i "Wolno dzielic · esp32ai.me/radio · bez
+# telemetrii". Obie wartosci przeliczone jak w poprzednim wpisie: macOS przez
+# `npm run check:renderer`, linuksowa w node:22-bookworm --platform linux/amd64
+# (g++ 12.2, glibc 2.36) na kopii drzewa. `--write` NIE uzyty.
+#
+# Wpis 0.4.3 (2026-09-26, T31): ekran konfiguracji Wi-Fi (onboarding i "Dodaj
+# siec") ma kroki co 18 px zamiast 22, etykiete "Kod awaryjny" na y = 128, kod
+# krojem body w dwoch liniach (po "OR-" i szesciu cyfrach) i tytul do 118 px, bo
+# kamera pokazala na Core2 11 z 12 cyfr hasla i "Connect pho...". Ta sama zmiana
+# naprawia drawWrappedText, ktory gubil ostatni glif, gdy przepelnial tylko on
+# (ekran glowny: "Supermoc" zamiast "Supermoce"; skrot domyslny e9650f92). Obie
+# wartosci przeliczone: macOS przez `make -C renderer determinism`, linuksowa
+# w node:22-bookworm --platform linux/amd64 (g++ 12.2) na kopii drzewa; ten sam
+# kontener na drzewie z sama poprawka zawijania odtworzyl poprzednia wartosc
+# linuksowa, wiec nowa nie jest nowym hostem. `--write` NIE uzyty.
+#
+# Wpis 0.4.4 (2026-09-27, T34): turkus jako drobny tekst dostal wlasny token
+# brand_text (jasny motyw #157556, 5,3:1 na canvas po zaokragleniu do RGB565;
+# ciemny = brand). Rusza "OpenRadio-Setup", adres konsoli i "Cala Polska"
+# na ekranie regionu, a druga linie karty na ekranach Wi-Fi i stanu, ktora
+# brala akcent grajacej stacji (na jasnej karcie 1,3-2:1), takze w ciemnym
+# motywie: "http://open-radio.local" w brand_text, nazwa stacji w muted
+# (podagent UX: na karcie bledu stacja to kontekst). Obie wartosci przeliczone: macOS przez `make -C renderer
+# determinism`, linuksowa w node:22-bookworm --platform linux/amd64 na kopii
+# drzewa; ten sam kontener na drzewie HEAD (4698db4) odtworzyl poprzednia
+# wartosc linuksowa, wiec nowa nie jest nowym hostem. T33 (przycisk "Zmien kod")
+# macierzy nie ruszyl: ekranu "Dodaj siec" z wlaczonym portalem w niej nie ma.
+# `--write` NIE uzyty.
+#
+# Wpis 0.4.4 (2026-09-27, T35): klikalne kontrolki na neutralnym tle (raised,
+# surface) dostaly obrys 1 px w nowym tokenie control_edge (jasny #7F8C88,
+# 3,22:1 na canvas po RGB565; ciemny = raised, wiec noc bez zmian poza
+# kaflami i "Gotowe"). "Gotowe" z surface na raised (polecenie, nie wybor).
+# Obie wartosci: macOS przez `make -C renderer determinism`, linuksowa
+# w node:22-bookworm --platform linux/amd64 na kopii drzewa; ten sam kontener
+# na drzewie HEAD (c5de303) odtworzyl poprzednia wartosc linuksowa.
+# `--write` NIE uzyty.
+#
 # UWAGA NA `--write`: nadpisuje TEN PLIK jednym wpisem biezacego hosta i kasuje
 # ten naglowek razem z druga platforma (check-renderer-determinism.mjs:82).
 # Uzyty tu 2026-08-01 skasowal caly rejestr; odtworzony z gita i zapisany
 # recznie. Do czasu naprawy: liczyc hashe osobno na obu hostach i wpisywac tu
 # recznie, `--write` NIE uzywac.
-d99be00c77935d9878c6af96e822a41deede06176723c6fc8aa59d1afb2d7d7f  apple-clang-darwin-arm64
-26df012c572c15797a6b3dc2df499944f1df1382ac90ad28014ab0f6afb85db3  gnu-libstdcxx-linux-x64
+705174dfd8f0f1999407453e10584062fd465495c9225f4caf11964e250ddc83  apple-clang-darwin-arm64
+1a31bb6a6ef43d41a76c41cdc031aa37a7278bca02ddd733bbb640a7aa89aaaf  gnu-libstdcxx-linux-x64

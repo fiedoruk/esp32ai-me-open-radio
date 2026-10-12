@@ -11,7 +11,7 @@
     },
     {
       "path": "firmware/public-candidate/src/async_icy_stream_source.hpp",
-      "sha256": "6a4b16020ea5d8ef32affea5e736015629e8c606d0208e917fba7ef6771cdfbe",
+      "sha256": "e3890852bbb71860b79ea3fc793ef9c3f9bba4be3b2543d21110e9d9a931e1a3",
       "frozenSha256": "62bbac547234f2482a556002458be1fa6209b1c5db0f99301171b90ecac844d1"
     },
     {
@@ -36,23 +36,33 @@
     },
     {
       "path": "firmware/public-candidate/src/device_network_runtime.hpp",
-      "sha256": "1b5aaef7c2a02d485f24fd41a5344c92f617f66812c3909cb4a655e2384e1c09",
+      "sha256": "a4d476470dba7b061666d17a686ab5f6338aea086e96f280c21db7cb01ae8787",
       "frozenSha256": "e36ff2a31c1ea3584e6dff962241202505d934909949503e5d9d840c63472677"
     },
     {
       "path": "firmware/public-candidate/src/logo_store.hpp",
-      "sha256": "303b406aef17bf3c0c0b2816b6118b11bd4f319f759a26c624453d86ef98f8f9",
+      "sha256": "a9aa919527ecc90c82e42329b4f20faf507c4f36dc87342ac963e4ef0ae63cd7",
       "frozenSha256": "7a3228e2f27ae7a62b0fc13bff39630e3a6d0b1f0408fea0b92c647455f4bdd8"
     },
     {
       "path": "firmware/public-candidate/src/station_runtime.hpp",
-      "sha256": "9e9d5cf3160627e74c3cd66a39a8bd0348ab2f7dc65ada3bdbd0262c6455f666",
+      "sha256": "d7338b584d95866d84c54d1602b8e44a3d33a0989466d3498bcf97a744fdad96",
       "frozenSha256": "f8bc20670a0ef4bf4ebfeb5b73a8e05557893fd203dc4e92277e7ba7147cc925"
     },
     {
       "path": "firmware/public-candidate/src/station_slots.hpp",
       "sha256": "9f1a77278ed8dfc2b91d358e5956c675908969094bcc9e45e7d3dd3e31888047",
       "frozenSha256": "0ecdfc85442c6df691c0af8101a3ea7a851aeea52df1cab355ee2a1102a4c58e"
+    },
+    {
+      "path": "firmware/common/include/open_radio/bluetooth_listen_policy.hpp",
+      "sha256": "abce4badfd920204507fdcad75d8fde4f281371a3ce5f68daa1f60adab906419",
+      "frozenSha256": "abce4badfd920204507fdcad75d8fde4f281371a3ce5f68daa1f60adab906419"
+    },
+    {
+      "path": "firmware/common/include/open_radio/bluetooth_retry_deferral.hpp",
+      "sha256": "073b4c8768a0c0e779b435b2677992551a4c900f6952cdb52fbe22781914c4d0",
+      "frozenSha256": "073b4c8768a0c0e779b435b2677992551a4c900f6952cdb52fbe22781914c4d0"
     }
   ],
   "invariants": [
@@ -128,7 +138,7 @@
     },
     {
       "path": "firmware/public-candidate/src/station_runtime.hpp",
-      "reason": "Wstrzykiwana bramka TLS (setTlsGate/tlsGate_) i jej sprawdzenie w fetchJson. WYLACZNIE dodatki: 22 linie, zero zmian w logice dzwieku, zero usuniec. fetchJson to jedyne drzwi do TLS w tej klasie, a resolveRmf otwieral handshake przy pustym cache w trakcie asynchronicznego wstawania Bluedroida - czyli w oknie paniki z 01.08. Pusty wynik byl juz obsluzona sciezka: resolveEndpoint schodzi na przypiety mount po zwyklym HTTP. Komentarze przetlumaczone na angielski zgodnie z AGENTS.md (source code: English); tresc zmiany bez zmian.",
+      "reason": "Wstrzykiwana bramka TLS (setTlsGate/tlsGate_) i jej sprawdzenie w fetchJson. WYLACZNIE dodatki: 22 linie, zero zmian w logice dzwieku, zero usuniec. fetchJson to jedyne drzwi do TLS w tej klasie, a resolveRmf otwieral handshake przy pustym cache w trakcie asynchronicznego wstawania Bluedroida - czyli w oknie paniki z 01.08. Pusty wynik byl juz obsluzona sciezka: resolveEndpoint schodzi na przypiety mount po zwyklym HTTP. Komentarze przetlumaczone na angielski, bo kod zrodlowy projektu jest po angielsku; tresc zmiany bez zmian.",
       "movedIn": "0.4.1",
       "date": "2026-08-02",
       "fromSha256": "2cf14d52d35e1b8855b9f0f5873b5d756c42c98869a28ffcecfecc72ed64bc84",
@@ -159,7 +169,7 @@
       "date": "2026-09-08",
       "fromSha256": "c314926e677984bccb1c6102599224700fb5f32d953fc5035d1301f390c120cf",
       "toSha256": "e75303239a84bbfd80ae3d81e481c7f82faf9cde4f24bff0046e70b51a01df5d",
-      "reason": "V1-01/V1-08 (audit 2026-09-08). fetchJson set no TLS handshake timeout, so the framework default of 120 s applied on the owner task under its 30-second watchdog, at every Wi-Fi connect; a peer accepting TCP and stalling the handshake rebooted the radio in a loop. setHandshakeTimeout(5) as logo_store.hpp already does. prefetchRmfPools now runs from the logo-fetch task (same heap window, no watchdog), so the pool bodies gained a FreeRTOS mutex (PoolLock) around assignment and candidate extraction. No change to resolution order, candidates, rotation or audio.",
+      "reason": "Audit of 2026-09-08. fetchJson set no TLS handshake timeout, so the framework default of 120 s applied on the owner task under its 30-second watchdog, at every Wi-Fi connect; a peer accepting TCP and stalling the handshake rebooted the radio in a loop. setHandshakeTimeout(5) as logo_store.hpp already does. prefetchRmfPools now runs from the logo-fetch task (same heap window, no watchdog), so the pool bodies gained a FreeRTOS mutex (PoolLock) around assignment and candidate extraction. No change to resolution order, candidates, rotation or audio.",
       "verification": "host compile of the public lane; node tests (firmware-fault-matrix, network-onboarding); device run with the 0.4.2 lab image still owed: stream_stage stage=resolver result=pools-cached must appear from the logo task and RMF FM must start from a pinned mount while the prefetch is in flight"
     },
     {
@@ -168,7 +178,7 @@
       "date": "2026-09-08",
       "fromSha256": "8a29d0b22beadf3ae4c7d5d8b77732b711dcd1c7420ff9767113cdc7eaec9517",
       "toSha256": "1b5aaef7c2a02d485f24fd41a5344c92f617f66812c3909cb4a655e2384e1c09",
-      "reason": "V1-02/V3-01/V3-02, Kimi F1, Codex F12 (audit 2026-09-08). POST /api/config-form was accepted from any host on the home network during a console session, with the CSRF token handed out by GET /api/session to the same hosts; a guest or a compromised LAN device could re-provision the radio onto its own access point inside the 15-minute window. Credentials are now accepted from the setup portal only (softAP client), and console requests must carry a Host header naming the device (its STA address or open-radio.local), closing DNS rebinding. Portal behaviour, captive-portal redirect and the console station flow are unchanged.",
+      "reason": "Audit of 2026-09-08. POST /api/config-form was accepted from any host on the home network during a console session, with the CSRF token handed out by GET /api/session to the same hosts; a guest or a compromised LAN device could re-provision the radio onto its own access point inside the 15-minute window. Credentials are now accepted from the setup portal only (softAP client), and console requests must carry a Host header naming the device (its STA address or open-radio.local), closing DNS rebinding. Portal behaviour, captive-portal redirect and the console station flow are unchanged.",
       "verification": "tests/network-onboarding.test.mjs pins both guards; host compile of the public lane; device run owed: console session still saves slots, a foreign Host gets 403, config-form from the console gets 403 reason=portal-only"
     },
     {
@@ -177,7 +187,7 @@
       "date": "2026-09-08",
       "fromSha256": "ef10d7cbf4a927f43541d22fa3830f2cb696943f266ec958b9aa1a5451f818c8",
       "toSha256": "303b406aef17bf3c0c0b2816b6118b11bd4f319f759a26c624453d86ef98f8f9",
-      "reason": "Codex F02/F03/F04 (audit 2026-09-08). (1) HTTPClient was declared before the WiFiClient/WiFiClientSecure it was begun with, so its destructor called stop() on a destroyed client on the disconnected/reuse path; declaration order reversed. (2) The chunked/unknown-length body went through writeToStream, whose inner loop has no deadline: a server holding the socket open after a chunk header parked the logo task and deferred Bluetooth for ever; the request is now HTTP/1.0 (no chunked coding) and one bounded loop reads both length- and close-delimited bodies under the existing 8-second deadline. (3) A PNG chunk declaring more bytes than the buffer holds walked the decoder skip pointer past the 96 KiB download allocation; pngChunksWellFormed() (open_radio/image_dims.hpp, host-tested) refuses it before pngle runs. Decoding, storage and monogram fallback unchanged.",
+      "reason": "Audit of 2026-09-08. (1) HTTPClient was declared before the WiFiClient/WiFiClientSecure it was begun with, so its destructor called stop() on a destroyed client on the disconnected/reuse path; declaration order reversed. (2) The chunked/unknown-length body went through writeToStream, whose inner loop has no deadline: a server holding the socket open after a chunk header parked the logo task and deferred Bluetooth for ever; the request is now HTTP/1.0 (no chunked coding) and one bounded loop reads both length- and close-delimited bodies under the existing 8-second deadline. (3) A PNG chunk declaring more bytes than the buffer holds walked the decoder skip pointer past the 96 KiB download allocation; pngChunksWellFormed() (open_radio/image_dims.hpp, host-tested) refuses it before pngle runs. Decoding, storage and monogram fallback unchanged.",
       "verification": "host tests image-dims (4 new cases); host compile of the public lane; device run owed: nine tile logos out of nine on a full-wipe boot, including the station whose CDN chunked under HTTP/1.1"
     },
     {
@@ -186,7 +196,7 @@
       "date": "2026-09-08",
       "fromSha256": "62bbac547234f2482a556002458be1fa6209b1c5db0f99301171b90ecac844d1",
       "toSha256": "6a4b16020ea5d8ef32affea5e736015629e8c606d0208e917fba7ef6771cdfbe",
-      "reason": "V1-06 (audit 2026-09-08). open() called close() and ignored its result before deleting upstream_; close() returns false when the worker did not stop within 1500 ms and the worker still owns upstream_. open() now refuses instead. Unreachable today (non-blocking reads, ICY metadata wait bounded to 500 ms) — the guard exists so a future library or patch change cannot turn it into a use-after-free. Ring, worker and metadata mailbox unchanged.",
+      "reason": "Audit of 2026-09-08. open() called close() and ignored its result before deleting upstream_; close() returns false when the worker did not stop within 1500 ms and the worker still owns upstream_. open() now refuses instead. Unreachable today (non-blocking reads, ICY metadata wait bounded to 500 ms) — the guard exists so a future library or patch change cannot turn it into a use-after-free. Ring, worker and metadata mailbox unchanged.",
       "verification": "host compile of the public lane; node fault-matrix test; behaviour identical on every path where close() succeeds"
     },
     {
@@ -231,7 +241,7 @@
       "date": "2026-09-09",
       "fromSha256": "7d2afe9e6d3a6f5304f18fdaadbcaf12656b3f5b278285042b73e78224940361",
       "toSha256": "2aa1891767a4324bca631b5291bfffa836dd4e04fe3019c891cc63737ea21c7e",
-      "reason": "Two release-blocking defects from the Codex pre-release review, both pre-existing and both about time nobody was bounding. (1) The owner loop no longer opens TLS at all. resolveRmf used to run a name lookup, a TCP connect, a handshake and a body read inside one iteration of a task subscribed to a 30-second watchdog; three of those we bound ourselves, the name lookup we do not, because the core resolves through getaddrinfo asking for both A and AAAA and nothing in our code caps it. Rather than argue the total stays under thirty seconds, the owner stops reaching for the network: it reads the cached pool or falls back to the pinned mount, which is what already happened on the 2026-09-09 run when this call failed at 5210 ms and the station started one second later anyway. The pool is filled by prefetchRmfPools on the unsubscribed logo task and refills at every Wi-Fi connect, so the handshake budget collapses back to one value, twenty seconds, with one caller. (2) The body read no longer uses getString(). The pinned core's body loop consults no clock — with nothing available it calls delay(1) and spins, and setTimeout does not reach it — so a peer that completes TLS, answers 200 and then goes quiet hangs the call forever: a watchdog reboot on the owner loop, or on the logo task a Bluetooth auto-start gate that is never released. The read now carries its own deadline and its own byte cap, and reports reason=body-deadline or reason=oversize instead of hanging. I had claimed in writing that setTimeout covered this; it does not.",
+      "reason": "Two release-blocking defects from the pre-release review, both pre-existing and both about time nobody was bounding. (1) The owner loop no longer opens TLS at all. resolveRmf used to run a name lookup, a TCP connect, a handshake and a body read inside one iteration of a task subscribed to a 30-second watchdog; three of those we bound ourselves, the name lookup we do not, because the core resolves through getaddrinfo asking for both A and AAAA and nothing in our code caps it. Rather than argue the total stays under thirty seconds, the owner stops reaching for the network: it reads the cached pool or falls back to the pinned mount, which is what already happened on the 2026-09-09 run when this call failed at 5210 ms and the station started one second later anyway. The pool is filled by prefetchRmfPools on the unsubscribed logo task and refills at every Wi-Fi connect, so the handshake budget collapses back to one value, twenty seconds, with one caller. (2) The body read no longer uses getString(). The pinned core's body loop consults no clock — with nothing available it calls delay(1) and spins, and setTimeout does not reach it — so a peer that completes TLS, answers 200 and then goes quiet hangs the call forever: a watchdog reboot on the owner loop, or on the logo task a Bluetooth auto-start gate that is never released. The read now carries its own deadline and its own byte cap, and reports reason=body-deadline or reason=oversize instead of hanging. I had claimed in writing that setTimeout covered this; it does not.",
       "verification": "Device-lane build SUCCESS; firmware-fault-matrix rewritten around the new invariant and asserting it structurally — exactly one fetchJson call site, none of it in resolveRmf, no getString in the gate, deadline and oversize paths present; npm run check green. Hardware exit gate for this cut: pools-pass-filled with three discovery_ok lines, and no rmf line at all before the logo task starts."
     },
     {
@@ -242,6 +252,96 @@
       "toSha256": "9e9d5cf3160627e74c3cd66a39a8bd0348ab2f7dc65ada3bdbd0262c6455f666",
       "reason": "Discovery requests go out as HTTP/1.0, for the same reason logo_store.hpp already does. Reading the body under our own deadline means reading the raw socket, and on HTTP/1.1 that carries chunk framing rather than the body — and a keep-alive peer never closes, so a loop waiting for the data to stop waits out its entire deadline with the complete answer already in hand. That is not a hypothetical: the first device run of the bounded read reported reason=body-deadline with len=1271, threw away a full response, and the two discoveries after it failed at the connect timeout on a client left in a bad state, ending the pass pools-pass-empty where the cut before it had ended pools-pass-filled. Under 1.0 the server sends a length or closes, so the read ends when the answer does and a closed connection with an empty buffer is the normal successful exit.",
       "verification": "Device-lane build SUCCESS; npm run check green. The defect this repairs was found on hardware, not reasoned about: log cube-v13-lab4-final-2026-09-09. Exit gate for this cut: pools-pass-filled with three discovery_ok lines and no body-deadline line."
+    },
+    {
+      "path": "firmware/public-candidate/src/logo_store.hpp",
+      "movedIn": "0.4.3",
+      "date": "2026-09-25",
+      "fromSha256": "303b406aef17bf3c0c0b2816b6118b11bd4f319f759a26c624453d86ef98f8f9",
+      "toSha256": "86920aaf322557ec6cb78f16f8cf124848d4bbab59bac99f820344a663b2257f",
+      "reason": "HTTPClient::getStreamPtr() returns nullptr once the peer has closed: it asks connected(), and after a FIN lwIP answers ENOTCONN. 0.4.2 moved the icon body read into a bounded loop that called stream->available() without checking, so an icon server answering 200 with an empty body and a close rebooted the radio on every boot while that icon stayed missing; one of the default nine stations is fetched this way, so a factory install did not help. 0.4.1 was guarded by request.connected() in the loop condition. The fetch now ends with reason=stream and the next icon is tried. Found in the audit of 2026-09-24 and verified against the pinned framework source.",
+      "verification": "firmware-fault-matrix test red on the 0.4.2 file (no guard) and on a variant with the guard after the first use, green on this one; public lane build SUCCESS; npm run check green. On hardware: NOT MEASURED (needs a fake icon server on the path)."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.3",
+      "date": "2026-09-25",
+      "fromSha256": "9e9d5cf3160627e74c3cd66a39a8bd0348ab2f7dc65ada3bdbd0262c6455f666",
+      "toSha256": "651702230f14a191171c031782decfb0f1eb0d0d29d6cb374ee7e15150ff7296",
+      "reason": "The pool discovery now asks the logo task's abort flag before each of its three fetches. A pairing tap or a Bluetooth recovery raises that flag to free the task, and the tap waiting behind it expires after sixty seconds; the logo loop already honoured the flag, but prefetchRmfPools() ran its three discoveries (DNS, a 5 s connect, a 20 s handshake, 5 s for headers and 5 s for the body, each) without looking, so on a sick network the tap could expire with no message. Found in the audit of 2026-09-24: on a fresh cube on 2026-09-21 Bluetooth came up 89 s after Wi-Fi. The pass logs rmf prefetch_aborted before=<index> and reports pools-pass-empty when slot 0 was not reached; the station still plays from the pinned mount.",
+      "verification": "firmware-fault-matrix test red without the parameter and on a variant with the check after fetchJson(), green on this one; two older tests re-pinned to the new signature (one call, inside logoFetchTask, outside the TLS gate block); public lane build SUCCESS; npm run check green. On hardware: Phase 4 step 5 (pairing tap in the first minute on a fresh cube)."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.3",
+      "date": "2026-09-25",
+      "fromSha256": "651702230f14a191171c031782decfb0f1eb0d0d29d6cb374ee7e15150ff7296",
+      "toSha256": "b92ade8608052185f6fb872bfb2fbe45a9468d0fd69b95b77d5f691a7ffb16ae",
+      "reason": "A pool body is kept whole or not at all (audit of 2026-09-24). A peer that closed before its declared Content-Length used to pass as discovery_ok, so decodeJsonString() could return an unfinished URL from the cut body; the pass now logs reason=short with len and want and keeps nothing. String::concat(ptr, n) in the pinned core copies n + 1 bytes, so a full 128-byte read made it read one byte past the chunk array: the array has a spare byte now and the read is terminated. And a concat that cannot grow the String returned false unchecked, which kept a truncated body; that path logs reason=alloc and keeps nothing. The station still plays in every rejected case: rotation or the pinned mount.",
+      "verification": "firmware-fault-matrix test red on the previous file (no spare byte), green on this one; the new log lines pass sanitizeHardwareLine(); public lane build SUCCESS; npm run check green. On hardware: pools-pass-filled with three discovery_ok lines in Phase 2 and Phase 4."
+    },
+    {
+      "path": "firmware/public-candidate/src/async_icy_stream_source.hpp",
+      "movedIn": "0.4.3",
+      "date": "2026-09-25",
+      "fromSha256": "6a4b16020ea5d8ef32affea5e736015629e8c606d0208e917fba7ef6771cdfbe",
+      "toSha256": "e3890852bbb71860b79ea3fc793ef9c3f9bba4be3b2543d21110e9d9a931e1a3",
+      "reason": "Comment-only: review labels (reviewer names and audit item numbers) removed from product comments, so public code no longer points at the workshop; the reasoning each comment carries is unchanged, and every edit stays on its own line so __LINE__ cannot move.",
+      "verification": "firmware.bin byte-identical before and after this change on the public lane: 138eb0ae7058b002e72c6c4067f04871d90f41cc9b4f520dcc5b9407b3db70b4 (main.cpp.o recompiled, the one translation unit these headers reach); firmware-fault-matrix label test red with 22 lines in 11 files, green after."
+    },
+    {
+      "path": "firmware/public-candidate/src/device_network_runtime.hpp",
+      "movedIn": "0.4.3",
+      "date": "2026-09-25",
+      "fromSha256": "1b5aaef7c2a02d485f24fd41a5344c92f617f66812c3909cb4a655e2384e1c09",
+      "toSha256": "a4d476470dba7b061666d17a686ab5f6338aea086e96f280c21db7cb01ae8787",
+      "reason": "Comment-only: review labels (reviewer names and audit item numbers) removed from product comments, so public code no longer points at the workshop; the reasoning each comment carries is unchanged, and every edit stays on its own line so __LINE__ cannot move.",
+      "verification": "firmware.bin byte-identical before and after this change on the public lane: 138eb0ae7058b002e72c6c4067f04871d90f41cc9b4f520dcc5b9407b3db70b4 (main.cpp.o recompiled, the one translation unit these headers reach); firmware-fault-matrix label test red with 22 lines in 11 files, green after."
+    },
+    {
+      "path": "firmware/public-candidate/src/logo_store.hpp",
+      "movedIn": "0.4.3",
+      "date": "2026-09-25",
+      "fromSha256": "86920aaf322557ec6cb78f16f8cf124848d4bbab59bac99f820344a663b2257f",
+      "toSha256": "a9aa919527ecc90c82e42329b4f20faf507c4f36dc87342ac963e4ef0ae63cd7",
+      "reason": "Comment-only: review labels (reviewer names and audit item numbers) removed from product comments, so public code no longer points at the workshop; the reasoning each comment carries is unchanged, and every edit stays on its own line so __LINE__ cannot move.",
+      "verification": "firmware.bin byte-identical before and after this change on the public lane: 138eb0ae7058b002e72c6c4067f04871d90f41cc9b4f520dcc5b9407b3db70b4 (main.cpp.o recompiled, the one translation unit these headers reach); firmware-fault-matrix label test red with 22 lines in 11 files, green after."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.3",
+      "date": "2026-09-25",
+      "fromSha256": "b92ade8608052185f6fb872bfb2fbe45a9468d0fd69b95b77d5f691a7ffb16ae",
+      "toSha256": "307afa20eea0b61e8aa5581fe120e70f519e0e2c007060a8f37a0ef5a0a7e861",
+      "reason": "Comment-only: review labels (reviewer names and audit item numbers) removed from product comments, so public code no longer points at the workshop; the reasoning each comment carries is unchanged, and every edit stays on its own line so __LINE__ cannot move.",
+      "verification": "firmware.bin byte-identical before and after this change on the public lane: 138eb0ae7058b002e72c6c4067f04871d90f41cc9b4f520dcc5b9407b3db70b4 (main.cpp.o recompiled, the one translation unit these headers reach); firmware-fault-matrix label test red with 22 lines in 11 files, green after."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.3",
+      "date": "2026-09-25",
+      "fromSha256": "307afa20eea0b61e8aa5581fe120e70f519e0e2c007060a8f37a0ef5a0a7e861",
+      "toSha256": "eca3c1f3010bed960fdaaff3f9270fd00e96a8c8e368cb69eea7288096ee3e19",
+      "reason": "Comment-only, completing the earlier pass: reviewer names and review item numbers the first label test could not see (it matched one label shape over a hand-picked list of directories) removed from two product comments. The reasoning is unchanged and each edit stays within its own lines, so __LINE__ cannot move. The label test now reads every public file, this lock included.",
+      "verification": "firmware.bin byte-identical before and after this change on the public lane: b9bff3213a4fccdec6a36a1df37fc18a076131cd8c604513813abaee01a95928; firmware-fault-matrix label test red with 21 lines in 5 files (this lock, the pre-build script and three product sources), green after."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.4",
+      "date": "2026-10-12",
+      "fromSha256": "eca3c1f3010bed960fdaaff3f9270fd00e96a8c8e368cb69eea7288096ee3e19",
+      "toSha256": "d95dfc4b4040c2a418f73977b021bf6f62cc1cd2dcba7f77032f94a76e9d8af2",
+      "reason": "Behaviour change, T36: a station's retry lap is its operator pool when the RMF pool is cached (10 MP3 edges, 20 in lanes with the AAC decoder), otherwise its slot or catalog list as before. Inside a lap the next alternate is opened after 1 s; the growing 5/30/120/600 s wait and the 'not broadcasting' announcement start only after a whole lap without a healthy stream. On 2026-10-12 three or four of the ten RMF FM MP3 edges (the -cyfronet hosts) answered on neither 80 nor 443, each failed open counted as the whole station failing (candidates=1), and four in a row left the radio silent on its 600 s retry while six edges worked. Each open also logs the edge host as address=, which the evidence sanitizer drops. Decoding, buffering and output paths are untouched.",
+      "verification": "core2-hardware-lab builds; firmware-fault-matrix pool-lap and address tests red on the previous file (no candidateLap, no endpoint line), green after; sanitizer test drops the address line; npm run check green. Device effect to be measured on the next RMF stream close (T36 in 05-PLAN-0-4-4)."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.4",
+      "date": "2026-10-12",
+      "fromSha256": "d95dfc4b4040c2a418f73977b021bf6f62cc1cd2dcba7f77032f94a76e9d8af2",
+      "toSha256": "d7338b584d95866d84c54d1602b8e44a3d33a0989466d3498bcf97a744fdad96",
+      "reason": "Two corrections to T36 from the pre-release review. A failed open blocks the loop for its whole connect timeout, and the retry deadline was taken before it, so the second between alternates (and the first 5 s backoff) had already passed when the loop came back; the deadline now counts from the end of the failed open. The logged edge host now also stops at '?' and '#', so a URL without a path cannot carry its query into the log.",
+      "verification": "core2-public-candidate, core2-owner-production and core2-hardware-lab build; firmware-fault-matrix T36 test asserts the deadline is taken after the failed open (failedAtMs) and red on the previous file; npm run check green."
     }
   ],
   "exceptionsNote": "An exception is the AUDIT TRAIL of a reviewed change, never a bypass. Until 2026-07-29 the checker excused a path by name, which meant one entry silently unfroze that file forever — and 0.3 plans to touch five frozen files. The hash check is now unconditional; an exception must name the exact from/to transition and its toSha256 must equal the current lock entry, so the record cannot drift from the file either.",

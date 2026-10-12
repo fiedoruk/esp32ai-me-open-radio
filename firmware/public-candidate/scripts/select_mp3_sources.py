@@ -59,6 +59,14 @@ env.Append(CPPDEFINES=[("OPEN_RADIO_BUILD_SHA", f'\\"{build_sha}\\"')])
 # and leave the reproducibility half broken for every other.
 env.Append(CCFLAGS=[f"-ffile-prefix-map={repository_root}=/open-radio"])
 
+# The same rewrite for the PlatformIO core, resolved. When PLATFORMIO_CORE_DIR
+# names the real toolchain directory, the compiler sees paths outside this tree
+# and the map above never applies; 0.4.2 shipped the build account's home twice
+# for exactly that reason. Mapped to the target the in-tree path already gets,
+# so every rebuilder lands on the same bytes however the core was reached.
+core_dir = Path(env.subst("$PROJECT_CORE_DIR")).resolve()
+env.Append(CCFLAGS=[f"-ffile-prefix-map={core_dir}=/open-radio/.tools/platformio-core"])
+
 expected_commit = "d6184e08977c0f15f1b09eeee119b238ce562383"
 environment_name = env.subst("$PIOENV")
 mp3_environments = {
@@ -153,7 +161,7 @@ if environment_name in mp3_environments:
                 f"unexpected ICY metadata wait-loop count: {replacements}"
             )
         icy_source_path.write_text(icy_source)
-    # Second workspace patch (audit 2026-09-08: V1-09, V3-06, Codex F01). The
+    # Second workspace patch (audit 2026-09-08). The
     # pinned parser zeroes only the first 16 bytes of its 273-byte metadata
     # buffer and then runs strstr/strchr over it — and WRITES a NUL wherever it
     # finds the terminator. A title with no ';' and no closing quote made those
@@ -182,6 +190,37 @@ if environment_name in mp3_environments:
             patched_icy_source.count(
                 "millis() - metadataStartedAtMs >= 500U") != 3):
         raise RuntimeError("failed to bound pinned ICY metadata reads")
+
+    # Third workspace patch (audit of 2026-09-24). The pinned source asks
+    # HTTP/1.1 and reads the raw socket; a server that answers chunked puts its
+    # framing ("20a7\r\n" every ~8 KB) into the bytes the ICY counter and the MP3
+    # decoder consume. 11 of 337 catalogue endpoints do; the catalogue itself was
+    # admitted by measure-station-directory.mjs over HTTP/1.0, which has no
+    # chunked coding. The radio now asks the way its catalogue was measured.
+    icy_source = icy_source_path.read_text()
+    http10_line = "    http.useHTTP10(true); // open_radio_http10\n"
+    if http10_line not in icy_source:
+        reuse_anchor = "    http.setReuse(true);\n"
+        if icy_source.count(reuse_anchor) != 1:
+            raise RuntimeError("ICY open() anchor not found; cannot force HTTP/1.0")
+        icy_source = icy_source.replace(reuse_anchor, reuse_anchor + http10_line, 1)
+        icy_source_path.write_text(icy_source)
+    if icy_source_path.read_text().count(http10_line) != 1:
+        raise RuntimeError("failed to force HTTP/1.0 on the pinned ICY source")
+
+    # Fourth workspace patch (audit of 2026-09-24). `end` is already the count
+    # of valid bytes, so "+ 1" carried one byte past them — a NUL since the whole
+    # buffer is zeroed — and a title split across two reads stopped at the seam.
+    title_line = "                int lastValidByte = end - (header - icyBuff); // open_radio_title_split\n"
+    icy_source = icy_source_path.read_text()
+    if title_line not in icy_source:
+        title_anchor = "                int lastValidByte = end - (header - icyBuff) + 1;\n"
+        if icy_source.count(title_anchor) != 1:
+            raise RuntimeError("ICY title anchor not found; cannot fix the split-title count")
+        icy_source = icy_source.replace(title_anchor, title_line, 1)
+        icy_source_path.write_text(icy_source)
+    if icy_source_path.read_text().count(title_line) != 1:
+        raise RuntimeError("failed to fix the pinned ICY split-title count")
 
     # The pinned decoder's default PCM scratch fits AAC-LC but not the maximum
     # stereo SBR frame documented by Helix. Keep the upstream pin and apply the

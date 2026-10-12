@@ -19,7 +19,9 @@
 
 #include "onboarding_assets.hpp"
 #include "open_radio/firmware_contract.hpp"
+#include "open_radio/bluetooth_listen_policy.hpp"
 #include "open_radio/bluetooth_profile_gate.hpp"
+#include "open_radio/bluetooth_retry_deferral.hpp"
 #include "open_radio/local_noise_source.hpp"
 #include "open_radio/upgrade_policy.hpp"
 #include "open_radio/renderer.hpp"
@@ -48,6 +50,32 @@
 #include <freertos/queue.h>
 #if !defined(CONFIG_ESP32_WIFI_SW_COEXIST_ENABLE)
 #error "The full variant requires ESP32 Wi-Fi/Bluetooth software coexistence"
+#endif
+#if defined(OPEN_RADIO_BT_ROLE_LOG)
+// Lab only (speaker plan, step B1). Bluedroid's own role lookup, exported by
+// the libbt.a of the pinned ESP-IDF 4.4.7 without a public header. It walks the
+// ACL list that the BTU task frees entries from, so a read from the loop can
+// land on a freed entry: log only, never a decision, never in a release lane.
+// tBTM_STATUS BTM_GetRole(BD_ADDR remote_bd_addr, UINT8* p_role), where
+// BTM_SUCCESS is 0 and the role is HCI_ROLE_MASTER 0 / HCI_ROLE_SLAVE 1.
+extern "C" std::uint8_t BTM_GetRole(std::uint8_t* remote_bd_addr,
+                                    std::uint8_t* p_role);
+#endif
+#if defined(OPEN_RADIO_BT_ACCEPT_AS_CENTRAL)
+// Speaker plan, step B2. L2CAP's "desired role when accepting a
+// connection", from the same libbt.a: UINT8 L2CA_SetDesireRole(UINT8 new_role)
+// sets HCI_ROLE_MASTER 0 / HCI_ROLE_SLAVE 1 and returns the role now in force;
+// any other value (0xff) changes nothing and only reads it (l2c_api.c).
+extern "C" std::uint8_t L2CA_SetDesireRole(std::uint8_t new_role);
+#endif
+#if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
+// Speaker plan, step B3. From the same libbt.a:
+// void BTA_DmCloseACL(BD_ADDR bd_addr, BOOLEAN remove_dev, tBTA_TRANSPORT transport)
+// copies its arguments into a message for the BTU task (bta_dm_api.c), so the
+// owner loop may call it; with remove_dev FALSE the link closes and the pairing
+// stays (bta_dm_close_acl -> btm_remove_acl). BT_TRANSPORT_BR_EDR is 1.
+extern "C" void BTA_DmCloseACL(std::uint8_t* bd_addr, std::uint8_t remove_dev,
+                               std::uint8_t transport);
 #endif
 #endif
 
@@ -1001,7 +1029,7 @@ class LocalVolumeBluetoothSource final : public BluetoothA2DPSource {
     return mediaStartAllowed_.load(std::memory_order_relaxed);
   }
 
-  // ---- 0.4.2 instrumentation (audit 2026-09-08: raport 01 §3, Codex §BT) ----
+  // ---- 0.4.2 instrumentation (audit of 2026-09-08) ----
   // Numeric breadcrumbs written from the library task and read by the owner
   // loop through atomics: no String, no allocation, no NVS in a callback. They
   // exist to give every attempt_result=dirty a cause it can be blamed on —
@@ -1090,19 +1118,114 @@ class LocalVolumeBluetoothSource final : public BluetoothA2DPSource {
     reconnectPeerEnabled_.store(enabled, std::memory_order_release);
   }
 
-  void applyReconnectListenPolicy() {
+  void applyReconnectListenPolicy(bool recovering, std::uint8_t recoveryAttempt) {
     const bool peerEnabled =
         reconnectPeerEnabled_.load(std::memory_order_acquire);
-    set_scan_mode_connectable(peerEnabled);
-    Serial.printf("bluetooth listen_policy connectable=%s peer_enabled=%s\n",
-                  peerEnabled ? "yes" : "no",
-                  peerEnabled ? "yes" : "no");
+#if defined(OPEN_RADIO_RECOVERY_DIALS_ONLY)
+    const bool connectable = open_radio::bluetoothRecoveryConnectable(
+        peerEnabled, recovering, recoveryAttempt);
+#else
+    (void)recovering;
+    (void)recoveryAttempt;
+    const bool connectable = peerEnabled;
+#endif
+    set_scan_mode_connectable(connectable);
+    Serial.printf("bluetooth listen_policy connectable=%s peer_enabled=%s recovering=%s attempt=%u\n",
+                  connectable ? "yes" : "no", peerEnabled ? "yes" : "no",
+                  recovering ? "yes" : "no", static_cast<unsigned>(recoveryAttempt));
   }
+
+#if defined(OPEN_RADIO_BT_ROLE_LOG)
+  // Speaker plan B1, the falsifier of H1 ("links the speaker opens leave the
+  // cube as slave, and those are the ones that stall"): the role of the
+  // remembered peer's ACL, printed once when it becomes known and again on
+  // every change. Owner loop only. The read shares Bluedroid's ACL table with
+  // the BTU task without a lock; it reads one byte of an entry that exists
+  // while aclUpSinceMs_ is set, which is good enough for a lab log line.
+  void logLinkRoleChange(std::uint32_t nowMs) {
+    constexpr std::uint8_t kRoleNone = 0xff;
+    const auto acl = aclAgeMs(nowMs);
+    if (acl == kBluetoothNoDialAgeMs) {
+      loggedLinkRole_ = kRoleNone;
+      return;
+    }
+    if (static_cast<std::int32_t>(nowMs - nextLinkRoleProbeMs_) < 0) return;
+    nextLinkRoleProbeMs_ = nowMs + 100U;
+    std::array<std::uint8_t, ESP_BD_ADDR_LEN> peer{};
+    for (std::size_t index = 0; index < peer.size(); ++index) {
+      peer[index] = reconnectPeer_[index].load(std::memory_order_relaxed);
+    }
+    std::uint8_t role = kRoleNone;
+    if (BTM_GetRole(peer.data(), &role) != 0U) role = kRoleNone;
+    if (role == loggedLinkRole_) return;
+    loggedLinkRole_ = role;
+    const auto dial = dialAgeMs(nowMs);
+    Serial.printf("bluetooth link_role=%s acl_age_ms=%lu dial_age_ms=%lu\n",
+                  role == 0U ? "master" : role == 1U ? "slave" : "unknown",
+                  static_cast<unsigned long>(acl),
+                  static_cast<unsigned long>(dial));
+  }
+#endif
+
+#if defined(OPEN_RADIO_BT_ACCEPT_AS_CENTRAL)
+  // Speaker plan B2. When the speaker opens the link, Bluedroid accepts it
+  // with l2cb.desire_role, and bta_dm_adjust_roles() puts that back to
+  // L2CAP_DESIRED_LINK_ROLE (slave) on every ACL change and profile open or
+  // close (IDF 4.4.7, BTA_DM_SCATTERNET config): after every drop, the
+  // speaker's call-back is accepted with the cube as slave. Set once at start,
+  // master would last until the first drop, so the owner loop re-asserts it.
+  // The L2CAP block is allocated when Bluedroid starts (dynamic memory), so
+  // this runs only once the stack is up. Owner loop only.
+  void assertAcceptMasterRole(std::uint32_t nowMs) {
+    if (static_cast<std::int32_t>(nowMs - nextDesireRoleProbeMs_) < 0) return;
+    nextDesireRoleProbeMs_ = nowMs + 100U;
+    const auto current = L2CA_SetDesireRole(0xff);
+    if (current == 0U) return;
+    L2CA_SetDesireRole(0U);
+    ++desireRoleResets_;
+    const auto acl = aclAgeMs(nowMs);
+    Serial.printf("bluetooth desire_role reasserted from=%u resets=%lu acl_age_ms=%ld\n",
+                  static_cast<unsigned>(current),
+                  static_cast<unsigned long>(desireRoleResets_),
+                  acl == kBluetoothNoDialAgeMs ? -1L : static_cast<long>(acl));
+  }
+#endif
 
   bool takeInboundProfileDialRequest() {
     return inboundProfileDialPending_.exchange(false,
                                                 std::memory_order_acq_rel);
   }
+
+#if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
+  // Speaker plan B3. A link the speaker opens either turns master once the
+  // profile opens (2-4 s to sound) or goes dead and drops with 264 when the
+  // speaker's 16 s supervision timeout runs out; on 12.10 three such links
+  // cost 20 s and 59 s, and 9 of 10 inbound links came up with the cube as
+  // slave. The role is not read: BTM_GetRole walks a list the BTU task frees
+  // from. Every inbound link of the remembered speaker is closed while it is
+  // still alive and before any profile runs on it, and the owner loop pages
+  // the speaker itself once the ACL is down, which makes the cube master by
+  // definition. When the speaker
+  // has already started the profile, the link is left alone: closing it would
+  // leave that profile's callbacks to land on the next attempt. Page scan goes
+  // dark first so the speaker cannot win the next race. Owner loop only.
+  bool closeInboundLink(std::uint32_t nowMs) {
+    if (get_connection_state() != ESP_A2D_CONNECTION_STATE_DISCONNECTED) {
+      Serial.println("bluetooth inbound_acl action=keep reason=profile_started");
+      return false;
+    }
+    std::array<std::uint8_t, ESP_BD_ADDR_LEN> peer{};
+    for (std::size_t index = 0; index < peer.size(); ++index) {
+      peer[index] = reconnectPeer_[index].load(std::memory_order_relaxed);
+    }
+    set_scan_mode_connectable(false);
+    BTA_DmCloseACL(peer.data(), 0U, 1U);
+    const auto acl = aclAgeMs(nowMs);
+    Serial.printf("bluetooth inbound_acl action=close_inbound acl_age_ms=%ld\n",
+                  acl == kBluetoothNoDialAgeMs ? -1L : static_cast<long>(acl));
+    return true;
+  }
+#endif
 
   BluetoothConnectionOrigin takeConnectionOrigin() {
     return static_cast<BluetoothConnectionOrigin>(connectionOrigin_.exchange(
@@ -1271,15 +1394,19 @@ class LocalVolumeBluetoothSource final : public BluetoothA2DPSource {
           pairingWindow_.store(false, std::memory_order_release);
           Serial.println("bluetooth inbound_pairing result=adopted");
         }
-        if (remoteListen) {
-          // The pinned source library deliberately disables incoming links and
-          // therefore leaves a peer-initiated CONNECTED event in UNCONNECTED.
-          // Adopt the event before its state dispatcher runs so subsequent
-          // media control is handled by the normal CONNECTED state.
-          s_a2d_state = APP_AV_STATE_CONNECTED;
-          s_media_state = 0;
-          s_connecting_heatbeat_count = 0;
-        }
+        // Adopt every accepted link before the library's state dispatcher
+        // runs, on this same task, so media control always starts from the
+        // normal CONNECTED state. A peer-initiated link otherwise stays in
+        // UNCONNECTED, because the pinned library disables incoming links.
+        // A local dial can land there too: the library's 10-second heartbeat
+        // counts every tick that falls inside CONNECTING, never resets that
+        // count after a link, and on the second tick demotes CONNECTING to
+        // UNCONNECTED. The CONNECTED event that follows is then ignored and
+        // START is never sent (2 of 10 speaker cycles on 2026-10-12, both
+        // with lib_state=3 at the CONNECTED event).
+        s_a2d_state = APP_AV_STATE_CONNECTED;
+        s_media_state = 0;
+        s_connecting_heatbeat_count = 0;
         connectionOrigin_.store(
             static_cast<std::uint8_t>(
                 remoteListen ? BluetoothConnectionOrigin::RemoteListen
@@ -1410,6 +1537,14 @@ class LocalVolumeBluetoothSource final : public BluetoothA2DPSource {
   std::atomic<std::uint8_t> localTeardownReason_{0};
   std::atomic<std::uint8_t> lastDiscRsn_{0xff};
   std::atomic<std::uint32_t> aclUpSinceMs_{0};
+#if defined(OPEN_RADIO_BT_ROLE_LOG)
+  std::uint8_t loggedLinkRole_ = 0xff;  // owner loop only
+  std::uint32_t nextLinkRoleProbeMs_ = 0;
+#endif
+#if defined(OPEN_RADIO_BT_ACCEPT_AS_CENTRAL)
+  std::uint32_t nextDesireRoleProbeMs_ = 0;  // owner loop only
+  std::uint32_t desireRoleResets_ = 0;
+#endif
   std::array<std::atomic<std::uint8_t>, ESP_BD_ADDR_LEN> reconnectPeer_{};
   std::atomic<bool> reconnectPeerEnabled_{false};
   std::atomic<bool> pairingWindow_{false};
@@ -1476,7 +1611,7 @@ volatile bool logoFetchPending = false;
 // wytknela. Relaxed wystarcza: sam fakt zmiany jest cala trescia.
 std::atomic<bool> logoFetchAbort{false};
 // Set by the fetch task when its pass is over; the LOOP deletes the task and
-// only then lets Bluetooth start. Kimi K3's verification (2026-07-30) caught
+// only then lets Bluetooth start. A verification pass (2026-07-30) caught
 // the flaw in both earlier shapes: a task that deletes ITSELF is freed later
 // by its core's idle task, and a cross-core vTaskDelete defers exactly the
 // same way — so on either path the Bluetooth gate could open while the 8 KB
@@ -1860,6 +1995,13 @@ constexpr std::uint32_t kBluetoothDisconnectingGraceMs = 8000U;
 std::uint32_t bluetoothDiscoveryRetryAtMs = 0;
 std::uint32_t bluetoothRecoveryStartedMs = 0;
 std::uint8_t bluetoothRecoveryAttemptCount = 0;
+
+// Recovery state is global and the source object predates it, so the policy
+// is handed the two facts it needs at every call site through one helper.
+void applyBluetoothListenPolicy() {
+  bluetoothSource.applyReconnectListenPolicy(bluetoothRecoveryStartedMs != 0,
+                                             bluetoothRecoveryAttemptCount);
+}
 std::uint8_t bluetoothMediaProbeAttempts = 0;
 std::uint32_t bluetoothDirtyAwaitSinceMs = 0;
 std::uint8_t appliedBluetoothVolume = 0xff;
@@ -1954,6 +2096,172 @@ void deferBluetoothRetryForAudio(std::uint32_t nowMs) {
       nowMs + kBluetoothRetryDeferredReportIntervalMs;
 }
 
+// Speaker plan B5, lab first: an upper bound on the wait above. Without the
+// flag the cap is 0 and the radio waits for local audio without limit, as 0.4.2
+// does (cycle 9 of 2026-09-26: 409 s, no dial until the station changed).
+#if defined(OPEN_RADIO_BT_DEFER_CAP_MS)
+constexpr std::uint32_t kBluetoothRetryDeferralCapMs = OPEN_RADIO_BT_DEFER_CAP_MS;
+#else
+constexpr std::uint32_t kBluetoothRetryDeferralCapMs = 0;
+#endif
+open_radio::BluetoothRetryDeferral bluetoothRetryDeferral(
+    kBluetoothRetryDeferralCapMs);
+// Speaker plan B5c: the boot auto-start waits on the same gate and had no cap.
+// In the B5b run of 12.10 Bluetooth did not start for 460 s after boot, until
+// the station was changed. Same cap, its own window.
+open_radio::BluetoothRetryDeferral bluetoothAutoStartDeferral(
+    kBluetoothRetryDeferralCapMs);
+
+#if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
+// B3 (narrow): when the cube closed a slave inbound link, and whether the dial
+// that replaces it is due. The speaker paged the cube a moment ago, so it is on
+// and a page reaches it at once: that dial skips the local-audio gate, which
+// exists for a page that may hold the radio for 5 s on a speaker that is off.
+// The close is deferred while a role switch is pending (btm_remove_acl), and
+// on 12.10 the first closed link did not go down at all: it died with 264 at
+// the speaker's 16 s supervision timeout. A dial over such a link only hangs
+// in the profile open, so the cube waits for the ACL to go down, page scan
+// dark, for longer than that timeout before it gives up and dials anyway.
+constexpr std::uint32_t kBluetoothSlaveInboundCloseWaitMs = 20000U;
+bool bluetoothSlaveInboundClosing = false;
+std::uint32_t bluetoothSlaveInboundClosedAtMs = 0;
+// After the close, the speaker may keep paging the cube and not listen for a
+// page itself: on the release bytes of 12.10, five replacement dials in a row
+// ended in page timeouts (stat=260, 5.1 s), and each time the cube opened page
+// scan again, the speaker came back in with a new link that was closed again;
+// one cycle took 59 s. So a failed replacement dial is repeated at once, page
+// scan still dark, up to this many times (three dials, about 15 s), before the
+// ordinary recovery and its listen window come back.
+constexpr std::uint8_t kBluetoothReplacementRedials = 2;
+constexpr std::uint32_t kBluetoothReplacementRedialDelayMs = 250U;
+std::uint8_t bluetoothReplacementRedialsLeft = 0;
+bool bluetoothReplacementDialDue = false;
+#endif
+
+// Whether the remembered speaker's inbound ACL gets the profile dial now. With
+// B3 it is closed instead and the dial follows once it is down.
+bool takeInboundProfileDial() {
+  if (!bluetoothSource.takeInboundProfileDialRequest() ||
+      !boardUi.config().bluetoothRemembered) {
+    return false;
+  }
+#if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
+  if (!bluetoothSlaveInboundClosing &&
+      bluetoothSource.closeInboundLink(millis())) {
+    bluetoothSlaveInboundClosing = true;
+    bluetoothSlaveInboundClosedAtMs = millis();
+    // A retry armed by the speaker going off must not open the profile on
+    // the link being closed; the replacement dial arms it again.
+    bluetoothRetryAtMs = 0;
+    return false;
+  }
+#endif
+  return true;
+}
+
+// B3 (narrow): once the closed slave link is down, or after the wait, the cube
+// pages the speaker itself.
+void dialAfterSlaveInboundClose() {
+#if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
+  if (bluetoothSlaveInboundClosing) {
+    const auto replaceNowMs = millis();
+    const bool aclDown =
+        bluetoothSource.aclAgeMs(replaceNowMs) == kBluetoothNoDialAgeMs;
+    const std::uint32_t waitedMs = replaceNowMs - bluetoothSlaveInboundClosedAtMs;
+    if (aclDown || waitedMs >= kBluetoothSlaveInboundCloseWaitMs) {
+      Serial.printf("bluetooth inbound_replace action=dial acl_down=%s waited_ms=%lu\n",
+                    aclDown ? "yes" : "no",
+                    static_cast<unsigned long>(waitedMs));
+      bluetoothSlaveInboundClosing = false;
+      bluetoothReplacementDialDue = true;
+      bluetoothReplacementRedialsLeft = kBluetoothReplacementRedials;
+      // 0 means "not armed" to the retry scheduler.
+      bluetoothRetryAtMs = replaceNowMs == 0 ? 1U : replaceNowMs;
+    }
+  }
+#endif
+}
+
+// The replacement dial goes out when this is called, so its bypass ends here;
+// behind a ready local buffer it had stayed set and let two later retries to a
+// speaker that was off skip the gate (12.10, 277.6 s and 415.4 s).
+void endReplacementDialBypass() {
+#if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
+  bluetoothReplacementDialDue = false;
+#endif
+}
+
+// A replacement dial that failed goes out again at once while redials are
+// left, page scan kept dark; false hands the failure to the ordinary recovery.
+bool continueReplacementDial(std::uint32_t nowMs) {
+#if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
+  if (bluetoothReplacementRedialsLeft == 0) return false;
+  --bluetoothReplacementRedialsLeft;
+  Serial.printf("bluetooth inbound_replace action=redial left=%u\n",
+                static_cast<unsigned>(bluetoothReplacementRedialsLeft));
+  bluetoothReplacementDialDue = true;
+  bluetoothRetryAtMs = nowMs + kBluetoothReplacementRedialDelayMs;
+  if (bluetoothRetryAtMs == 0) bluetoothRetryAtMs = 1U;
+  return true;
+#else
+  (void)nowMs;
+  return false;
+#endif
+}
+
+void endReplacementChain() {
+#if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
+  bluetoothReplacementRedialsLeft = 0;
+#endif
+}
+
+// Read, not consumed: the flag belongs to the dial it was set for and is
+// cleared only when that dial actually goes out (connectRememberedBluetooth),
+// so a retry that could not dial yet does not lose the bypass.
+bool bluetoothReplacementDialReady() {
+#if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
+  if (!bluetoothReplacementDialDue) return false;
+  Serial.println("bluetooth retry_gate_bypass reason=speaker_called");
+  return true;
+#else
+  return false;
+#endif
+}
+
+// Speaker plan B5b, lab first. The gate above exists for a dial that pages a
+// speaker which may be off and holds the shared radio for about five seconds.
+// When the remembered speaker's own ACL is already up, the profile opens over
+// that link without paging, and waiting only lets the link die: on 12.10 every
+// inbound link whose profile dial was deferred dropped with reason 264 after
+// 11-16 s, while the gate (both slots full AND a second decoded) stayed shut
+// for more than a minute. With the flag, an up ACL counts as ready.
+bool bluetoothAclAllowsProfileDial(std::uint32_t nowMs) {
+#if defined(OPEN_RADIO_BT_DIAL_OVER_ACL)
+  const auto acl = bluetoothSource.aclAgeMs(nowMs);
+  if (acl == kBluetoothNoDialAgeMs) return false;
+  Serial.printf("bluetooth retry_gate_bypass reason=acl_up acl_age_ms=%lu\n",
+                static_cast<unsigned long>(acl));
+  return true;
+#else
+  (void)nowMs;
+  return false;
+#endif
+}
+
+bool bluetoothMustWaitForAudio(open_radio::BluetoothRetryDeferral& deferral,
+                               const char* what, bool localAudioReady,
+                               std::uint32_t nowMs) {
+  const auto decision = deferral.decide(localAudioReady, nowMs);
+  if (decision == open_radio::BluetoothRetryDeferral::Decision::dialAtCap) {
+    Serial.printf(
+        "bluetooth %s_deferral_cap cap_ms=%lu local_blocks=%u decoded_frames=%u\n",
+        what, static_cast<unsigned long>(kBluetoothRetryDeferralCapMs),
+        static_cast<unsigned>(localSpeaker.bufferedBlocks()),
+        static_cast<unsigned>(decodedFrames.size()));
+  }
+  return decision == open_radio::BluetoothRetryDeferral::Decision::wait;
+}
+
 void resetBluetoothMediaProbe() {
   bluetoothLinkConnectedAtMs = 0;
   bluetoothMediaStartAllowedAtMs = 0;
@@ -1970,8 +2278,23 @@ void armBluetoothMediaProbe(std::uint32_t nowMs) {
   bluetoothSource.setMediaStartAllowed(false);
 }
 
+// Speaker plan B5d, lab first: a connected link waits for this before media may
+// start, and it also asked for a block in the local speaker. When the local
+// speaker has just starved (RMF on 12.10, cycle 4 of the B5c run: local_blocks=0
+// with the Bluetooth queue full and memory fine), there is nothing left to keep
+// continuous, and the wait only ran into the 5 s buffer timeout, which tore
+// the link down. With the flag, the decoded reserve and the Bluetooth queue
+// decide on their own.
+bool bluetoothStandbyLocalReady() {
+#if defined(OPEN_RADIO_BT_STANDBY_WITHOUT_LOCAL)
+  return true;
+#else
+  return localSpeaker.bufferedBlocks() > 0;
+#endif
+}
+
 bool bluetoothStandbyReady() {
-  return localSpeaker.bufferedBlocks() > 0 &&
+  return bluetoothStandbyLocalReady() &&
          decodedFrames.size() >=
              open_radio::public_candidate::kBluetoothFallbackReserveFrames &&
          bluetoothQueue.bufferedFrames() >= kBluetoothStandbyReadyFrames;
@@ -2123,7 +2446,7 @@ bool loadRememberedBluetooth() {
   // Straight into the fixed buffer, no Arduino String: this runs moments
   // before the Bluetooth stack start, and a String heap-allocates for any name
   // past its inline capacity — a few dozen bytes of churn exactly where
-  // docs/133 wants the heap quietest (Codex audit #6, 2026-07-30).
+  // docs/133 wants the heap quietest (review of 2026-07-30).
   const std::size_t nameLength = preferences.getString(
       "bt_name", rememberedBluetoothName.data(),
       rememberedBluetoothName.size());
@@ -2250,7 +2573,7 @@ void scheduleBluetoothRecovery(std::uint32_t nowMs,
       activeBluetoothAddress = rememberedBluetoothAddress;
       bluetoothActiveWasRemembered = true;
       bluetoothSource.setReconnectPeer(activeBluetoothAddress, true);
-      if (bluetoothStackStarted) bluetoothSource.applyReconnectListenPolicy();
+      if (bluetoothStackStarted) applyBluetoothListenPolicy();
     }
     scheduleBluetoothRetry(nowMs, overrideDelayMs);
     return;
@@ -2366,6 +2689,11 @@ bool connectRememberedBluetooth(std::uint32_t nowMs) {
   bluetoothSource.authorizeProfileOpen(
       open_radio::BluetoothProfileOpenReason::Recovery);
   if (!bluetoothSource.connect_to(activeBluetoothAddress.data())) {
+#if defined(OPEN_RADIO_RECOVERY_DIALS_ONLY)
+    // connect_to() closes page scan before it dials, and failing here it never
+    // reaches a callback that would open it again for this attempt's gap.
+    applyBluetoothListenPolicy();
+#endif
     return false;
   }
   bluetoothRetryDeferredReportAtMs = 0;
@@ -2559,7 +2887,7 @@ bool startBluetoothStack(bool scan, std::uint32_t nowMs) {
     return false;
   }
   if (!bluetoothSource.appTaskRunning()) {
-    // Codex F08 (2026-09-08): Bluedroid can be enabled while the library's
+    // Review of 2026-09-08: Bluedroid can be enabled while the library's
     // BtAppT task failed to allocate. Its queued STACK_UP is then never
     // processed, no dial ever happens, and with the flag set the owner would
     // suppress every stream open for the rest of the boot. Loud, not wedged.
@@ -2596,7 +2924,7 @@ void startBluetooth(bool scan) {
     activeBluetoothName.fill(0);
     activeBluetoothAddress.fill(0);
     bluetoothSource.setReconnectPeer(activeBluetoothAddress, false);
-    if (bluetoothStackStarted) bluetoothSource.applyReconnectListenPolicy();
+    if (bluetoothStackStarted) applyBluetoothListenPolicy();
     bluetoothActiveWasRemembered = false;
     bluetoothFoundPending = false;
     bluetoothAllowNewCandidate.store(true, std::memory_order_relaxed);
@@ -2628,7 +2956,7 @@ void startBluetooth(bool scan) {
 
   if (!loadRememberedBluetooth()) {
     bluetoothSource.setReconnectPeer(rememberedBluetoothAddress, false);
-    if (bluetoothStackStarted) bluetoothSource.applyReconnectListenPolicy();
+    if (bluetoothStackStarted) applyBluetoothListenPolicy();
     boardUi.forgetBluetooth();
     scheduleBluetoothDiscoveryRetry(nowMs, 250U);
     return;
@@ -2842,11 +3170,11 @@ void logoFetchTask(void*) {
   // First the rmfon pools, then the icons — same heap window, same task, and
   // no longer the owner loop: three TLS discoveries in a row (DNS ladder,
   // connect, handshake) at every Wi-Fi connect could exceed its 30-second
-  // watchdog on a sick network (audit 2026-09-08, V1-01/V1-08, Codex F05). A
+  // watchdog on a sick network (audit 2026-09-08). A
   // station started meanwhile falls back to its pinned mount until the pools
   // land; StationRuntime::PoolLock keeps the two tasks off each other.
   if (!logoFetchAbort.load(std::memory_order_relaxed)) {
-    stationRuntime.prefetchRmfPools();
+    stationRuntime.prefetchRmfPools(&logoFetchAbort);
   }
   // Fetching next to a LIVE stream exhausts something in the shared network
   // stack after about two connections (measured: the same URLs succeed from
@@ -3121,7 +3449,7 @@ void handleNetworkConnected(void*, bool newlyProvisioned) {
       // Heap-rich window before the Bluetooth stack exists: the rmfon
       // discovery pools are cached by the logo-fetch task started below
       // (0.4.2: no longer on this watchdog-subscribed owner task — audit
-      // 2026-09-08, V1-08) so in-session station switches never need TLS.
+      // 2026-09-08) so in-session station switches never need TLS.
       // The radio starts NOW. Missing tile icons fetch in the background from
       // the main loop, one at a time, while the decode buffer can bridge the
       // pause — the old all-at-once pre-playback fetch was a minute of boot
@@ -3333,6 +3661,13 @@ void setup() {
   auto m5Config = M5.config();
   m5Config.output_power = false;
   M5.begin(m5Config);
+#if defined(OPEN_RADIO_SERIAL_TX_BUFFER)
+  // Bluetooth callbacks print, and with no transmit buffer every line holds the
+  // stack's task until the UART FIFO drains (about 13 ms for 150 bytes at
+  // 115200). The buffer costs its size in internal DRAM for the whole run,
+  // where the 2026-09-21 low was 3 932 bytes, so it is measured before it ships.
+  Serial.setTxBufferSize(OPEN_RADIO_SERIAL_TX_BUFFER);
+#endif
   Serial.begin(115200);
   // Arduino leaves loopTask outside the task watchdog, so a wedged loop is a
   // silent, permanent hang (hit live 2026-07-17: the first aacp stream froze
@@ -3354,6 +3689,14 @@ void setup() {
                    function != nullptr ? function : "?");
       });
   Serial.printf("boot build_sha=%s\n", OPEN_RADIO_BUILD_SHA);
+#if defined(OPEN_RADIO_SERIAL_TX_BUFFER)
+  // setTxBufferSize() refuses quietly once the UART runs, and the A/B that
+  // decides this buffer would then compare two identical images. The image
+  // reports what it got: about the requested size with the buffer, 128 without.
+  Serial.printf("boot serial_tx_free=%u requested=%u\n",
+                static_cast<unsigned>(Serial.availableForWrite()),
+                static_cast<unsigned>(OPEN_RADIO_SERIAL_TX_BUFFER));
+#endif
   // Started last and cheaply. An optional module a person bought separately
   // must never be able to delay a radio coming up, so it gets its own task on
   // the network core and the boot path does not wait for it.
@@ -3705,6 +4048,11 @@ void loop() {
         "bluetooth disconnect_lost reason=no-callback recovery=armed "
         "profile_retired=%lu\n",
         static_cast<unsigned long>(retired));
+#if defined(OPEN_RADIO_RECOVERY_DIALS_ONLY)
+    // The DISCONNECTED handler is what re-asserts the listen policy; with that
+    // callback lost, the gap keyed to this attempt would be skipped.
+    applyBluetoothListenPolicy();
+#endif
     scheduleBluetoothRecovery(millis());
   }
   if (bluetoothManualScanPending &&
@@ -3727,9 +4075,11 @@ void loop() {
     reportMemoryBudget("post-bluetooth-start");
   }
   if (bluetoothAutoStartPending && !logoFetchPending &&
-      activeAudioSourceHealthy() &&
-      localAudioReadyForBluetoothRetry() &&
-      !bluetoothConnectInFlight && !bluetoothMediaStarted) {
+      activeAudioSourceHealthy() && !bluetoothConnectInFlight &&
+      !bluetoothMediaStarted &&
+      !bluetoothMustWaitForAudio(bluetoothAutoStartDeferral, "autostart",
+                                 localAudioReadyForBluetoothRetry(),
+                                 millis())) {
     reportMemoryBudget("pre-bluetooth");
     startBluetooth(!boardUi.config().bluetoothRemembered);
     reportMemoryBudget("post-bluetooth-start");
@@ -3829,6 +4179,12 @@ void loop() {
     }
   }
 
+#if defined(OPEN_RADIO_BT_ROLE_LOG)
+  bluetoothSource.logLinkRoleChange(millis());
+#endif
+#if defined(OPEN_RADIO_BT_ACCEPT_AS_CENTRAL)
+  if (bluetoothStackStarted) bluetoothSource.assertAcceptMasterRole(millis());
+#endif
   const auto connectionEvent =
       bluetoothConnectionEventPending.exchange(0, std::memory_order_acq_rel);
   if (connectionEvent != 0) {
@@ -3913,6 +4269,7 @@ void loop() {
         if (!remoteListen && dialAgeMs != kBluetoothNoDialAgeMs) {
           reportBluetoothAttemptResult("success", dialAgeMs);
         }
+        endReplacementChain();
         bluetoothSource.clearDialAttempt();
         bluetoothDirtyAttemptReported = false;
         bluetoothConnectStartedMs = 0;
@@ -4004,7 +4361,7 @@ void loop() {
       runtimeServices.bluetoothConnection(false, 1, sequence, millis());
       if (bluetoothScanAfterDisconnect) {
         bluetoothSource.setReconnectPeer(activeBluetoothAddress, false);
-        bluetoothSource.applyReconnectListenPolicy();
+        applyBluetoothListenPolicy();
         bluetoothScanAfterDisconnect = false;
         if (!beginBluetoothDiscovery(millis())) {
           bluetoothScanActive = false;
@@ -4013,15 +4370,19 @@ void loop() {
       } else if (!bluetoothScanActive) {
         bluetoothSource.setReconnectPeer(activeBluetoothAddress,
                                          bluetoothActiveWasRemembered);
-        bluetoothSource.applyReconnectListenPolicy();
-        boardUi.setBluetoothState(open_radio::BluetoothUiState::Error,
-                                  activeBluetoothName.data());
-        // Anchor the retry to the actual A2DP DISCONNECTED callback. A dirty
-        // abort can take much longer than the nominal retry delay to unwind;
-        // preserving its already-expired timer starts a new profile dial on
-        // stale HCI state and can tear down an otherwise successful link.
-        bluetoothRetryAtMs = 0;
-        scheduleBluetoothRecovery(millis());
+        // B3: a failed replacement dial is repeated with page scan dark
+        // instead of reopening the listen window the speaker came back in by.
+        if (!continueReplacementDial(millis())) {
+          applyBluetoothListenPolicy();
+          boardUi.setBluetoothState(open_radio::BluetoothUiState::Error,
+                                    activeBluetoothName.data());
+          // Anchor the retry to the actual A2DP DISCONNECTED callback. A dirty
+          // abort can take much longer than the nominal retry delay to unwind;
+          // preserving its already-expired timer starts a new profile dial on
+          // stale HCI state and can tear down an otherwise successful link.
+          bluetoothRetryAtMs = 0;
+          scheduleBluetoothRecovery(millis());
+        }
       }
     }
   }
@@ -4144,6 +4505,20 @@ void loop() {
     scheduleBluetoothRecovery(millis());
   }
   const auto bluetoothNowMs = millis();
+  // The 2026-09-21 run lost 8 KB of internal DRAM in the nine seconds between
+  // CONNECTED and the media start, and nothing sampled it. One line a second in
+  // exactly that window; nothing outside it. Unsigned elapsed on purpose: a
+  // signed cast turns negative once the last sample is 24.8 days old, and the
+  // next recovery would go unsampled (review of 2026-09-25).
+  static std::uint32_t lastConnectedWaitSampleMs = 0;
+  if (bluetoothLinkConnected && !bluetoothMediaStarted &&
+      bluetoothNowMs - lastConnectedWaitSampleMs >= 1000U) {
+    lastConnectedWaitSampleMs = bluetoothNowMs;
+    Serial.printf("memory stage=bt-connected-wait dram_free=%u dram_largest=%u dma_largest=%u\n",
+                  static_cast<unsigned>(heap_caps_get_free_size(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT)),
+                  static_cast<unsigned>(heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT)),
+                  static_cast<unsigned>(heap_caps_get_largest_free_block(MALLOC_CAP_DMA)));
+  }
   if (bluetoothLinkConnected && !bluetoothMediaStarted &&
       bluetoothMediaStartAllowedAtMs == 0 && bluetoothStandbyReady()) {
     // The heap check moved AHEAD of the flag. allowBluetoothMediaStart() calls
@@ -4301,8 +4676,7 @@ void loop() {
         millis(),
         bluetoothMediaStartTimeout ? kBluetoothMediaRecoveryDelayMs : 0);
   }
-  if (bluetoothSource.takeInboundProfileDialRequest() &&
-      boardUi.config().bluetoothRemembered) {
+  if (takeInboundProfileDial()) {
     // E6: the state the scheduled dial lands in. The reverted 2026-08-02 fix
     // targeted exactly this hand-off and missed, because a retry armed by the
     // disconnect 8-20 s earlier was still live; these fields make that
@@ -4325,6 +4699,7 @@ void loop() {
         discDeadlineInMs);
     bluetoothRetryAtMs = millis();
   }
+  dialAfterSlaveInboundClose();
   if (bluetoothDiscoveryRetryAtMs != 0 &&
       static_cast<std::int32_t>(millis() - bluetoothDiscoveryRetryAtMs) >= 0 &&
       activeAudioSourceHealthy() && !boardUi.config().bluetoothRemembered) {
@@ -4345,7 +4720,14 @@ void loop() {
       static_cast<std::int32_t>(millis() - bluetoothRetryAtMs) >= 0 &&
       activeAudioSourceHealthy() && boardUi.config().bluetoothRemembered) {
     const auto retryNowMs = millis();
-    if (!localAudioReadyForBluetoothRetry()) {
+    if (bluetoothMustWaitForAudio(
+            bluetoothRetryDeferral, "retry",
+            // The replacement flag is read first so its dial always sees it;
+            // it is cleared when that dial goes out, below.
+            bluetoothReplacementDialReady() ||
+                localAudioReadyForBluetoothRetry() ||
+                bluetoothAclAllowsProfileDial(retryNowMs),
+            retryNowMs)) {
       deferBluetoothRetryForAudio(retryNowMs);
     } else if (!bluetoothStackStarted) {
       ++bluetoothRetryAttempts;
@@ -4353,6 +4735,7 @@ void loop() {
     } else if (!bluetoothDiscoveryActive && bluetoothLinkIsDown()) {
       bluetoothRetryAtMs = 0;
       ++bluetoothRetryAttempts;
+      endReplacementDialBypass();
       if (!connectRememberedBluetooth(retryNowMs)) {
         scheduleBluetoothRetry(retryNowMs);
       }

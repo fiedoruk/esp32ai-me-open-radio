@@ -801,8 +801,8 @@ class DeviceNetworkRuntime {
     // is reachable by every host on the home network, and the CSRF token is
     // handed to any of them by /api/session — so until 0.4.2 a compromised
     // camera or a guest could re-provision the radio onto its own access
-    // point inside the fifteen-minute window (Kimi F1 2026-07-30, confirmed
-    // for the public lane by the 2026-09-08 audit: V1-02, V3-01, Codex F12).
+    // point inside the fifteen-minute window (review of 2026-07-30, confirmed
+    // for the public lane by the 2026-09-08 audit).
     // The console keeps stations and directory; Wi-Fi changes need the
     // physical step of joining the cube's own network.
     if (!(portalActive_ && server_.client().localIP() == WiFi.softAPIP())) {
@@ -866,7 +866,7 @@ class DeviceNetworkRuntime {
     return false;
   }
 
-  // DNS-rebinding guard for the console (audit 2026-09-08, V3-02). A page on
+  // DNS-rebinding guard for the console (audit 2026-09-08). A page on
   // the owner's laptop that resolves an attacker's hostname to this address
   // would otherwise be same-origin to the device, read the token from
   // /api/session and post to any route without being in the LAN itself. The

@@ -41,7 +41,7 @@ class AsyncIcyStreamSource final : public ::AudioFileSource {
     // close() reports whether the worker actually stopped; deleting upstream_
     // while a worker still owns it is the use-after-free this file's own
     // destructor takes care to avoid, and open() skipped the check (audit
-    // 2026-09-08, V1-06). Today unreachable — the reads are non-blocking and
+    // 2026-09-08). Today unreachable — the reads are non-blocking and
     // the ICY metadata wait is bounded to 500 ms — which is exactly when a
     // guard costs nothing.
     if (!close()) return false;

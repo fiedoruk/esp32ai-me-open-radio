@@ -63,7 +63,9 @@
       "danger": "#B4232A",
       "shadow": "#24312E",
       "brand": "#1B8464",
-      "onBrand": "#FFFFFF"
+      "onBrand": "#FFFFFF",
+      "brandText": "#157556",
+      "controlEdge": "#7F8C88"
     },
     "dark": {
       "canvas": "#0B1016",
@@ -77,7 +79,9 @@
       "danger": "#FF7D78",
       "shadow": "#000000",
       "brand": "#42D8AE",
-      "onBrand": "#081511"
+      "onBrand": "#081511",
+      "brandText": "#42D8AE",
+      "controlEdge": "#1B2632"
     }
   },
   "screens": {

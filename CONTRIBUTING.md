@@ -2,7 +2,7 @@
 
 [Polska wersja](CONTRIBUTING.pl.md)
 
-The project ships public firmware releases (0.1, 0.2, 0.2.1, 0.4, 0.4.1, current 0.4.2) validated on real
+The project ships public firmware releases (0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2, current 0.4.4) validated on real
 hardware. Contributions are:
 
 - software under GPL-3.0-or-later,

@@ -18,6 +18,13 @@ Only the source files listed in `../manifests/dependencies.lock.json` are
 eligible from ESP8266Audio. AAC, Opus, FLAC, MIDI, MOD and alternative hardware
 outputs are mechanically excluded from the public link graph.
 
-The released 0.4.1 binary ships with its corresponding-source bundle,
-exact license texts, build instructions and the final generated SBOM
-published next to the download (see release/release-0-4-1.json).
+ESP8266Audio is modified when the firmware is built:
+`../public-candidate/scripts/select_mp3_sources.py` changes its
+`src/AudioFileSourceICYStream.cpp` (a 500 ms bound on reading stream metadata,
+a cleared metadata buffer, HTTP/1.0 requests, and the length of a stream title
+split across two reads) and its `library.json` (which files are compiled).
+Modified as of 2026-09-25.
+
+Each released binary ships with its corresponding-source bundle, license
+texts, build instructions and the generated SBOM, published next to the
+download.

@@ -3,7 +3,7 @@
 <p align="center"><img src="brand/logo-a-signal-cube.svg" width="92" alt="Open Radio — logo signal cube"></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/wydane-0.4.2-3db8f5" alt="Wydane 0.4.2">
+  <img src="https://img.shields.io/badge/wydane-0.4.4-3db8f5" alt="Wydane 0.4.4">
   <img src="https://img.shields.io/badge/licencja-GPL--3.0--or--later-blue" alt="GPL-3.0-or-later">
   <img src="https://img.shields.io/badge/stacje-236_wysylanych-success" alt="236 wysyłanych stacji">
 </p>
@@ -17,13 +17,15 @@
   <img src="https://esp32ai.me/assets/img/or/screen-4.png" height="150" alt="Karta statusu">
 </p>
 
-<p align="center"><b><a href="https://esp32ai.me/pl/radio/instalacja">⚡ Zainstaluj z przeglądarki</a></b> · <a href="https://fiedoruk.pl/os/open-radio-0-4-2.bin">Pobierz 0.4.2</a> · <a href="https://esp32ai.me/pl/radio/stacje">236 stacji</a></p>
+<p align="center"><b><a href="https://esp32ai.me/pl/radio/instalacja">⚡ Zainstaluj z przeglądarki</a></b> · <a href="https://fiedoruk.pl/os/open-radio-0-4-4.bin">Pobierz 0.4.4</a> · <a href="https://esp32ai.me/pl/radio/stacje">236 stacji</a></p>
 
-> Wydane publicznie jako **Open Radio**. Opublikowanym wydaniem jest **0.4.2**
-> (21.09.2026) — wydanie bezpieczeństwa i niezawodności na bazie 0.4.1: bez
-> nowych funkcji, bez nowych stacji, ten sam katalog 236 stacji. Wcześniejsze
-> wydania 0.1, 0.2, 0.2.1, 0.4 i 0.4.1 zostają do pobrania jako wydania
-> historyczne. Oficjalne binarki pochodzą wyłącznie z `fiedoruk.pl/os/` i są
+> Wydane publicznie jako **Open Radio**. Opublikowanym wydaniem jest **0.4.4**
+> (12.10.2026) — ostatnie wydanie linii 0.4: naprawia dwa błędy znalezione
+> w 0.4.2 i sprawia, że wyłączony głośnik Bluetooth wraca w kilka sekund, a nie
+> w kilka minut. Bez nowych funkcji, bez nowych stacji, ten sam katalog
+> 236 stacji. Wersja 0.4.3 nie wyszła osobno; jej poprawki są w 0.4.4.
+> Wcześniejsze wydania 0.1, 0.2, 0.2.1, 0.4, 0.4.1 i 0.4.2 zostają do pobrania
+> jako wydania historyczne. Oficjalne binarki pochodzą wyłącznie z `fiedoruk.pl/os/` i są
 > linkowane ze strony [esp32ai.me/pl/radio](https://esp32ai.me/pl/radio), a
 > odpowiadające im źródła są publikowane obok każdej binarki na licencji GPL.
 
@@ -73,12 +75,16 @@ kodekiem SBC. Granie nie wymaga AVRCP ani funkcji producenta. Głośniki wyłąc
 Bluetooth LE Audio są poza możliwościami oryginalnego ESP32. Nie będzie
 deklaracji uniwersalnej zgodności przed fizycznymi testami.
 
-**Znane ograniczenie w 0.4.2.** Głośnik Bluetooth, który został wyłączony,
-potrafi wracać od 13 sekund do około pięciu minut. Zmierzyliśmy to na obrazie
-wydania w ośmiu cyklach, w których głośnik wyłączano i włączano: 13, 109, 36,
-152, 50, 285, 34 i 15 sekund. Przez ten czas radio gra z własnego głośnika, a każdy z tych ośmiu cykli
-skończył się powrotem — bez restartu urządzenia i bez pomocy z zewnątrz. To
-wciąż za wolno. Poprawka jest planowana na 0.4.3.
+**Znane ograniczenia w 0.4.4.** Głośnik Bluetooth, który został wyłączony,
+wraca teraz w kilka sekund: w dziesięciu cyklach na RMF FM na opublikowanych
+bajtach od 3 do 16 sekund od chwili, gdy głośnik zadzwonił do radia, w dziewięciu
+cyklach na dziesięć w ciągu 10 sekund (w 0.4.2 od 13 sekund do około pięciu
+minut). Zmierzyliśmy to na jednym głośniku; drugiego nie testowaliśmy. Głośnik
+często nie odbiera pierwszego telefonu radia i powrót trwa wtedy około pięciu
+sekund dłużej. Głośnik kostki może przycinać na RMF FM, dopóki nie gra
+Bluetooth: dekodowanie strumienia 128 kb/s jest na tym sprzęcie tylko o jedną
+czwartą szybsze od odtwarzania. Przez głośnik Bluetooth nie zmierzyliśmy żadnej
+przerwy.
 
 ## Czujniki powietrza — uczciwa obietnica
 
@@ -123,32 +129,46 @@ nagrywa stacji ani nie sugeruje ich poparcia.
 - stałe zasilanie USB-C z powerbanku
 - wyjście Bluetooth Classic A2DP Source
 
-## Co naprawia 0.4.2
+## Co naprawia 0.4.4
 
-Cztery usterki, dwie z nich dotyczą bezpieczeństwa. Poza nimi nie zmieniło się
-nic: żadnych nowych funkcji, żadnych nowych stacji.
+Dwa błędy znalezione w opublikowanym 0.4.2, powolny powrót głośnika Bluetooth
+i poprawki z 0.4.3, które nie wyszły osobno. Poza nimi nie zmieniło się nic:
+żadnych nowych funkcji, żadnych nowych stacji.
 
-- **Dowolny komputer w twojej sieci mógł przestawić radio na inne Wi-Fi.**
-  Wystarczyło, że konsola ustawień była otwarta. Teraz radio przyjmuje hasło do
-  sieci wyłącznie od urządzenia podłączonego do jego własnego punktu dostępowego,
-  a każda ścieżka konsoli wymaga nagłówka Host wskazującego to radio.
-- **Spreparowana ikona nadawcy potrafiła wpędzić radio w pętlę restartów.**
-  Starczyło 80 bajtów uszkodzonego PNG. Przypięty dekoder PNG jest łatany na
-  etapie budowania.
-- **Rotacja adresów stacji znów działa.** Pięciosekundowy limit na uzgodnienie
-  TLS sprawiał, że wyszukiwanie przepadało za każdym razem. Teraz chodzi w tle
-  i ma dwadzieścia sekund, a pętla dźwięku nie otwiera TLS w ogóle.
-- **Strzałka tendencji ciśnienia może się wreszcie ruszyć.** Bufor historii był
-  o jedną próbkę krótszy niż trzy godziny, więc porównanie, którego strzałka
-  potrzebowała, nigdy nie powstawało. Przy okazji utwardzono obliczenia
-  czujnikowe.
+- **Brakująca ikona stacji mogła restartować radio przy każdym starcie.** Serwer
+  ikon, który odpowiadał `200` z pustą treścią, sprawiał, że radio wywoływało
+  metodę na pustym wskaźniku. Pusta odpowiedź oznacza teraz po prostu brak ikony.
+- **Głośnik wraca w kilka sekund.** Naprawione są cztery przyczyny: radio nie
+  czeka już na pełny bufor własnego głośnika, zanim sięgnie po Bluetooth; zamyka
+  łącze otwarte przez głośnik i samo do niego dzwoni, a gdy głośnik nie odbierze,
+  od razu dzwoni jeszcze raz; pięciosekundowy limit nie zrywa już działających
+  połączeń; a łącze, które biblioteka Bluetooth zgubiła w trakcie dzwonienia,
+  uruchamia teraz dźwięk, zamiast zostać pominięte.
+- **Mniej ciszy na RMF.** Martwy adres serwera nie liczy się już jako awaria
+  całej stacji. Radio po sekundzie próbuje następnego adresu RMF FM, a dłużej
+  czeka dopiero wtedy, gdy zawiodą wszystkie.
+- **Niektóre stacje grały z zakłóceniami.** Jedenaście adresów w katalogu
+  odpowiada na zapytanie HTTP/1.1 w kawałkach (chunked), a znaczniki kawałków
+  trafiały do danych dźwięku. Radio pyta teraz w HTTP/1.0.
+- **Mniejsze poprawki.** Tytuł utworu rozdzielony między dwa odczyty z sieci nie
+  jest już ucinany na łączeniu. Kod na ekranie konfiguracji i tytuł na ekranie
+  głównym są pokazywane w całości. Przycisk kodu na ekranie konfiguracji to
+  neutralny „Zmień kod”. Mały tekst i neutralne przyciski są lepiej widoczne
+  w jasnym motywie. Stuknięcie parowania zatrzymuje szukanie adresów stacji.
+  Uszkodzona kalibracja ciśnienia daje brak odczytu zamiast przepełnienia.
+  Opublikowana binarka nie zawiera już ścieżki komputera, na którym ją
+  zbudowano.
 
 ## Aktualny stan
 
-**Publicznym wydaniem jest 0.4.2, opublikowane 21.09.2026.** Tego samego dnia
-wgrano je z wyczyszczonej pamięci na Core2 v1.3 i potwierdził to właściciel:
-zero panik i zero nieoczekiwanych restartów. Jedynym otwartym ograniczeniem jest
-czas powrotu głośnika Bluetooth — stoi wyżej, nie w przypisie.
+**Publicznym wydaniem jest 0.4.4, opublikowane 12.10.2026.** Tego samego dnia
+wgrano je z wyczyszczonej pamięci na Core2 v1.3: onboarding od zera, sparowany
+głośnik, którego kostka wcześniej nie znała, dziesięć cykli wyłączenia
+i włączenia głośnika na RMF FM z powrotem od 3 do 16 sekund od chwili, gdy
+głośnik zadzwonił, zero panik i zero nieoczekiwanych restartów. Na tych bajtach
+nie sprawdzono: dwóch godzin grania przez Bluetooth, aktualizacji z 0.4.2
+z zachowaniem ustawień, drugiego głośnika ani stacji innych niż RMF FM.
+Ograniczenia, które zostają otwarte, stoją wyżej, nie w przypisie.
 
 Gotowe teraz:
 
@@ -180,7 +200,8 @@ dowodami z więcej niż jednej kostki:
 
 Na linii wydania pozostają otwarte:
 
-- czas powrotu głośnika Bluetooth, opisany wyżej,
+- sprawy Bluetooth opisane wyżej: drugi głośnik, nieodebrany pierwszy telefon
+  i przycinanie głośnika kostki na RMF FM,
 - wymuszone cykle recovery (Wi-Fi, stream, głośnik) i długi soak endurance,
   wraz z zachowaniem SD i powerbanku,
 - zgodność z kolejnymi głośnikami Bluetooth Classic A2DP/SBC,
@@ -188,7 +209,9 @@ Na linii wydania pozostają otwarte:
 
 Publiczny tor MP3-only jest torem wydanym: 0.4.1, 0.4 i 0.2.1 odtwarzają się
 bajt w bajt poza stemplem pochodzenia, o ile zachowa się udokumentowane
-parametry budowania (patrz [REPRODUCIBILITY.pl.md](REPRODUCIBILITY.pl.md)).
+parametry budowania, a build 0.4.4 z opublikowanej paczki źródeł, poza tym
+repozytorium, daje aplikację wydania bajt w bajt (patrz
+[REPRODUCIBILITY.pl.md](REPRODUCIBILITY.pl.md)).
 Punkty endurance wyżej pozostają otwarte i są wymienione wprost.
 
 ## Budowanie
@@ -220,7 +243,7 @@ Founder i pierwotny autor: **Tomasz Fiedoruk — [fiedoruk.pl](https://fiedoruk.
 Kod jest na `GPL-3.0-or-later`, oryginalna dokumentacja i grafiki na
 `CC BY-SA 4.0`, a dane katalogowe na `CC0-1.0`. Oficjalne logotypy stacji nie są
 dołączane bez udokumentowanej zgody. Publiczne wydania firmware (0.1, 0.2,
-0.2.1, 0.4, 0.4.1 i aktualne 0.4.2) pochodzą z `fiedoruk.pl/os/`; archiwum
+0.2.1, 0.4, 0.4.1, 0.4.2 i aktualne 0.4.4) pochodzą z `fiedoruk.pl/os/`; archiwum
 odpowiadających źródeł jest publikowane obok każdej binarki, a każde wydanie ma
 proweniencję zapisaną w manifeście wydania. Szczegóły:
 [LICENSES.md](LICENSES.md), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)

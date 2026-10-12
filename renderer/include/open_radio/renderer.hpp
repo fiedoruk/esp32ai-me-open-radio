@@ -42,6 +42,12 @@ struct ThemeTokens {
   std::uint16_t shadow;
   std::uint16_t brand;
   std::uint16_t on_brand;
+  // Brand teal for small text: darker than brand in the light theme, where
+  // brand on canvas is about 4.2:1. Fills, icons and large glyphs use brand.
+  std::uint16_t brand_text;
+  // Edge of a control on a raised or surface fill: raised and surface sit at
+  // about 1.1:1 on the light canvas, the edge carries the control's outline.
+  std::uint16_t control_edge;
 };
 
 struct IconMask24 {

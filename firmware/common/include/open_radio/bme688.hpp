@@ -212,7 +212,7 @@ inline bool bme688CalibrationPlausible(const Bme688Calibration& c) {
 // BEFORE the plausibility check that would have discarded the sample. The same
 // operations in 64-bit give bit-identical results wherever the reference did
 // not overflow — the transcription vector below pins that — and defined ones
-// everywhere else (audit 2026-09-08: V2-06, V2-07, Codex F10).
+// everywhere else (audit 2026-09-08).
 inline std::int32_t bme688CompensatePressure(const Bme688Calibration& c,
                                              std::uint32_t adc, std::int32_t tFine) {
   using i64 = std::int64_t;
@@ -235,6 +235,10 @@ inline std::int32_t bme688CompensatePressure(const Bme688Calibration& c,
   } else {
     pressure = (pressure * 2) / var1;
   }
+  // The sensor spans 300-1100 hPa. Past 2e6 Pa this is a corrupt calibration,
+  // and past about 8e7 the cube below overflows int64 (t1 = p1 = p10 = 1, rest
+  // zero, passes the plausibility check and reaches 6.55e9). No reading.
+  if (pressure <= 0 || pressure > 2000000) return 0;
   var1 = (static_cast<i64>(c.p9) * (((pressure >> 3) * (pressure >> 3)) >> 13)) >> 12;
   var2 = ((pressure >> 2) * c.p8) >> 13;
   // With p10 = 30 the int32 cube overflowed from about 1065 hPa — inside the

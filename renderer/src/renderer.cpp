@@ -672,16 +672,25 @@ void drawWrappedText(Painter& painter, int x, int y, const char* value,
     char* last_space = nullptr;
     char* fit_end = line;
     int width = 0;
+    // decodeUtf8() has already stepped past the glyph that did not fit, so the
+    // cursor alone cannot say whether the line ended: when the LAST glyph
+    // overflows it sits on the terminator and the line looked complete, and
+    // drawText then cut that glyph without an ellipsis (a Core2 showed 11 of the
+    // 12 digits of its setup password, 2026-09-26).
+    bool overflowed = false;
     while (*cursor != 0U) {
       const auto* start = cursor;
       const auto codepoint = decodeUtf8(cursor);
       const auto& glyph = glyphFor(generated::interFace(size), codepoint);
-      if (width + glyph.advance > maximum_width) break;
+      if (width + glyph.advance > maximum_width) {
+        overflowed = true;
+        break;
+      }
       width += glyph.advance;
       fit_end = reinterpret_cast<char*>(const_cast<unsigned char*>(cursor));
       if (codepoint == ' ') last_space = reinterpret_cast<char*>(const_cast<unsigned char*>(start));
     }
-    if (*cursor == 0U) {
+    if (!overflowed) {
       painter.text(x, y + line_index * lineHeight(size), line, size, color,
                    maximum_width, false);
       break;
@@ -707,6 +716,36 @@ void drawWrappedText(Painter& painter, int x, int y, const char* value,
   }
 }
 
+// A control on a neutral fill (raised or surface) gets a 1 px edge in
+// control_edge. In the light theme both fills sit at about 1.1:1 on the canvas,
+// so a button had only its label to say it was one; the light edge reaches
+// 3:1, the figure WCAG 1.4.11 uses for a control's boundary (a labelled button
+// does not strictly need one; this is about seeing what can be pressed). The
+// dark theme keeps its night look: its edge is the raised colour itself. Same
+// construction as the ghost pill's brand stroke, at 1 px so the pill (2 px) and
+// the playing station's ring (3 px) stay the louder marks. Brand and danger
+// fills keep their own contrast and get none.
+void fillControl(FramebufferView framebuffer, Rect rect, int radius,
+                 std::uint16_t fill, const ThemeTokens& theme) {
+  if (fill != theme.raised && fill != theme.surface) {
+    fillRoundRect(framebuffer, rect, radius, fill);
+    return;
+  }
+  fillRoundRect(framebuffer, rect, radius, theme.control_edge);
+  fillRoundRect(framebuffer, {rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2},
+                radius - 1, fill);
+}
+
+void fillControlCircle(FramebufferView framebuffer, int center_x, int center_y,
+                       int radius, std::uint16_t fill, const ThemeTokens& theme) {
+  if (fill != theme.raised && fill != theme.surface) {
+    fillCircle(framebuffer, center_x, center_y, radius, fill);
+    return;
+  }
+  fillCircle(framebuffer, center_x, center_y, radius, theme.control_edge);
+  fillCircle(framebuffer, center_x, center_y, radius - 1, fill);
+}
+
 void drawUtilityHeader(Painter& painter, const ThemeTokens& theme,
                        const char* title, const char* subtitle = nullptr) {
   // On the grid, like everything else. This header is shared by nineteen
@@ -723,7 +762,7 @@ void drawUtilityHeader(Painter& painter, const ThemeTokens& theme,
   // reaching two edges of the glass. It used to be painted as 44 by 44 inset at
   // y=2, so the visible centre and the real centre were different points and
   // aiming at what you can see meant aiming slightly off what responds.
-  fillRoundRect(painter.framebuffer, {268, 0, 52, 48}, 14, theme.raised);
+  fillControl(painter.framebuffer, {268, 0, 52, 48}, 14, theme.raised, theme);
   drawCross(painter.framebuffer, 292, 24, 9, 3, theme.text);
 }
 
@@ -826,11 +865,35 @@ bool drawRuntimeStationLogo(Painter& painter, Rect rect, int radius,
 // Blits the baked station logo centred in rect, choosing the mip whose size is
 // nearest the rect (no runtime scaling). Returns false when no logo is baked
 // for this station so the caller can fall back to the placeholder.
-bool drawStationLogo(Painter& painter, Rect rect, std::size_t index) {
+// The run of row local_y that fillRoundRect paints in a rect of this size:
+// the same corner-arc test, so a clipped logo meets the slot's own shape.
+void roundRectRowSpan(Rect rect, int radius, int local_y, int& from, int& to) {
+  radius = std::min(radius, std::min(rect.width, rect.height) / 2);
+  from = 0;
+  to = rect.width;
+  const int corner_y = local_y < radius
+                           ? radius - 1 - local_y
+                           : local_y >= rect.height - radius
+                                 ? local_y - (rect.height - radius)
+                                 : 0;
+  if (radius == 0 || corner_y == 0) return;
+  while (from < radius) {
+    const int corner_x = radius - 1 - from;
+    if (corner_x == 0 || corner_x * corner_x + corner_y * corner_y < radius * radius) break;
+    ++from;
+  }
+  to = rect.width - from;  // the arc is symmetric
+}
+
+// target_size picks the mip; rect is where it is drawn and clipped. They
+// differ on a station tile, where the logo keeps the look of the whole tile
+// (the 72 mip; the 48 one is a round badge) inside a gap within the edge.
+bool drawStationLogo(Painter& painter, Rect rect, int radius, std::size_t index,
+                     int target_size) {
   if (index >= generated::kStationLogos.size()) return false;
   const auto& logo = generated::kStationLogos[index];
   if (!logo.present) return false;
-  const int target = std::min(rect.width, rect.height);
+  const int target = target_size;
   std::size_t best = 0;
   for (std::size_t level = 1; level < logo.mips.size(); ++level) {
     const int here = generated::kStationLogoSizes[level] - target;
@@ -840,11 +903,19 @@ bool drawStationLogo(Painter& painter, Rect rect, std::size_t index) {
   const auto& mip = logo.mips[best];
   const int origin_x = rect.x + (rect.width - mip.width) / 2;
   const int origin_y = rect.y + (rect.height - mip.height) / 2;
+  // The nearest mip can be a pixel or two larger than the slot; clipped to
+  // the slot's rounded shape, so the logo cannot paint over a control edge.
   for (std::uint16_t run_index = 0; run_index < mip.run_count; ++run_index) {
     const auto& run = mip.runs[run_index];
-    fillRect(painter.framebuffer,
-             {origin_x + run.x, origin_y + run.y, run.length, 1},
-             mip.palette[run.color]);
+    const int y = origin_y + run.y;
+    if (y < rect.y || y >= rect.y + rect.height) continue;
+    int from = 0;
+    int to = 0;
+    roundRectRowSpan(rect, radius, y - rect.y, from, to);
+    const int left = std::max(origin_x + run.x, rect.x + from);
+    const int right = std::min(origin_x + run.x + run.length, rect.x + to);
+    if (right <= left) continue;
+    fillRect(painter.framebuffer, {left, y, right - left, 1}, mip.palette[run.color]);
   }
   return true;
 }
@@ -867,7 +938,10 @@ void drawStationBadge(Painter& painter, const ThemeTokens& theme,
     return;
   }
 #if defined(OPEN_RADIO_HAS_LOGO_PACK)
-  if (drawStationLogo(painter, bounds, index)) return;
+  if (drawStationLogo(painter, bounds, 24, index,
+                      std::min(bounds.width, bounds.height))) {
+    return;
+  }
 #endif
   fillCircle(painter.framebuffer, bounds.x + bounds.width / 2,
              bounds.y + bounds.height / 2, bounds.width / 3, theme.raised);
@@ -905,10 +979,10 @@ void drawStationBadge(Painter& painter, const ThemeTokens& theme,
 void drawTransport(Painter& painter, const CompactSnapshot& snapshot,
                    const ThemeTokens& theme) {
   fillRect(painter.framebuffer, {0, 184, 320, 56}, theme.surface);
-  fillRoundRect(painter.framebuffer, {8, 190, 52, 44}, 14, theme.raised);
+  fillControl(painter.framebuffer, {8, 190, 52, 44}, 14, theme.raised, theme);
   fillRoundRect(painter.framebuffer, {68, 190, 184, 44}, 14, theme.brand);
   fillRoundRect(painter.framebuffer, {70, 192, 180, 40}, 13, theme.raised);
-  fillRoundRect(painter.framebuffer, {260, 190, 52, 44}, 14, theme.raised);
+  fillControl(painter.framebuffer, {260, 190, 52, 44}, 14, theme.raised, theme);
   drawIconMask24(painter.framebuffer, 22, 200, generated::kIconChevronLeft,
                  theme.text);
   drawIconMask24(painter.framebuffer, 274, 200, generated::kIconChevronRight,
@@ -1253,8 +1327,8 @@ void drawHomeHeader(Painter& painter, const CompactSnapshot& snapshot,
   drawStationBadge(painter, theme, station,
                    {kHomeMargin, kBandHeaderTop, kBandHeaderHeight, kBandHeaderHeight},
                    snapshot.station_index);
-  fillRoundRect(painter.framebuffer, {268, kBandHeaderTop, 44, 44}, kHomeRadius,
-                theme.raised);
+  fillControl(painter.framebuffer, {268, kBandHeaderTop, 44, 44}, kHomeRadius,
+              theme.raised, theme);
   drawIconLit(painter.framebuffer, 282, kBandHeaderTop + 14, generated::kIconMenu2,
               theme.brand, theme.canvas);
   constexpr int kClockStack = kAscentDisplay + 4 + kAscentCaption;
@@ -1419,8 +1493,8 @@ void drawNowPlaying(Painter& painter, const CompactSnapshot& snapshot,
   // which is the whole of what the owner asked to see better.
   drawStationBadge(painter, theme, station, {kHomeMargin, 66, 96, 96},
                    snapshot.station_index);
-  fillRoundRect(painter.framebuffer, {268, kBandHeaderTop, 44, 44}, kHomeRadius,
-                theme.raised);
+  fillControl(painter.framebuffer, {268, kBandHeaderTop, 44, 44}, kHomeRadius,
+              theme.raised, theme);
   drawIconLit(painter.framebuffer, 282, kBandHeaderTop + 14, generated::kIconMenu2,
               theme.brand, theme.canvas);
 
@@ -1551,9 +1625,10 @@ void drawSettingsGrid(Painter& painter, const CompactSnapshot& snapshot,
     const int top = 48 + row * 44;
     const bool destructive =
         snapshot.screen == ScreenKind::settings_system && index == 4;
-    fillRoundRect(painter.framebuffer, {left, top + 2, 148, 40}, 11,
-                  destructive && snapshot.confirm_delete ? theme.danger
-                                                          : theme.surface);
+    fillControl(painter.framebuffer, {left, top + 2, 148, 40}, 11,
+                destructive && snapshot.confirm_delete ? theme.danger
+                                                        : theme.surface,
+                theme);
     painter.text(left + 10, top + 5, labels[index], FontSize::caption,
                  destructive && snapshot.confirm_delete ? theme.canvas
                                                          : theme.muted,
@@ -1576,8 +1651,8 @@ void drawSettingsGrid(Painter& painter, const CompactSnapshot& snapshot,
                          : snapshot.screen == ScreenKind::settings_system ? 1 : 2;
   for (int index = 0; index < 3; ++index) {
     const int left = 8 + index * 104;
-    fillRoundRect(painter.framebuffer, {left, 190, 96, 44}, 13,
-                  index == active ? theme.brand : theme.raised);
+    fillControl(painter.framebuffer, {left, 190, 96, 44}, 13,
+                index == active ? theme.brand : theme.raised, theme);
     painter.centered(left + 48, 202, pages[static_cast<std::size_t>(index)],
                      FontSize::caption,
                      index == active ? theme.on_brand : theme.text, 82);
@@ -1668,9 +1743,9 @@ void drawSettings(Painter& painter, const CompactSnapshot& snapshot,
                       ? theme.text
                       : theme.border);
   }
-  fillRoundRect(painter.framebuffer, {216, 2, 44, 44}, 14, theme.raised);
+  fillControl(painter.framebuffer, {216, 2, 44, 44}, 14, theme.raised, theme);
   drawNoiseGlyph(painter.framebuffer, 238, 24, theme.text, theme.raised);
-  fillRoundRect(painter.framebuffer, {268, 2, 44, 44}, 14, theme.raised);
+  fillControl(painter.framebuffer, {268, 2, 44, 44}, 14, theme.raised, theme);
   drawIconMask24(painter.framebuffer, 278, 12, generated::kIconX, theme.text);
   std::array<const char*, 6> labels{};
   std::array<const char*, 6> values{};
@@ -1750,13 +1825,13 @@ void drawNoise(Painter& painter, const CompactSnapshot& snapshot,
   std::array<char, 20> date{};
   formatClock(snapshot, time, date);
   painter.text(206, 13, time.data(), FontSize::caption, theme.muted, 52);
-  fillRoundRect(painter.framebuffer, {268, 2, 44, 44}, 14, theme.raised);
+  fillControl(painter.framebuffer, {268, 2, 44, 44}, 14, theme.raised, theme);
   drawIconMask24(painter.framebuffer, 278, 12, generated::kIconX, theme.text);
 
   const auto controlColor = snapshot.noise_playing ? theme.brand : theme.raised;
   const auto controlForeground =
       snapshot.noise_playing ? theme.on_brand : theme.text;
-  fillCircle(painter.framebuffer, 160, 102, 52, controlColor);
+  fillControlCircle(painter.framebuffer, 160, 102, 52, controlColor, theme);
   if (snapshot.noise_playing) {
     fillRoundRect(painter.framebuffer, {146, 80, 28, 28}, 5,
                   controlForeground);
@@ -1776,8 +1851,8 @@ void drawNoise(Painter& painter, const CompactSnapshot& snapshot,
   for (int index = 0; index < 3; ++index) {
     const int left = 8 + index * 104;
     const bool selected = snapshot.noise_color == index;
-    fillRoundRect(painter.framebuffer, {left, 166, 96, 40}, 14,
-                  selected ? theme.brand : theme.surface);
+    fillControl(painter.framebuffer, {left, 166, 96, 40}, 14,
+                selected ? theme.brand : theme.surface, theme);
     painter.centered(left + 48, 178,
                      translated(snapshot, polish[static_cast<std::size_t>(index)],
                                 english[static_cast<std::size_t>(index)]),
@@ -1972,7 +2047,7 @@ void drawSensors(Painter& painter, const CompactSnapshot& snapshot,
   std::array<char, 20> date{};
   formatClock(snapshot, time, date);
   painter.text(206, 13, time.data(), FontSize::caption, theme.muted, 52);
-  fillRoundRect(painter.framebuffer, {268, 2, 44, 44}, 14, theme.raised);
+  fillControl(painter.framebuffer, {268, 2, 44, 44}, 14, theme.raised, theme);
   drawIconMask24(painter.framebuffer, 278, 12, generated::kIconX, theme.text);
 
   bool anyModule = false;
@@ -2143,7 +2218,7 @@ void drawStations(Painter& painter, const CompactSnapshot& snapshot,
   fill(painter.framebuffer, theme.canvas);
   // By owner decision the picker is nine logo tiles and a way out — no title,
   // no footer bar. The X matches the global top-right close hitbox.
-  fillRoundRect(painter.framebuffer, {268, 2, 44, 44}, 14, theme.raised);
+  fillControl(painter.framebuffer, {268, 2, 44, 44}, 14, theme.raised, theme);
   drawIconMask24(painter.framebuffer, 278, 12, generated::kIconX, theme.text);
   // Centred 3x3 grid. The controller and the hitbox contract share the same
   // 72 px touch pitch from origin (52, 12); tiles sit 4 px inside each cell.
@@ -2167,11 +2242,20 @@ void drawStations(Painter& painter, const CompactSnapshot& snapshot,
       slot_radius = kTileRadius - 3;
       fillRoundRect(painter.framebuffer, slot, slot_radius, theme.raised);
     } else {
-      fillRoundRect(painter.framebuffer, slot, slot_radius, theme.surface);
+      fillControl(painter.framebuffer, slot, slot_radius, theme.surface, theme);
+      // The logo sits 2 px inside the edge. Touching it, a dark or saturated
+      // logo swallowed the 1 px line and the outline read as broken (owner,
+      // 2026-09-27). Edge plus gap is 3 px, as wide as the playing station's
+      // ring, so a logo has the same slot whether its station plays or not.
+      slot = {left + 3, top + 3, kTile - 6, kTile - 6};
+      slot_radius = kTileRadius - 3;
     }
     bool drew_logo = drawRuntimeStationLogo(painter, slot, slot_radius, index);
 #if defined(OPEN_RADIO_HAS_LOGO_PACK)
-    if (!drew_logo) drew_logo = drawStationLogo(painter, slot, index);
+    if (!drew_logo) {
+      drew_logo = drawStationLogo(painter, slot, slot_radius, index,
+                                  selected ? std::min(slot.width, slot.height) : kTile);
+    }
 #endif
     if (!drew_logo) {
       // Monogram chip. The nine per-station colours left with the owner's
@@ -2245,8 +2329,11 @@ void drawPercentControl(Painter& painter, const CompactSnapshot& snapshot,
   fillRoundRect(painter.framebuffer, {24, 152, 272, 2}, 1, theme.surface);
   fillRoundRect(painter.framebuffer, {24, 151, pos - 24, 4}, 2, ink);
   fillRoundRect(painter.framebuffer, {pos - 1, 112, 3, 48}, 1, ink);
-  fillRoundRect(painter.framebuffer, {8, 190, 88, 44}, 14, theme.raised);
-  fillRoundRect(painter.framebuffer, {104, 190, 112, 44}, 14, theme.surface);
+  fillControl(painter.framebuffer, {8, 190, 88, 44}, 14, theme.raised, theme);
+  // A command, so raised like "-": white is what the choices wear (settings
+  // cards, station tiles, noise colours), and white with an edge reads as a
+  // text field.
+  fillControl(painter.framebuffer, {104, 190, 112, 44}, 14, theme.raised, theme);
   fillRoundRect(painter.framebuffer, {224, 190, 88, 44}, 14, theme.brand);
   painter.centered(52, 199, "-", FontSize::title, theme.text, 56);
   painter.centered(160, 201, translated(snapshot, "Gotowe", "Done"),
@@ -2302,7 +2389,11 @@ void drawStateScreen(Painter& painter, const CompactSnapshot& snapshot,
   fillRoundRect(painter.framebuffer, {16, 54, 288, 116}, 18, theme.surface);
   painter.text(32, 66, translated(snapshot, polish_title, english_title),
                FontSize::title, theme.text, 252);
-  painter.text(32, 94, station.name, FontSize::caption, station.accent, 252);
+  // Muted, not the station's accent: the nine accents are tuned for the night
+  // theme and fall to about 1.3-2:1 on the light card (T34), the one-ink ruling
+  // keeps station colour to the tile ring and the screensavers, and on a card
+  // about a failure the station is context, not the thing to act on.
+  painter.text(32, 94, station.name, FontSize::caption, theme.muted, 252);
   drawWrappedText(painter, 32, 116,
                   translated(snapshot, polish_detail, english_detail),
                   FontSize::body, theme.text, 252, 2);
@@ -2326,7 +2417,7 @@ void drawWifiStatus(Painter& painter, const CompactSnapshot& snapshot,
     painter.text(8, 56,
                  snapshot.device_address != nullptr ? snapshot.device_address
                                                     : "",
-                 FontSize::caption, theme.brand, 112);
+                 FontSize::caption, theme.brand_text, 112);
     painter.text(8, 78, translated(snapshot, "1. Skanuj QR", "1. Scan QR"),
                  FontSize::caption, theme.text, 112);
     painter.text(8, 100,
@@ -2361,7 +2452,7 @@ void drawWifiStatus(Painter& painter, const CompactSnapshot& snapshot,
     // The address is the way into the device console: mDNS name first, the
     // raw IP as the fallback for networks without mDNS.
     painter.text(32, 98, "http://open-radio.local", FontSize::body,
-                 station.accent, 252);
+                 theme.brand_text, 252);
     std::array<char, 48> address{};
     std::snprintf(address.data(), address.size(), "IP: %s",
                   snapshot.device_address);
@@ -2371,7 +2462,7 @@ void drawWifiStatus(Painter& painter, const CompactSnapshot& snapshot,
                             "Open in a browser on the same network."),
                  FontSize::caption, theme.muted, 252);
   } else {
-    painter.text(32, 98, station.name, FontSize::caption, station.accent, 252);
+    painter.text(32, 98, station.name, FontSize::caption, theme.muted, 252);
     drawWrappedText(painter, 32, 122,
                     translated(snapshot,
                                snapshot.wifi_online
@@ -2411,7 +2502,8 @@ void drawBluetoothPairing(Painter& painter, const CompactSnapshot& snapshot,
                     snapshot.bluetooth_candidate_name[0] != '\0'
                 ? snapshot.bluetooth_candidate_name
                 : translated(snapshot, "Znaleziono głośnik", "Speaker found");
-    detail = translated(snapshot, "A2DP · SBC · znaleziony", "A2DP · SBC · found");
+    detail = translated(snapshot, "Pierwsze łączenie może potrwać do minuty.",
+                        "The first connection can take up to a minute.");
     action = translated(snapshot, "Łączę automatycznie…", "Connecting automatically…");
     actionColor = theme.raised;
   } else if (snapshot.bluetooth_state == BluetoothState::connecting) {
@@ -2419,8 +2511,8 @@ void drawBluetoothPairing(Painter& painter, const CompactSnapshot& snapshot,
                     snapshot.bluetooth_candidate_name[0] != '\0'
                 ? snapshot.bluetooth_candidate_name
                 : translated(snapshot, "Łączenie", "Connecting");
-    detail = translated(snapshot, "Łączę głośnik przez A2DP.",
-                        "Connecting the speaker over A2DP.");
+    detail = translated(snapshot, "Pierwsze łączenie może potrwać do minuty.",
+                        "The first connection can take up to a minute.");
     action = translated(snapshot, "Łączenie…", "Connecting…");
     actionColor = theme.raised;
   } else if (snapshot.bluetooth_state == BluetoothState::connected) {
@@ -2452,7 +2544,7 @@ void drawBluetoothPairing(Painter& painter, const CompactSnapshot& snapshot,
     painter.text(64, 146, translated(snapshot, "ZAPAMIĘTANY", "REMEMBERED"),
                  FontSize::caption, theme.success, 120);
   }
-  fillRoundRect(painter.framebuffer, {8, 190, 304, 44}, 14, actionColor);
+  fillControl(painter.framebuffer, {8, 190, 304, 44}, 14, actionColor, theme);
   painter.centered(160, 201, action, FontSize::body,
                    actionColor == theme.brand ? theme.on_brand : theme.muted,
                    270);
@@ -2485,7 +2577,7 @@ void drawOnboarding(Painter& painter, const CompactSnapshot& snapshot,
     painter.text(190, 145, snapshot.setup_access_code, FontSize::caption,
                  theme.text, 102);
   }
-  fillRoundRect(painter.framebuffer, {8, 190, 96, 44}, 14, theme.raised);
+  fillControl(painter.framebuffer, {8, 190, 96, 44}, 14, theme.raised, theme);
   painter.centered(56, 202,
                    translated(snapshot, polish_secondary, english_secondary),
                    FontSize::caption, theme.text, 78);
@@ -2495,43 +2587,91 @@ void drawOnboarding(Painter& painter, const CompactSnapshot& snapshot,
                    FontSize::body, theme.on_brand, 166);
 }
 
+// The backup code is the Wi-Fi password of OpenRadio-Setup and is typed by hand,
+// so it is never cut, and it is set a size up from the steps (body: 11-pixel
+// capitals instead of 9). Firmware makes it "OR-" and twelve hex digits, which in
+// body measure up to 101 + 72 pixels, so it always takes two lines split after
+// the sixth digit: the same place on every device, easy to check against "OR-
+// and twelve". Lines are 16 apart, not the body line height of 19, because
+// neither "OR-" nor hex digits have descenders (5 clear rows remain between
+// them). Anything else falls back to one line, or to halves of similar width.
+void drawBackupCode(Painter& painter, int x, int y, const char* code,
+                    std::uint16_t color, int maximum_width) {
+  if (code == nullptr || *code == '\0') return;
+  constexpr int kCodeLineStep = 16;
+  std::array<char, 64> buffer{};
+  std::strncpy(buffer.data(), code, buffer.size() - 1);
+  const std::size_t length = std::strlen(buffer.data());
+  std::size_t split = 0;
+  if (length == 15 && std::strncmp(buffer.data(), "OR-", 3) == 0) {
+    split = 9;
+  } else if (measureText(buffer.data(), FontSize::body) > maximum_width) {
+    const int full_width = measureText(buffer.data(), FontSize::body);
+    const auto& face = generated::interFace(FontSize::body);
+    const auto* start = reinterpret_cast<const unsigned char*>(buffer.data());
+    const auto* cursor = start;
+    int width = 0;
+    int best_gap = full_width;
+    while (*cursor != 0U) {
+      width += glyphFor(face, decodeUtf8(cursor)).advance;
+      const int gap = std::abs(full_width - 2 * width);
+      if (gap < best_gap) {
+        best_gap = gap;
+        split = static_cast<std::size_t>(cursor - start);
+      }
+    }
+  }
+  if (split == 0 || split >= length) {
+    painter.text(x, y, buffer.data(), FontSize::body, color, maximum_width, false);
+    return;
+  }
+  const char saved = buffer[split];
+  buffer[split] = '\0';
+  painter.text(x, y, buffer.data(), FontSize::body, color, maximum_width, false);
+  buffer[split] = saved;
+  painter.text(x, y + kCodeLineStep, buffer.data() + split, FontSize::body, color,
+               maximum_width, false);
+}
+
 void drawWifiQrScreen(Painter& painter, const CompactSnapshot& snapshot,
                       const ThemeTokens& theme) {
   const bool onboarding = snapshot.screen == ScreenKind::onboarding_wifi;
   fill(painter.framebuffer, theme.canvas);
   painter.text(8, 8, onboarding ? "1/3" : "Wi-Fi", FontSize::caption,
                theme.muted, 112);
+  // Up to 6 pixels short of the QR's white field: "Connect phone" is 115 pixels
+  // wide and was shown as "Connect pho..." in the 112 of the text column.
   painter.text(8, 30,
                onboarding
                    ? translated(snapshot, "Połącz telefon", "Connect phone")
                    : translated(snapshot, "Dodaj sieć", "Add network"),
-               FontSize::body, theme.text, 112);
-  painter.text(8, 52, "OpenRadio-Setup", FontSize::caption, theme.brand, 112);
+               FontSize::body, theme.text, 118);
+  painter.text(8, 52, "OpenRadio-Setup", FontSize::caption, theme.brand_text, 112);
+  // Steps 18 apart (was 22) so the gap before the backup code reads as a new
+  // block rather than a fourth step; the two-line code ends at y = 177, thirteen
+  // rows above the buttons at y = 190.
   painter.text(8, 68,
                translated(snapshot, "1. Skanuj QR", "1. Scan QR"),
                FontSize::caption, theme.text, 112);
-  painter.text(8, 90,
+  painter.text(8, 86,
                translated(snapshot, "2. Połącz", "2. Join"),
                FontSize::caption, theme.text, 112);
-  painter.text(8, 112,
+  painter.text(8, 104,
                translated(snapshot, "3. Wybierz Wi-Fi", "3. Choose Wi-Fi"),
                FontSize::caption, theme.text, 112);
-  painter.text(8, 144,
+  painter.text(8, 128,
                translated(snapshot, "Kod awaryjny", "Backup code"),
                FontSize::caption, theme.muted, 112);
-  drawWrappedText(
-      painter, 8, 162,
-      snapshot.setup_access_code != nullptr ? snapshot.setup_access_code : "",
-      FontSize::caption, theme.text, 112, 2);
+  drawBackupCode(painter, 8, 146, snapshot.setup_access_code, theme.text, 112);
   fillRect(painter.framebuffer, {128, 4, 184, 184}, rgb565(255, 255, 255));
   painter.centered(220, 84, "QR", FontSize::title, rgb565(0, 0, 0), 120);
   if (onboarding) {
-    fillRoundRect(painter.framebuffer, {8, 190, 96, 44}, 14, theme.raised);
+    fillControl(painter.framebuffer, {8, 190, 96, 44}, 14, theme.raised, theme);
     painter.centered(56, 202, translated(snapshot, "Język", "Language"),
                      FontSize::caption, theme.text, 78);
     const std::uint16_t continueColor =
         snapshot.wifi_online ? theme.brand : theme.raised;
-    fillRoundRect(painter.framebuffer, {112, 190, 200, 44}, 14, continueColor);
+    fillControl(painter.framebuffer, {112, 190, 200, 44}, 14, continueColor, theme);
     painter.centered(
         212, 201,
         snapshot.wifi_online
@@ -2541,10 +2681,12 @@ void drawWifiQrScreen(Painter& painter, const CompactSnapshot& snapshot,
         snapshot.wifi_online ? theme.on_brand : theme.muted, 166);
     return;
   }
-  fillRoundRect(painter.framebuffer, {8, 190, 148, 44}, 14, theme.brand);
-  fillRoundRect(painter.framebuffer, {164, 190, 148, 44}, 14, theme.raised);
-  painter.centered(82, 201, translated(snapshot, "Nowy kod QR", "New QR code"),
-                   FontSize::caption, theme.on_brand, 122);
+  // Not the primary action: it restarts the setup network with a new password,
+  // so the code on this screen stops working for whoever is typing it.
+  fillControl(painter.framebuffer, {8, 190, 148, 44}, 14, theme.raised, theme);
+  fillControl(painter.framebuffer, {164, 190, 148, 44}, 14, theme.raised, theme);
+  painter.centered(82, 201, translated(snapshot, "Zmień kod", "Change code"),
+                   FontSize::caption, theme.text, 122);
   painter.centered(238, 201,
                    snapshot.wifi_online
                        ? translated(snapshot, "Zamknij", "Close")
@@ -2827,7 +2969,7 @@ RenderResult renderScreen(FramebufferView framebuffer,
                    FontSize::body, theme.text, 210);
       painter.text(260, top + 11, "PASS", FontSize::caption, theme.success, 42);
     }
-    fillRoundRect(framebuffer, {8, 190, 304, 44}, 14, theme.raised);
+    fillControl(framebuffer, {8, 190, 304, 44}, 14, theme.raised, theme);
     painter.centered(160, 201, translated(snapshot, "Wstecz", "Back"),
                      FontSize::body, theme.text, 270);
   } else if (snapshot.screen == ScreenKind::about) {
@@ -2846,7 +2988,12 @@ RenderResult renderScreen(FramebufferView framebuffer,
                               ? snapshot.firmware_version
                               : "dev",
                  FontSize::display, theme.text, 200);
-    painter.text(104, 134, "Core2 · GPL-3.0", FontSize::caption, theme.muted, 200);
+    // GPL-3.0 §5(d): a modified GPL work with an interactive interface must show
+    // "Appropriate Legal Notices" — a copyright notice, that there is no warranty,
+    // that licensees may share it, and where the licence is. The three lines here
+    // carry exactly that, and nothing more (legal case of 2026-09-25).
+    painter.text(104, 134, translated(snapshot, "GPL-3.0 · bez gwarancji", "GPL-3.0 · no warranty"),
+                 FontSize::caption, theme.muted, 200);
 
     // One line, one colour, and only the part that is true. Three coloured
     // claims side by side read as decoration; a single muted sentence reads as
@@ -2856,19 +3003,19 @@ RenderResult renderScreen(FramebufferView framebuffer,
     // class of problem as the icon masks, on the other side of the type.
     // The author's name and his own domain come FIRST, and they are the pair
     // that has to outlive everything else here. A cube can sit on a shelf for
-    // years; open-radio.me is a project domain with a renewal date, and the
+    // years; esp32ai.me/radio is the project's current address, and the
     // day it lapses this screen would point a curious owner at nothing. A name
     // does not expire, and fiedoruk.pl is the last address that would ever be
     // let go — so provenance is anchored to that, and the project site is
     // listed as what it is: where the project currently lives.
-    painter.text(9, 166, "Tomasz Fiedoruk · fiedoruk.pl", FontSize::caption,
+    painter.text(9, 166, "© 2026 Tomasz Fiedoruk · fiedoruk.pl", FontSize::caption,
                  theme.text, 302);
     painter.text(9, 184,
-                 translated(snapshot, "open-radio.me · bez telemetrii i konta",
-                            "open-radio.me · no telemetry, no account"),
+                 translated(snapshot, "Wolno dzielić · esp32ai.me/radio · bez telemetrii",
+                            "Free to share · esp32ai.me/radio · no telemetry"),
                  FontSize::caption, theme.muted, 302);
 
-    fillRoundRect(framebuffer, {8, 206, 304, 26}, 12, theme.raised);
+    fillControl(framebuffer, {8, 206, 304, 26}, 12, theme.raised, theme);
     painter.centered(160, 211, translated(snapshot, "Diagnostyka", "Diagnostics"),
                      FontSize::body, theme.text, 270);
   } else if (snapshot.screen == ScreenKind::market) {
@@ -2890,9 +3037,9 @@ RenderResult renderScreen(FramebufferView framebuffer,
       const char* value = index == 2 ? translated(snapshot, "9 z 236", "9 of 236")
                                      : values[index];
       painter.text(kHomeColumnTwo, top, value, FontSize::body,
-                   index == 0 ? theme.brand : theme.muted, 110);
+                   index == 0 ? theme.brand_text : theme.muted, 110);
     }
-    fillRoundRect(framebuffer, {8, 190, 304, 44}, 14, theme.raised);
+    fillControl(framebuffer, {8, 190, 304, 44}, 14, theme.raised, theme);
     painter.centered(160, 201, translated(snapshot, "Wbudowane lokalnie", "Embedded locally"),
                      FontSize::body, theme.text, 270);
   }

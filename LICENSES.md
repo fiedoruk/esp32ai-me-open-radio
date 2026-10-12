@@ -22,7 +22,7 @@ The complete license texts are available in:
 `GPL-3.0-or-later` means recipients may use version 3 of the GNU GPL or, at
 their option, any later version published by the Free Software Foundation.
 
-Third-party dependencies keep their own licenses. Firmware binaries have been
-published since 0.1 (2026-07-18); every release ships only after
-`THIRD-PARTY-NOTICES.md` and the dependency manifest are complete for the exact
-pinned build, and the same requirement applies to every future release.
+Third-party dependencies keep their own licenses. `THIRD-PARTY-NOTICES.md` and
+`firmware/release/THIRD_PARTY_NOTICES.md` list the libraries linked into the
+firmware, with their licenses. Firmware binaries have been published since 0.1
+(2026-07-18).

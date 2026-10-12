@@ -7,20 +7,26 @@ reproducible byte-for-byte outside its provenance stamp when three build
 parameters are honored. Measured on 0.2.1 (2026-07-23) and proved again by
 execution on **0.4** (2026-07-31): the published image was rebuilt from a
 commit later than its own code cut, by stamping the recorded cut, and the hash
-matched.
+matched. On **0.4.4** (2026-10-12) the published corresponding-source package,
+unpacked outside the repository and built in a fresh environment, gave the
+release application byte for byte.
 
 1. **Dependency pins, by name.** Every library in
    `firmware/manifests/dependencies.lock.json` must resolve exactly once;
    M5GFX is pinned as a *named* entry
    (`M5GFX=https://github.com/m5stack/M5GFX.git#ad9b814…`, content-identical
    to registry 0.2.25).
-2. **The build root path — neutralized as of 0.4.1.** Two framework assert
-   strings used to embed the absolute build directory, so an exact byte match
-   required the same build root, and the published binary carried the
-   compiling machine's home directory and username. The pre-build script now
-   passes `-ffile-prefix-map`, computed from whichever tree is being built, so
-   those strings read `/open-radio/...` and the bytes no longer depend on where
-   the sources were unpacked. Four paths naming the machine that built the
+2. **The build root path — neutralized as of 0.4.1, and again as of 0.4.4.**
+   Two framework assert strings used to embed the absolute build directory, so
+   an exact byte match required the same build root, and the published binary
+   carried the compiling machine's home directory and username. The pre-build
+   script passes `-ffile-prefix-map`, computed from whichever tree is being
+   built, so those strings read `/open-radio/...`. 0.4.2 carries the toolchain
+   path in those two strings again: its build ran with `PLATFORMIO_CORE_DIR`
+   naming the toolchain's real directory, outside the tree the map covers. As
+   of 0.4.4 the toolchain directory, with links resolved, is mapped to the same
+   target, and the release build rejects an image that still carries a
+   home-directory path. Four paths naming the machine that built the
    *upstream toolchain* remain inside precompiled libraries this project does
    not rebuild; they are identical for everyone using the pinned toolchain and
    therefore do not affect reproduction.

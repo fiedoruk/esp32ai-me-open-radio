@@ -30,7 +30,6 @@ M5Unified or M5GFX dependency.
 - `src/`: framebuffer primitives and production screens,
 - `generated/`: checked-in constants derived from JSON,
 - `host/`: PPM command-line adapter,
-- `tests/`: bounds, screen-matrix and deterministic-render tests,
 - `evidence/`: expected fixture and production-matrix hashes.
 
 The renderer consumes generated Light A and Dark B RGB565 tokens, defaults to

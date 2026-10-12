@@ -8,6 +8,8 @@ RUNTIME_TARGET := $(BUILD_DIR)/runtime-orchestrator-tests
 INGRESS_TARGET := $(BUILD_DIR)/runtime-ingress-tests
 UI_TARGET := $(BUILD_DIR)/ui-controller-tests
 BLUETOOTH_PROFILE_TARGET := $(BUILD_DIR)/bluetooth-profile-gate-tests
+BLUETOOTH_LISTEN_TARGET := $(BUILD_DIR)/bluetooth-listen-policy-tests
+BLUETOOTH_DEFERRAL_TARGET := $(BUILD_DIR)/bluetooth-retry-deferral-tests
 NOISE_TARGET := $(BUILD_DIR)/local-noise-source-tests
 IMAGE_DIMS_TARGET := $(BUILD_DIR)/image-dims-tests
 STATION_BINDING_TARGET := $(BUILD_DIR)/station-binding-tests
@@ -25,12 +27,12 @@ TOUCH_TARGET := $(BUILD_DIR)/touch-target-audit
 SLOT_MIGRATION_INCLUDES = -Itests/stubs -I../public-candidate/src $(INCLUDES)
 UI_TRACE_TARGET := $(BUILD_DIR)/ui-controller-trace
 NOISE_PROBE_TARGET := $(BUILD_DIR)/local-noise-source-probe
-TARGETS := $(CONTRACT_TARGET) $(PARITY_TARGET) $(HOSTILE_TARGET) $(RUNTIME_TARGET) $(INGRESS_TARGET) $(UI_TARGET) $(BLUETOOTH_PROFILE_TARGET) $(NOISE_TARGET) $(IMAGE_DIMS_TARGET) $(STATION_BINDING_TARGET) $(SLOT_MIGRATION_TARGET) $(UPGRADE_POLICY_TARGET) $(SENSOR_SNAPSHOT_TARGET) $(SCD4X_TARGET) $(AIR_TARGET) $(ALERT_TARGET) $(BME688_TARGET) $(TOUCH_TARGET)
+TARGETS := $(CONTRACT_TARGET) $(PARITY_TARGET) $(HOSTILE_TARGET) $(RUNTIME_TARGET) $(INGRESS_TARGET) $(UI_TARGET) $(BLUETOOTH_PROFILE_TARGET) $(BLUETOOTH_LISTEN_TARGET) $(BLUETOOTH_DEFERRAL_TARGET) $(NOISE_TARGET) $(IMAGE_DIMS_TARGET) $(STATION_BINDING_TARGET) $(SLOT_MIGRATION_TARGET) $(UPGRADE_POLICY_TARGET) $(SENSOR_SNAPSHOT_TARGET) $(SCD4X_TARGET) $(AIR_TARGET) $(ALERT_TARGET) $(BME688_TARGET) $(TOUCH_TARGET)
 INCLUDES := -Iinclude -I../generated
 
 .PHONY: test test-san trace probe clean
 
-# The same eighteen suites under AddressSanitizer + UBSan, no recovery: an
+# The same nineteen suites under AddressSanitizer + UBSan, no recovery: an
 # overflow or a signed-arithmetic UB aborts the run instead of "working" on
 # the host. Added after the 2026-09-08 audit found three such defects in
 # sensor arithmetic that the plain build never reported. Separate build dir
@@ -47,6 +49,8 @@ test: $(TARGETS)
 	$(INGRESS_TARGET)
 	$(UI_TARGET)
 	$(BLUETOOTH_PROFILE_TARGET)
+	$(BLUETOOTH_LISTEN_TARGET)
+	$(BLUETOOTH_DEFERRAL_TARGET)
 	$(NOISE_TARGET)
 	$(IMAGE_DIMS_TARGET)
 	$(STATION_BINDING_TARGET)
@@ -88,6 +92,14 @@ $(UI_TARGET): tests/ui_controller_tests.cpp include/open_radio/ui_controller.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
 
 $(BLUETOOTH_PROFILE_TARGET): tests/bluetooth_profile_gate_tests.cpp include/open_radio/bluetooth_profile_gate.hpp
+	mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
+
+$(BLUETOOTH_LISTEN_TARGET): tests/bluetooth_listen_policy_tests.cpp include/open_radio/bluetooth_listen_policy.hpp
+	mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
+
+$(BLUETOOTH_DEFERRAL_TARGET): tests/bluetooth_retry_deferral_tests.cpp include/open_radio/bluetooth_retry_deferral.hpp
 	mkdir -p $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
 

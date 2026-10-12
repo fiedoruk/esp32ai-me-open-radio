@@ -279,7 +279,7 @@ class LogoStore {
 
   // Returns nullptr when the logo landed, otherwise a static reason tag for
   // the serial log — the difference between a network layer that refuses
-  // (begin/http), a starved read (small) and a bad payload (dims/decode)
+  // (begin/http/stream), a starved read (small) and a bad payload (dims/decode)
   // points at entirely different fixes.
   const char* fetchOne(std::size_t slot, const char* url) {
     std::uint8_t* download = downloadBuffer_;
@@ -289,7 +289,7 @@ class LogoStore {
       // Declared BEFORE the HTTPClient that will use them: C++ destroys in
       // reverse order and HTTPClient's destructor calls _client->stop() on the
       // client it was begun with; with `request` declared first that call
-      // landed on a client already destroyed (Codex F03, 2026-09-08).
+      // landed on a client already destroyed (review of 2026-09-08).
       WiFiClientSecure secureClient;
       WiFiClient plainClient;
       HTTPClient request;
@@ -303,7 +303,7 @@ class LogoStore {
       // below. The library's own chunk reader used before (writeToStream) had
       // no deadline: a server that announced a chunk and then held the socket
       // open parked this task for ever, and with it the Bluetooth start that
-      // waits for the fetch pass (Codex F04, 2026-09-08). The CDN that chunked
+      // waits for the fetch pass (review of 2026-09-08). The CDN that chunked
       // under HTTP/1.1 (Radio Wnet, fixed 2026-08-02) answers HTTP/1.0 plain.
       request.useHTTP10(true);
       bool begun = false;
@@ -337,9 +337,18 @@ class LogoStore {
       // at the declared size; close-delimited (HTTP/1.0 without a length) it
       // drains what the socket buffered and stops when the peer has closed;
       // either way it stops at the deadline. Unknown length used to go through
-      // writeToStream(), whose inner loop has no clock at all (Codex F04).
+      // writeToStream(), whose inner loop has no clock at all.
       const int declared = request.getSize();
       WiFiClient* stream = request.getStreamPtr();
+      // nullptr once the peer has closed: HTTPClient asks connected(), and after
+      // a FIN lwIP answers ENOTCONN. A 200 with an empty body (Content-Length: 0,
+      // then close) reached stream->available() on a null pointer in 0.4.2 and
+      // rebooted the radio on every boot while that icon stayed missing; 0.4.1
+      // was guarded by request.connected() in the loop condition.
+      if (stream == nullptr) {
+        request.end();
+        return "stream";
+      }
       const std::uint32_t startedAt = millis();
       while (millis() - startedAt < kFetchBodyTimeoutMs) {
         const std::size_t available = stream->available();
@@ -366,7 +375,7 @@ class LogoStore {
     }
     // The decoder skips unknown chunks by advancing an index it never bounds
     // against the buffer, so a chunk declaring more bytes than exist walks it
-    // past the download allocation (Codex F02, 2026-09-08 — reachable through a
+    // past the download allocation (review of 2026-09-08 — reachable through a
     // substituted favicon, since transport integrity is waived above). Every
     // chunk has to fit, and IEND has to be present, before pngle sees a byte.
     if (!pngChunksWellFormed(download, downloaded)) {

@@ -38,7 +38,7 @@ const stationRows = catalog.stations.map(station => {
 const themeOrder = ["dark", "light"];
 const themeRows = themeOrder.map(themeName => {
   const theme = pixelSystem.themes[themeName];
-  const colors = ["canvas", "surface", "raised", "text", "muted", "border", "success", "warning", "danger", "shadow", "brand", "onBrand"]
+  const colors = ["canvas", "surface", "raised", "text", "muted", "border", "success", "warning", "danger", "shadow", "brand", "onBrand", "brandText", "controlEdge"]
     .map(key => hex16(rgb565(theme[key])))
     .join(", ");
   return `inline constexpr ThemeTokens k${themeName[0].toUpperCase()}${themeName.slice(1)}Theme{${colors}};`;

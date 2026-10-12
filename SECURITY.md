@@ -2,14 +2,14 @@
 
 ## Current state
 
-Public firmware releases 0.1, 0.2, 0.2.1, 0.4, 0.4.1 and the current 0.4.2 are
-live; official binaries come only from `fiedoruk.pl/os/`. There is no OTA channel — a
+Public firmware releases are listed at https://esp32ai.me/radio. Official
+binaries come only from `fiedoruk.pl/os/`. There is no OTA channel — a
 fixed release can only reach devices through a manual reflash, so severity
 assessments must assume affected devices stay on their installed version.
 
 ## Support window
 
-Security fixes target the current public release (0.4.2). An end-of-support
+Security fixes target the most recent public release. An end-of-support
 date for the 0.4 line has not been declared yet and will be published here when
 it is. There is no OTA channel: a fix reaches a device only through a manual
 reflash from `fiedoruk.pl/os/`, so severity assessment must assume affected
@@ -28,7 +28,7 @@ devices stay on their installed version.
 Do not include Wi-Fi passwords, private MAC addresses or personal listening
 data in a public issue. Report privately through GitHub private vulnerability
 reporting (Security Advisories) at
-[github.com/fiedoruk/open-radio/security/advisories](https://github.com/fiedoruk/open-radio/security/advisories),
+[github.com/fiedoruk/esp32ai-me-open-radio/security/advisories](https://github.com/fiedoruk/esp32ai-me-open-radio/security/advisories),
 or by e-mail to the address published in `/.well-known/security.txt` on
 `fiedoruk.pl` and `esp32ai.me`. We acknowledge a report within 72 hours and
 follow a coordinated disclosure policy: a fixed vulnerability is published once
@@ -77,7 +77,7 @@ request arrived on, not which host sent it, and the CSRF token is issued by
 therefore re-provision the radio onto another access point during the window. No
 route returns Wi-Fi passwords or other credentials.
 
-**In 0.4.2, the published release, both halves are closed.** Wi-Fi credentials are accepted only from a
+**From 0.4.2 on, both halves are closed.** Wi-Fi credentials are accepted only from a
 client of the device's own setup access point, so `POST /api/config-form` over
 the home network is refused; and every console route requires a `Host` header
 naming this device, either `open-radio.local` or its current IPv4 address. The

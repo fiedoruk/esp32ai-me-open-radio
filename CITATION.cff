@@ -3,9 +3,9 @@ message: "If you use this project, please cite it using this metadata."
 title: "Open Radio Core2"
 type: software
 license: GPL-3.0-or-later
-version: 0.4.1
-date-released: 2026-08-02
-repository-code: "https://github.com/fiedoruk/open-radio"
+version: 0.4.4
+date-released: 2026-10-12
+repository-code: "https://github.com/fiedoruk/esp32ai-me-open-radio"
 authors:
   - family-names: "Fiedoruk"
     given-names: "Tomasz"

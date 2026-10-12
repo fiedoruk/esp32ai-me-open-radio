@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <algorithm>
+#include <atomic>
 #include <cstring>
 #include <iterator>
 
@@ -59,6 +60,7 @@ class StationRuntime {
     hlsActive_ = false;
     retryIndex_ = 0;
     rmfCandidateIndex_ = 0;
+    failuresSinceHealthy_ = 0;
     exhaustedCycles_ = 0;
     // A reassigned slot counts its own alternates, so "everything failed" means
     // the same thing whichever list the station came from.
@@ -178,6 +180,7 @@ class StationRuntime {
     if (running_ && !healthy_ && count > 0) {
       healthy_ = true;
       retryIndex_ = 0;
+      failuresSinceHealthy_ = 0;
       exhaustedCycles_ = 0;
       if (activeEndpoint_.length() > 0) {
         writeLastKnownGood(activeEndpointAac_ ? "aac|" + activeEndpoint_ : activeEndpoint_);
@@ -240,6 +243,13 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
   static constexpr std::uint32_t kStreamProgressStallMs = 8000;
   static constexpr std::uint32_t kSourceDeadReopenMs = 2000;
   static constexpr std::size_t kRmfCandidateCount = 10;
+  // Lanes with the AAC decoder turn the wheel through both decks of the pool.
+#if defined(OPEN_RADIO_HAS_HLS)
+  static constexpr std::size_t kRmfWheelSize = 2U * kRmfCandidateCount;
+#else
+  static constexpr std::size_t kRmfWheelSize = kRmfCandidateCount;
+#endif
+  static constexpr std::uint32_t kNextCandidateDelayMs = 1000;
   static constexpr std::uint32_t kRetryDelaysMs[] = {5000, 30000, 120000,
                                                       600000};
 
@@ -280,6 +290,32 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
     return {};
   }
 
+  // Host (and port) of an endpoint, never its path, query or fragment.
+  static String hostOf(const String& endpoint) {
+    const int scheme = endpoint.indexOf("://");
+    const int from = scheme < 0 ? 0 : scheme + 3;
+    int to = endpoint.length();
+    for (const char stop : {'/', '?', '#'}) {
+      const int at = endpoint.indexOf(stop, from);
+      if (at >= 0 && at < to) to = at;
+    }
+    return endpoint.substring(from, to);
+  }
+
+  // Alternates in one lap: the cached operator pool of a built-in RMF station,
+  // otherwise the slot's or the catalog row's own list (candidatesAtSelect_).
+  std::size_t candidateLap() const {
+    if (slots_.endpointCount(stationIndex_) == 0 &&
+        stationUsesRmfonPools(stationIndex_)) {
+      const int slot = rmfPoolSlot(rmfonStationIdFor(stationIndex_));
+      if (slot >= 0) {
+        PoolLock lock;
+        if (rmfPoolBody_[slot].length() > 0) return kRmfWheelSize;
+      }
+    }
+    return candidatesAtSelect_;
+  }
+
   static String audioHttpUrl(String endpoint) {
     if (endpoint.startsWith("https://")) endpoint.remove(4, 1);
     return endpoint;
@@ -309,7 +345,7 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
     // timeouts below do not bound it, and the framework default is 120 s. A
     // peer that accepts TCP and then goes quiet in the handshake held this
     // call — and the owner task it runs on, under a 30-second watchdog —
-    // for two minutes (audit 2026-09-08, V1-01 / Codex F05). Same figure as
+    // for two minutes (audit 2026-09-08). Same figure as
     // logo_store.hpp uses for the icon fetch.
     client.setHandshakeTimeout(kDiscoveryHandshakeSeconds);
     HTTPClient request;
@@ -377,13 +413,13 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
     // TLS, answers 200 and then holds the connection open without sending the
     // body spins here forever — on the owner loop that is a 30-second watchdog
     // reboot, and on logoFetchTask it never releases the Bluetooth auto-start
-    // gate, so the radio silently never gets Bluetooth. Found by Codex in the
+    // gate, so the radio silently never gets Bluetooth. Found in the
     // pre-release review of 2026-09-09; I had claimed in writing that setTimeout
     // covered this, and it does not. The deadline below is ours.
     String body;
     if (Stream* upstream = request.getStreamPtr(); upstream != nullptr) {
       const std::uint32_t readDeadlineMs = millis() + kDiscoveryTimeoutMs;
-      char chunk[128];
+      char chunk[129];  // one spare byte: String::concat(ptr, n) copies n + 1
       while (static_cast<std::int32_t>(millis() - readDeadlineMs) < 0) {
         const int ready = upstream->available();
         if (ready <= 0) {
@@ -393,11 +429,12 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
           delay(5);
           continue;
         }
-        const int wanted = ready < static_cast<int>(sizeof(chunk))
+        const int wanted = ready < static_cast<int>(sizeof(chunk) - 1)
                                ? ready
-                               : static_cast<int>(sizeof(chunk));
+                               : static_cast<int>(sizeof(chunk) - 1);
         const int got = upstream->readBytes(chunk, wanted);
         if (got <= 0) continue;
+        chunk[got] = '\0';
         if (body.length() + static_cast<std::size_t>(got) > kDiscoveryResponseBytes) {
           Serial.printf("rmf discovery_failed reason=oversize len=%u elapsed_ms=%lu "
                         "heap_largest=%lu\n",
@@ -406,7 +443,13 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
           request.end();
           return {};
         }
-        body.concat(chunk, static_cast<unsigned int>(got));
+        if (!body.concat(chunk, static_cast<unsigned int>(got))) {
+          Serial.printf("rmf discovery_failed reason=alloc len=%u elapsed_ms=%lu heap_largest=%lu\n",
+                        static_cast<unsigned>(body.length()),
+                        static_cast<unsigned long>(millis() - startedAtMs), largestInternal);
+          request.end();
+          return {};
+        }
         if (!lengthUnknown && body.length() >= static_cast<std::size_t>(length)) break;
       }
       if (static_cast<std::int32_t>(millis() - readDeadlineMs) >= 0) {
@@ -419,6 +462,12 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
       }
     }
     request.end();
+    if (!lengthUnknown && body.length() != static_cast<std::size_t>(length)) {
+      Serial.printf("rmf discovery_failed reason=short len=%u want=%d elapsed_ms=%lu heap_largest=%lu\n",
+                    static_cast<unsigned>(body.length()), length,
+                    static_cast<unsigned long>(millis() - startedAtMs), largestInternal);
+      return {};
+    }
     if (body.length() == 0 || body.length() > kDiscoveryResponseBytes) {
       Serial.printf("rmf discovery_failed reason=body len=%u elapsed_ms=%lu heap_largest=%lu\n",
                     static_cast<unsigned>(body.length()),
@@ -480,10 +529,10 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
   // Since 0.4.2 this runs on the logo-fetch task, not the owner loop: three
   // sequential discoveries (DNS ladder, connect, handshake) at EVERY Wi-Fi
   // connect could exceed the owner's 30-second watchdog on a sick network
-  // (V1-08). The pool bodies are therefore shared between two tasks and every
+  // (audit 2026-09-08). The pool bodies are therefore shared between two tasks and every
   // access goes through PoolLock; the lock is held only around the String
   // assignment or the candidate extraction, never across the network.
-  void prefetchRmfPools() {
+  void prefetchRmfPools(const std::atomic<bool>* abort = nullptr) {
     // Without the mutex there is no safe way to be the second writer of
     // rmfPoolBody_, so this pass stands down and leaves the pool to
     // resolveRmf() on the owner loop, which is single-threaded. The station
@@ -495,6 +544,13 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
     static constexpr int kRmfIds[3] = {5, 6, 29};
     bool cached = false;
     for (int index = 0; index < 3; ++index) {
+      // A pairing tap or a Bluetooth recovery asks the logo task to stop, and the
+      // tap waiting behind it expires after sixty seconds. Three discoveries can
+      // take longer than that on a sick network, so the flag is asked before each.
+      if (abort != nullptr && abort->load(std::memory_order_relaxed)) {
+        Serial.printf("rmf prefetch_aborted before=%d\n", index);
+        break;
+      }
       const String discovery = "https://api.rmfon.pl/stations/" +
                                String(kRmfIds[index]) + "/streams";
       const String body = fetchJson(discovery.c_str());
@@ -566,8 +622,8 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
     // four we bound ourselves; the name lookup we do not — the core resolves
     // through getaddrinfo and asks for A and AAAA, and nothing in our code
     // caps how long that takes. Rather than argue the total stays under thirty
-    // seconds, the owner stops reaching for the network at all (Codex
-    // pre-release review, 2026-09-09, vector 1).
+    // seconds, the owner stops reaching for the network at all (pre-release
+    // review of 2026-09-09).
     //
     // Nothing is lost that was reliably there: when the pool is empty
     // resolveEndpoint() falls back to the pinned mount, which is exactly what
@@ -690,6 +746,12 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
       aacEndpoint = parseStoredEndpoint(endpoint);
       selection = ResolverSelection::LastKnownGood;
     }
+    // Which edge this open goes to. The key is address= so the evidence
+    // sanitizer drops the line; the raw lab log keeps it. Without it a run of
+    // failed opens cannot tell a dead edge from a radio that lost the network.
+    Serial.printf("stream_stage stage=endpoint source=%s candidate=%u address=%s\n",
+                  selection == ResolverSelection::Primary ? "resolved" : "last-known-good",
+                  static_cast<unsigned>(rmfCandidateIndex_), hostOf(endpoint).c_str());
     hlsActive_ = endpoint.endsWith(".m3u8");
     const bool aacActive = !hlsActive_ && aacEndpoint;
     bool started = false;
@@ -701,26 +763,46 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
     if (endpoint.length() == 0 || endpoint.length() >= 128 || !started) {
       ++startFailures_;
       ++rmfCandidateIndex_;
+      ++failuresSinceHealthy_;
       // A full lap through this station's alternates without a single healthy
       // stream is the difference between "the edge blinked" and "this station
-      // is not broadcasting". Nothing acts on it yet; 0.2's failure screen
-      // reads this counter, and the serial line makes it measurable now.
-      if (candidatesAtSelect_ > 0 &&
-          rmfCandidateIndex_ % candidatesAtSelect_ == 0) {
+      // is not broadcasting"; the failure screen reads this counter. The lap of
+      // an RMF station is its operator pool, not its one pinned catalog row.
+      // On 2026-10-12 three or four of the ten RMF FM MP3 edges were dead (the
+      // -cyfronet hosts answered on neither 80 nor 443); every failed open was
+      // counted as the whole station failing, and four in a row put the radio
+      // on its 600 s retry with "not broadcasting" on screen while six live
+      // edges stayed untried.
+      const std::size_t lap = candidateLap();
+      const bool lapFailed = lap == 0 || failuresSinceHealthy_ % lap == 0;
+      if (lap > 0 && lapFailed) {
         ++exhaustedCycles_;
         Serial.printf(
             "station_health station=%u exhausted_cycles=%u candidates=%u\n",
             static_cast<unsigned>(stationIndex_),
             static_cast<unsigned>(exhaustedCycles_),
-            static_cast<unsigned>(candidatesAtSelect_));
+            static_cast<unsigned>(lap));
       }
       activeEndpoint_ = "";
       ResolverResultDto failed;
       failed.status = ResolverStatus::RetryScheduled;
-      failed.retryAtMs = nowMs + kRetryDelaysMs[std::min<std::size_t>(
-                                      retryIndex_, std::size(kRetryDelaysMs) - 1)];
-      services_.resolver(failed, 1, nextSequence(), nowMs);
-      scheduleRetry(nowMs);
+      // Waits count from the end of the failed open, not from nowMs: the open
+      // above blocks for its whole connect timeout, and a deadline taken
+      // before it had already passed when the loop came back.
+      const std::uint32_t failedAtMs = millis();
+      if (lapFailed) {
+        failed.retryAtMs = failedAtMs + kRetryDelaysMs[std::min<std::size_t>(
+                                            retryIndex_, std::size(kRetryDelaysMs) - 1)];
+        scheduleRetry(failedAtMs);
+      } else {
+        // Inside a lap the next alternate goes next. Backing off is for a
+        // station that failed on all of them, not for one dead edge; the
+        // second between opens is for touch and Bluetooth, because each open
+        // that fails holds this loop for its whole connect timeout.
+        retryAtMs_ = failedAtMs + kNextCandidateDelayMs;
+        failed.retryAtMs = retryAtMs_;
+      }
+      services_.resolver(failed, 1, nextSequence(), failedAtMs);
       return;
     }
     running_ = true;
@@ -761,6 +843,9 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
   std::size_t retryIndex_ = 0;
   std::size_t rmfCandidateIndex_ = 0;
   std::size_t exhaustedCycles_ = 0;
+  // Failed opens since the last healthy stream; a lap is counted on these,
+  // not on rmfCandidateIndex_, which also turns when a healthy stream dies.
+  std::size_t failuresSinceHealthy_ = 0;
   std::size_t candidatesAtSelect_ = 0;
   // Guards rmfPoolBody_ between the logo-fetch task (prefetch) and the owner
   // loop (resolve). A function-local static: created once, thread-safe by the
