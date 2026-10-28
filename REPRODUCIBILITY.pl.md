@@ -9,7 +9,8 @@ Zmierzone na 0.2.1 (2026-07-23) i **udowodnione ponownie wykonaniem na 0.4**
 cięcie kodu, stemplując zapisane cięcie, i hash się zgodził. Na **0.4.4**
 (12.10.2026) opublikowana paczka odpowiadających źródeł, rozpakowana poza
 repozytorium i zbudowana w świeżym środowisku, dała aplikację wydania bajt
-w bajt.
+w bajt. Ten sam test na **0.4.5** (27.10.2026) dał bajt w bajt aplikację wydania
+i obraz fabryczny.
 
 1. **Piny zależności, po nazwie.** Każda biblioteka z
    `firmware/manifests/dependencies.lock.json` musi rozwiązać się dokładnie

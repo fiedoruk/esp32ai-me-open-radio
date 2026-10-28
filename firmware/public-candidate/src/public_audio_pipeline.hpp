@@ -21,6 +21,10 @@
 #include "hls_aac_source.hpp"
 #endif
 
+#if defined(OPEN_RADIO_DIAG_045)
+void openRadioDiagMemoryProbe(const char* stage);
+#endif
+
 namespace open_radio {
 namespace public_candidate {
 
@@ -174,6 +178,11 @@ class DecoderQueueOutput final : public ::AudioOutput {
   bool ConsumeSample(std::int16_t sample[2]) override {
     if (!active_ || !formatSupported()) return false;
     if (ownerLoopFrames_ >= kFramesPerOwnerLoop) return false;
+    // Refused samples are retried on the next pass. This is a scheduling
+    // hint; the decoder's NeedInput state owns EOF correctness.
+#if !defined(OPEN_RADIO_LAB_NO_INPUT_GATE)
+    if (inputGate_ != nullptr && inputGate_->inputStarved()) return false;
+#endif
     // AudioGeneratorMP3 keeps producing samples inside one loop() call until
     // the output refuses one. Bound that burst independently from the large
     // PSRAM reserve so live A2DP playback cannot monopolize the UI loop while
@@ -233,6 +242,7 @@ class DecoderQueueOutput final : public ::AudioOutput {
   }
 
   std::size_t bufferedFrames() const { return queue_.size(); }
+  void setInputGate(const AsyncIcyStreamSource* source) { inputGate_ = source; }
   void setHighWaterFrames(std::size_t frames) {
     highWaterFrames_ =
         std::max<std::size_t>(1, std::min(frames, queue_.capacity()));
@@ -270,6 +280,7 @@ class DecoderQueueOutput final : public ::AudioOutput {
   }
 
   PsramPcmRingBuffer<kDecodedPcmFrames>& queue_;
+  const AsyncIcyStreamSource* inputGate_ = nullptr;
   PcmFrame previous_{};
   std::uint64_t inputIndex_ = 0;
   std::uint64_t outputIndex_ = 0;
@@ -530,10 +541,16 @@ class Mp3StreamPipeline {
         "stream_stage stage=connect duration_ms=%lu result=%s codec=%s\n",
         static_cast<unsigned long>(millis() - connectStartedAtMs),
         connected ? "ok" : "fail", aacStream ? "aac" : "mp3");
+#if defined(OPEN_RADIO_DIAG_045)
+    // 0.4.5 plan A2: every reopen allocates the client, headers and DNS
+    // anew; 26.10 the cube reopened ~8 times a minute and dram_min hit 448 B.
+    ::openRadioDiagMemoryProbe("stream-open");
+#endif
     if (!connected) {
       close(false);
       return false;
     }
+    output_.setInputGate(asyncSource);
 #if defined(OPEN_RADIO_HAS_HLS)
     if (aacStream) {
       decoder_ = new (std::nothrow) AudioGeneratorAAC();
@@ -609,6 +626,8 @@ class Mp3StreamPipeline {
 
   bool loop() {
     if (decoder_ == nullptr || !decoder_->isRunning()) return false;
+    source_->loop(); // Deliver metadata even while the input gate holds.
+    observeInputStarvation();
     const std::uint32_t refillStartedAtMs = millis();
     const std::size_t refillFramesBefore = output_.bufferedFrames();
     const auto reportRefill = [this, refillStartedAtMs, refillFramesBefore](
@@ -633,7 +652,18 @@ class Mp3StreamPipeline {
     std::size_t previousBufferedFrames = output_.bufferedFrames();
     while (output_.bufferedFrames() < pumpLowWaterFrames_ &&
            (bluetoothRealtimeMode_ || pass < kDecoderPumpPasses)) {
+      observeInputStarvation();
+#if !defined(OPEN_RADIO_LAB_NO_INPUT_GATE)
+      if (inputStarved_) break;
+#endif
+      const std::size_t before = output_.bufferedFrames();
       const bool running = decoder_->loop();
+      const std::size_t after = output_.bufferedFrames();
+      // Only this owner produces/drains the decoded queue during this call.
+      if (after > before) {
+        decodedProducedFrames_ += static_cast<std::uint32_t>(after - before);
+      }
+      observeInputStarvation();
       if (!output_.formatSupported()) {
         reportRefill("format-error");
         close(false);
@@ -644,6 +674,9 @@ class Mp3StreamPipeline {
         close(false);
         return false;
       }
+#if !defined(OPEN_RADIO_LAB_NO_INPUT_GATE)
+      if (inputStarved_) break;
+#endif
       ++pass;
       const std::size_t bufferedFrames = output_.bufferedFrames();
       if (bufferedFrames > previousBufferedFrames) {
@@ -661,6 +694,14 @@ class Mp3StreamPipeline {
   }
 
   void stop() { close(true); }
+
+  std::uint32_t decodedProducedFrames() const { return decodedProducedFrames_; }
+  std::uint32_t inputStarvationEntries() const { return inputStarvationEntries_; }
+  std::uint64_t inputStarvedMs() const {
+    return inputStarvedMs_ +
+           (inputStarved_ ? static_cast<std::uint32_t>(millis() - inputObservedMs_)
+                          : 0U);
+  }
 
   std::uint32_t decodedBackpressureEvents() const {
     return output_.backpressureEvents();
@@ -699,7 +740,24 @@ class Mp3StreamPipeline {
   }
 
  private:
+  // Owner-observed intervals, including an active interval at report time.
+  // Counters survive reconnect/station changes and also run with the lab gate off.
+  void setInputStarved(bool starved) {
+    const std::uint32_t nowMs = millis();
+    if (inputStarved_) {
+      inputStarvedMs_ += static_cast<std::uint32_t>(nowMs - inputObservedMs_);
+    }
+    if (starved && !inputStarved_) ++inputStarvationEntries_;
+    inputStarved_ = starved;
+    inputObservedMs_ = nowMs;
+  }
+
+  void observeInputStarvation() {
+    setInputStarved(asyncSource_ != nullptr && asyncSource_->inputStarved());
+  }
+
   void close(bool clearOutput) {
+    setInputStarved(false);
     if (decoder_ != nullptr && decoderStarted_) decoder_->stop();
     decoderStarted_ = false;
     delete decoder_;
@@ -717,6 +775,7 @@ class Mp3StreamPipeline {
             completedInputWorkerStackMinimumBytes_, workerStackBytes);
       }
     }
+    output_.setInputGate(nullptr);
     delete source_;
     source_ = nullptr;
     asyncSource_ = nullptr;
@@ -757,6 +816,11 @@ class Mp3StreamPipeline {
   AudioGenerator* decoder_ = nullptr;
   MetadataCallback metadataCallback_ = nullptr;
   void* metadataContext_ = nullptr;
+  std::uint32_t decodedProducedFrames_ = 0;
+  std::uint32_t inputStarvationEntries_ = 0;
+  std::uint64_t inputStarvedMs_ = 0;
+  std::uint32_t inputObservedMs_ = 0;
+  bool inputStarved_ = false;
   std::uint32_t completedInputReceivedBytes_ = 0;
   std::uint32_t completedInputUnderruns_ = 0;
   std::uint32_t completedInputWorkerStackMinimumBytes_ = UINT32_MAX;

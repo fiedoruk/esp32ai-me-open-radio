@@ -4,30 +4,28 @@
 
 namespace open_radio {
 
-// How long a due Bluetooth retry may wait for local audio (speaker plan B5).
-// The radio holds a dial until the local speaker has two blocks and a second of
-// decoded audio, so the hand-over does not start on an empty buffer. When the
-// stream cannot keep that much, the hold never ends: on 2026-09-26 (cycle 9)
-// the radio deferred 344 times over 409 s and did not dial at all until the
-// station was changed. With a cap, the retry dials anyway once it has waited
-// capMs in one stretch; the media start keeps its own buffer gate. A cap of 0
-// keeps the old unbounded wait. A stretch is a run of decisions no more than
-// maxGapMs apart (the owner polls every 250 ms while a retry is due): a longer
-// silence means the retry stopped being due, so the next one starts afresh
-// instead of firing at once on a window left open hours ago.
+// A due Bluetooth request prefers healthy audio with a local reserve, but
+// cannot wait for it forever (2026-09-26: 409 s; 2026-10-26: boot > 2 min).
+// The owner calls decide even when the source is unhealthy or logos are busy,
+// and resets explicitly when the request ends. A slow loop is not cancellation.
+// At the cap, cancel logo work cooperatively and keep the expired window until
+// its TLS buffers and task stack have been released. Never overlap them with
+// stack startup. Media admission and the stack memory guard remain separate.
+// capMs == 0 preserves the uncapped audio/logo wait.
 class BluetoothRetryDeferral {
  public:
-  enum class Decision : std::uint8_t { dial, wait, dialAtCap };
+  enum class Decision : std::uint8_t { dial, wait, dialAtCap, abortLogoFetch };
 
-  explicit constexpr BluetoothRetryDeferral(std::uint32_t capMs,
-                                            std::uint32_t maxGapMs = 5000U)
-      : capMs_(capMs), maxGapMs_(maxGapMs) {}
+  explicit constexpr BluetoothRetryDeferral(std::uint32_t capMs)
+      : capMs_(capMs) {}
 
-  Decision decide(bool localAudioReady, std::uint32_t nowMs) {
-    // Unsigned differences throughout: correct across the 49.7-day millis() wrap.
-    if (waiting_ && nowMs - lastDecisionMs_ > maxGapMs_) waiting_ = false;
-    lastDecisionMs_ = nowMs;
-    if (localAudioReady) {
+  void reset() { waiting_ = false; }
+
+  Decision decide(bool localAudioReady, std::uint32_t nowMs,
+                  bool logoFetchPending = false) {
+    // Unsigned differences throughout: correct across the 49.7-day millis()
+    // wrap.
+    if (localAudioReady && !logoFetchPending) {
       waiting_ = false;
       return Decision::dial;
     }
@@ -37,6 +35,7 @@ class BluetoothRetryDeferral {
       return Decision::wait;
     }
     if (capMs_ != 0 && nowMs - waitingSinceMs_ >= capMs_) {
+      if (logoFetchPending) return Decision::abortLogoFetch;
       waiting_ = false;  // the next retry gets a fresh window
       return Decision::dialAtCap;
     }
@@ -45,9 +44,7 @@ class BluetoothRetryDeferral {
 
  private:
   std::uint32_t capMs_;
-  std::uint32_t maxGapMs_;
   std::uint32_t waitingSinceMs_ = 0;
-  std::uint32_t lastDecisionMs_ = 0;
   bool waiting_ = false;
 };
 

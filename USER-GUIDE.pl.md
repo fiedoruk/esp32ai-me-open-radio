@@ -4,24 +4,24 @@
 
 ## Bieżące dowody sprzętowe
 
-Aktualne publiczne wydanie to **0.4.4** (12.10.2026) — ostatnie wydanie linii
-0.4. Naprawia dwa błędy znalezione w 0.4.2 i sprawia, że wyłączony głośnik
-Bluetooth wraca w kilka sekund, a nie w kilka minut; nie dodaje funkcji ani
-stacji. Jego dowody pochodzą z jednej sztuki — Core2 v1.3 właściciela — na
-opublikowanym obrazie fabrycznym, wgranym z pełnego kasowania tak, jak instaluje
-go kupujący: onboarding od zera, dźwięk z wbudowanego głośnika, sparowany
-głośnik, którego kostka wcześniej nie znała, oraz dziesięć cykli wyłączenia
-i włączenia głośnika na RMF FM z powrotem od 3 do 16 sekund od chwili, gdy
-głośnik zadzwonił, w dziewięciu cyklach na dziesięć w ciągu 10 sekund; ani
-chwili ciszy w głośniku, ani jednego przycięcia w głośniku kostki, zero panik
-i zero nieoczekiwanych restartów. Lista znanych ograniczeń niżej obejmuje także ścieżki, których na
-sprzęcie w ogóle nie sprawdzono.
+Aktualne publiczne wydanie to **0.4.5** (28.10.2026), odebrane z wyjątkami.
+Usuwa kilka przyczyn przerywania dźwięku przy nierównym dopływie danych stacji,
+problem pamięci, który po wielokrotnym łączeniu mógł zostawić radio w ciszy,
+restart podczas utraty Wi-Fi i nieograniczone oczekiwanie przed uruchomieniem
+Bluetooth; nie dodaje funkcji ani stacji. Jego dowody pochodzą z jednej sztuki
+— Core2 v1.3 właściciela — z aplikacją wydania wgraną jako aktualizacja z 0.4.4,
+która zachowała ustawienia: dwie godziny przez głośnik Bluetooth bez ramki
+ciszy, zatrzymania strumienia i restartu; w ciągu 21 godzin w nocy dwa restarty
+przy ponownym łączeniu Bluetooth, z powrotem po 129 i 83 sekundach, a potem
+12,8 godziny bez restartu; dziesięć cykli zasilania głośnika, z których osiem
+niezakłóconych wróciło w 3,2–16,5 sekundy. Lista znanych ograniczeń
+niżej obejmuje także ścieżki, których na sprzęcie w ogóle nie sprawdzono.
 
 **0.2.1 pozostaje wydaniem z najszerszym dowodem sprzętowym**: smoke z dnia
 wydania na Core2 v1.0 właściciela, zewnętrzny użytkownik, który niezależnie
 zainstalował i potwierdził je na fabrycznie świeżym v1.1, oraz klient, który
 potwierdził v1.3 — cała linia rewizji sprzętu ma dowody z terenu dla tamtego
-wydania, a dla 0.4.4 jeszcze nie. Czas na baterii jest zmierzony przez
+wydania, a dla 0.4.5 jeszcze nie. Czas na baterii jest zmierzony przez
 właściciela (~2,5 h typowo, do ~3 h); praca z powerbanku i długie biegi
 endurance pozostają niezmierzone.
 
@@ -41,6 +41,28 @@ endurance pozostają niezmierzone.
 
 Po konfiguracji telefon nie jest potrzebny, dopóki nie dodajesz nowej sieci.
 
+### Ręczne otwieranie konfiguracji Wi-Fi w 0.4.5
+
+Po ukończeniu konfiguracji i zapisaniu co najmniej jednej sieci utrata Wi-Fi
+nie otwiera już automatycznie `OpenRadio-Setup`. Radio nadal próbuje zapisanych
+sieci. Jeśli zmieniło się hasło lub radio trafiło do innej sieci:
+
+1. Otwórz menu ustawień ikoną w prawym górnym rogu ekranu głównego.
+   Na pierwszej stronie ustawień dotknij **Wi-Fi**.
+2. Dotknij **Dodaj sieć Wi-Fi**. Jeśli trwa sesja konsoli, najpierw dotknij
+   **Zamknij konsolę**, a następnie **Dodaj sieć Wi-Fi**.
+3. Zeskanuj QR telefonem albo połącz się z `OpenRadio-Setup`, używając
+   wyświetlonego kodu z pola **Kod awaryjny**. Jeśli strona konfiguracji
+   nie otworzy się sama, otwórz `192.168.4.1`.
+4. Wybierz swoją zabezpieczoną sieć i wpisz hasło. Po połączeniu radio zamknie
+   sieć konfiguracji. **Zmień kod** tworzy nowe hasło konfiguracji; użyj tego
+   przycisku tylko wtedy, gdy chcesz zastąpić wyświetlany kod.
+
+W angielskim interfejsie przyciski to **Add Wi-Fi network**, **Close console**
+i **Change code**, a **Kod awaryjny** to **Backup code**.
+Automatyczna konfiguracja pozostaje dostępna, gdy nie ma zapisanych sieci
+lub nie ukończono pierwszej konfiguracji.
+
 ## Codzienny ekran
 
 Dolne przyciski przełączają na poprzednią stację, otwierają siatkę stacji i
@@ -51,16 +73,15 @@ Dostępne są dwa układy ekranu głównego:
 - **Pełny** eksponuje wygląd stacji i aktualny tytuł ICY, jeśli jest dostępny.
 - **Minimalny** eksponuje zegar i celowo ogranicza informacje o stacji.
 
-Wybór zapisuje się na urządzeniu. Brak metadanych nigdy nie zatrzymuje dźwięku —
-odpowiednie pole przechodzi w fallback albo znika.
+Wybór zapisuje się na urządzeniu. Jeśli stacja nie podaje tytułu utworu,
+odpowiednie pole pokazuje tekst zastępczy albo znika.
 
 ## Ustawienia
 
 Ustawienia są podzielone na trzy czytelnie ponumerowane strony:
 
 - **Szybkie:** status Wi-Fi, Bluetooth, głośność, jasność, motyw i język.
-- **System:** lokalizacja/region, ekran, informacje o projekcie, diagnostyka,
-  układ ekranu głównego i ponowne skanowanie Bluetooth.
+- **System:** Ekran główny, Wi-Fi i sieci, O projekcie, Diagnostyka, Wyczyść dane i Konsola.
 - **Ekran:** wygaszacz ON/OFF, czas, tryb, ekran OFF ON/OFF, czas i podgląd.
 
 Karty mają pojedyncze, ograniczone akcje. Wartości przechodzą przez krótką listę;
@@ -103,16 +124,12 @@ certyfikowane czujki.
 ## Usypianie ekranu
 
 Pulse, Bars, Orbit i Kiara są wygaszaczami wizualnymi. Włączają się po 30 sekundach do
-10 minut. Ekran może wyłączyć się po 15, 30 albo 60 minutach. Audio, sieć i
-recovery działają dalej. Dotyk budzi ekran i wraca do wybranego układu głównego.
+10 minut. Bez działającego czujnika ekran może wyłączyć się po 15, 30 albo 60 minutach. Gdy czujnik przekazuje odczyty, ekran pozostaje włączony, a wygaszacz nie uruchamia się automatycznie. Po odłączeniu czujnika ponownie obowiązują zapisane ustawienia. Odtwarzanie i przywracanie połączeń działają także przy wyłączonym ekranie. Dotyk budzi ekran i wraca do wybranego układu głównego.
 
 ## Zmiana Wi-Fi i dostęp do konsoli (zmienione w 0.4.2)
 
 Sieć Wi-Fi zmienia się z własnego punktu dostępowego radia, a nie przez sieć
-domową. Na ekranie Wi-Fi dolny przycisk otwiera ten punkt, gdy radio jest
-połączone, a gdy zapisana sieć naprawdę zniknęła, portal otwiera się sam. Jeśli
-masz otwartą sesję konsoli, zamknij ją najpierw: dopóki trwa, ten sam przycisk
-znaczy „zamknij konsolę".
+domową. W 0.4.5 punkt konfiguracji otworzysz przyciskiem **Dodaj sieć Wi-Fi**, również bez połączenia z domową siecią. Jeśli trwa sesja konsoli, najpierw wybierz **Zamknij konsolę**. Po ukończeniu konfiguracji radio z zapisaną siecią nie otwiera tego punktu automatycznie przy utracie Wi-Fi.
 
 Konsola odpowiada pod dwoma adresami, które radio samo pokazuje — `http://open-radio.local`
 oraz adres IP wypisany na ekranie Wi-Fi i zakodowany w tamtejszym kodzie QR.
@@ -148,32 +165,38 @@ nie istnieją w firmware urządzenia i nigdy nie mogą stać się zależnością
 
 ## Znane ograniczenia
 
-- **Powrót głośnika zmierzyliśmy na jednym głośniku.** Na opublikowanych
-  bajtach dziesięć cykli wyłączenia i włączenia na RMF FM dało powrót od 3 do
-  16 sekund od chwili, gdy głośnik zadzwonił. Drugiego głośnika nie
-  testowaliśmy.
-- Głośnik często nie odbiera pierwszego telefonu radia, bo w tej chwili sam
-  jeszcze dzwoni do radia. Drugi telefon przechodzi, a powrót trwa wtedy około
-  pięciu sekund dłużej.
-- Raz na dwadzieścia cykli radio wstrzymało dźwięk na pięć sekund, bo pamięć
-  była zbyt poszatkowana, żeby bezpiecznie uruchomić dźwięk Bluetooth, po czym
-  zadzwoniło jeszcze raz: 23 sekundy.
-- **Głośnik kostki może przycinać na RMF FM**, dopóki nie gra Bluetooth. Przez
-  głośnik Bluetooth nie zmierzyliśmy żadnej przerwy.
-- Gdy łącze z głośnikiem wstaje, strumień stacji czasem rusza od nowa na
-  następnym serwerze, w około sekundę. Ciszy ani przycięcia nie zmierzyliśmy.
-- Otwieranie strumienia pod adresem, który nie odpowiada, zamraża ekran do
-  pięciu sekund, raz na każdy martwy adres.
-- Dwóch godzin grania przez Bluetooth, aktualizacji, która zapisuje samą
-  aplikację na 0.4.2 z zachowaniem ustawień, ani stacji innych niż RMF FM nie
-  sprawdzono na opublikowanych bajtach 0.4.4.
-- Historyczne notki niżej o oblanym 60-minutowym biegu dotyczą starszego,
-  przedwydaniowego obrazu labowego, nie wydanego 0.2.1.
-- Wymuszone cykle recovery Wi-Fi/streamu/głośnika, zachowanie PMU/baterii/SD
-  i dłuższe endurance pozostają dla 0.2.1 formalnie niezakwalifikowane.
-- Wszystkie dziewięć stacji wybranych z katalogu 236 używa ścieżek MP3, ale dostępność
-  endpointów może zmieniać się niezależnie od jakiegokolwiek wydania.
-- Oficjalne logotypy stacji nie są publicznie dołączone bez zgody.
-- Głośniki wyłącznie Bluetooth LE Audio są poza kontraktem Core2.
-- Aktualnym publicznym wydaniem jest 0.4.4; endurance i czas na baterii nie
-  mają jeszcze formalnej kwalifikacji, a dowody sprzętowe 0.4.4 pochodzą z jednej sztuki.
+0.4.5 odebrano 28.10.2026 z wyjątkami, na jednej kostce Core2 v1.3 i jednym
+głośniku Bluetooth.
+
+- **Radio może się zrestartować, gdy ponownie łączy się z głośnikiem
+  Bluetooth po zerwaniu łącza przez słaby sygnał.** W 21-godzinnym teście
+  zdarzyło się to dwa razy; za każdym razem radio samo wróciło z Wi-Fi,
+  stacją i głośnikiem w ciągu około dwóch minut. Wyłączenie i włączenie
+  głośnika tego nie wywołuje. Wydanie 0.4.4 ma ten sam kod ponownego
+  łączenia. Poprawka jest planowana w 0.4.6.
+- **Zdarzenie ochrony Wi-Fi nadal może przerwać odtwarzanie na około minutę.**
+  W sieci mieszanej CCMP/TKIP router zablokował Wi-Fi z powodem 14 (błąd MIC)
+  jedenaście razy w ciągu jednej nocy na obrazie wydania; za każdym razem
+  dźwięk znikał na około minutę i wracał bez pomocy.
+- **Głośnik kostki może przerywać co kilka sekund**, także gdy dane stacji
+  przychodzą na czas. Nie sprawdziliśmy, czy 0.4.4 zachowuje się tak samo.
+- **Drugiego głośnika Bluetooth nie zakwalifikowano dla tego wydania.**
+  Z jedynym testowanym głośnikiem osiem niezakłóconych cykli zasilania
+  wróciło w 3,2–16,5 sekundy. W jednym cyklu, gdy obok leżał telefon
+  sparowany z tym samym głośnikiem, powrót trwał 72 sekundy.
+- Adres stacji, który nie odpowiada, może zatrzymać reakcję ekranu na kilka
+  sekund podczas otwierania połączenia.
+- Dźwięk Bluetooth może czekać na dostateczną ilość pamięci. Głośnik może też
+  wymagać kolejnej próby połączenia; wcześniejszego ponownego otwarcia
+  strumienia przy łączeniu głośnika nie uznano jeszcze za rozwiązane w 0.4.5.
+- Opóźnione metadane ICY nadal mogą powodować ponowne połączenie strumienia.
+  0.4.5 nie dodaje szczegółowych objaśnień tych przerw na ekranie; odłożono je
+  do 0.4.6. Nie ma komunikatów głosowych.
+- Obrazu fabrycznego 0.4.5 i konfiguracji z wyczyszczonej pamięci, aktualizacji
+  ze strony instalacji, zmiany stacji ani parowania nowego głośnika nie
+  sprawdzono na bajtach wydania. Testy innych rewizji Core2, pełnego katalogu,
+  czasu na baterii i opcjonalnych czujników również są przed nami.
+- Każda z dziewięciu wybranych stacji używa ścieżki MP3 z katalogu 236 stacji.
+  Dostępność adresów może się zmieniać niezależnie od wersji firmware.
+  AAC, HLS i głośniki wyłącznie Bluetooth LE Audio nie są obsługiwane.
+- Oficjalne logotypy stacji nie są publicznie dołączane bez zgody.

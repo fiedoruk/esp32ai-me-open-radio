@@ -9,7 +9,8 @@ execution on **0.4** (2026-07-31): the published image was rebuilt from a
 commit later than its own code cut, by stamping the recorded cut, and the hash
 matched. On **0.4.4** (2026-10-12) the published corresponding-source package,
 unpacked outside the repository and built in a fresh environment, gave the
-release application byte for byte.
+release application byte for byte. The same test on **0.4.5** (2026-10-27) gave
+the release application and the factory image byte for byte.
 
 1. **Dependency pins, by name.** Every library in
    `firmware/manifests/dependencies.lock.json` must resolve exactly once;

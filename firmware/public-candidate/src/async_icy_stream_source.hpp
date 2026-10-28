@@ -33,8 +33,9 @@ class AsyncIcyStreamSource final : public ::AudioFileSource {
     // must never release its storage while that producer still owns it.
     while (workerRunning_.load(std::memory_order_acquire)) delay(2);
     delete upstream_;
-    heap_caps_free(scratch_);
-    heap_caps_free(ringStorage_);
+    // The storage outlives the source; see ensureStorage(). The worker is gone
+    // (above), so the next source may take it over.
+    if (ringStorage_ != nullptr) storageClaimed_ = false;
   }
 
   bool open(const char* url) override {
@@ -141,6 +142,16 @@ class AsyncIcyStreamSource final : public ::AudioFileSource {
   }
 
   std::size_t bufferedBytes() const { return ring_.size(); }
+
+  // Scheduling hint only. The patched MP3 decoder distinguishes NeedInput
+  // from EOF even if a non-blocking read empties the ring during sync search.
+  // A completed producer is never held: its remaining bytes and EOF pass.
+  bool inputStarved() const {
+    return ring_.size() < kDecoderReadReserveBytes &&
+           open_.load(std::memory_order_acquire) &&
+           workerRunning_.load(std::memory_order_acquire) &&
+           !upstreamEnded_.load(std::memory_order_acquire);
+  }
   std::uint32_t receivedBytes() const {
     return receivedBytes_.load(std::memory_order_relaxed);
   }
@@ -165,22 +176,44 @@ class AsyncIcyStreamSource final : public ::AudioFileSource {
   static constexpr std::size_t kStartupBufferedBytes = 16U * 1024U;
   static constexpr std::uint32_t kStartupTimeoutMs = 3000U;
   static constexpr std::uint32_t kReadWaitMs = 100U;
+  // One decoder read: AudioGeneratorMP3 asks for up to 0x600 bytes, the AAC
+  // generator for 1600. See inputStarved().
+  static constexpr std::size_t kDecoderReadReserveBytes = 2048U;
   static constexpr std::uint32_t kWorkerCloseTimeoutMs = 1500U;
   static constexpr std::uint32_t kWorkerStackBytes = 4096U;
   static constexpr std::size_t kMaximumUrlBytes = 128U;
   static constexpr std::size_t kTitleBytes = 192U;
 
+  // Allocated once, on the first open, and kept for the life of the device.
+  // Every source used to allocate its own 128 KB ring and free it on close.
+  // 26.10.2026, a weak link and ~50 reopens in two minutes: PSRAM had 321 KB
+  // free but its largest block was 131060 B, twelve bytes short of the ring,
+  // and every later open failed (alloc_failed size=131072 caps=0x404) until a
+  // reboot — on the published 0.4.4 as well. The pipeline deletes the old
+  // source, which waits for its worker, before it creates the next one; the
+  // claim refuses a second live source instead of sharing the ring with it.
   bool ensureStorage() {
-    if (ringStorage_ == nullptr) {
-      ringStorage_ = static_cast<std::uint8_t*>(heap_caps_malloc(
+    if (ringStorage_ != nullptr && scratch_ != nullptr) return true;
+    if (storageClaimed_) return false;
+    if (sharedRing_ == nullptr) {
+      sharedRing_ = static_cast<std::uint8_t*>(heap_caps_malloc(
           kRingBytes, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT));
     }
-    if (scratch_ == nullptr) {
-      scratch_ = static_cast<std::uint8_t*>(heap_caps_malloc(
+    if (sharedScratch_ == nullptr) {
+      sharedScratch_ = static_cast<std::uint8_t*>(heap_caps_malloc(
           kScratchBytes, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT));
     }
-    return ringStorage_ != nullptr && scratch_ != nullptr;
+    if (sharedRing_ == nullptr || sharedScratch_ == nullptr) return false;
+    storageClaimed_ = true;
+    ringStorage_ = sharedRing_;
+    scratch_ = sharedScratch_;
+    return true;
   }
+
+  // Owner task only: sources are created, opened and deleted by the pipeline.
+  static inline std::uint8_t* sharedRing_ = nullptr;
+  static inline std::uint8_t* sharedScratch_ = nullptr;
+  static inline bool storageClaimed_ = false;
 
   std::uint32_t readFromRing(void* data, std::uint32_t length, bool wait) {
     flushPendingCallbacks();
@@ -251,6 +284,9 @@ class AsyncIcyStreamSource final : public ::AudioFileSource {
       }
       receivedBytes_.fetch_add(static_cast<std::uint32_t>(written),
                                std::memory_order_relaxed);
+#if defined(OPEN_RADIO_LAB_INGEST_LIMIT_BPS)
+      throttleIngest(written);
+#endif
     }
     if (upstream_ != nullptr) upstream_->close();
     upstreamEnded_.store(true, std::memory_order_release);
@@ -285,6 +321,34 @@ class AsyncIcyStreamSource final : public ::AudioFileSource {
     source->metadataPending_ = true;
     portEXIT_CRITICAL(&source->callbackMux_);
   }
+
+#if defined(OPEN_RADIO_LAB_INGEST_LIMIT_BPS)
+  // Lab only: the ingest deficit of 26.10.2026 (data at 40-80 % of the bit
+  // rate) on demand, so the decoder gate can be tested against it. The
+  // worker stops reading the socket while it is ahead of the budget, which
+  // fills the TCP window and slows the server the way a weak link does.
+  void throttleIngest(std::size_t bytes) {
+    if (ingestStartedMs_ == 0) {
+      ingestStartedMs_ = millis();
+#if defined(OPEN_RADIO_LAB_NO_INPUT_GATE)
+      const char* gate = "off";
+#else
+      const char* gate = "on";
+#endif
+      Serial.printf("lab_ingest_limit bps=%u gate=%s\n",
+                    static_cast<unsigned>(OPEN_RADIO_LAB_INGEST_LIMIT_BPS), gate);
+    }
+    ingestBytes_ += bytes;
+    const std::uint64_t dueMs =
+        ingestBytes_ * 1000ULL / OPEN_RADIO_LAB_INGEST_LIMIT_BPS;
+    const std::uint32_t elapsedMs = millis() - ingestStartedMs_;
+    if (dueMs > elapsedMs) {
+      vTaskDelay(pdMS_TO_TICKS(static_cast<std::uint32_t>(dueMs - elapsedMs)));
+    }
+  }
+  std::uint32_t ingestStartedMs_ = 0;
+  std::uint64_t ingestBytes_ = 0;
+#endif
 
   AudioFileSourceICYStream* upstream_ = nullptr;
   std::uint8_t* ringStorage_ = nullptr;

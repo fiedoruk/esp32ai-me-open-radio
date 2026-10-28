@@ -2,7 +2,10 @@
 
 [English version](CONTRIBUTING.md)
 
-Projekt wydaje publiczny firmware (0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2, aktualnie 0.4.4) zwalidowany na realnym sprzęcie.
+**Opublikowanym wydaniem jest 0.4.5.** Oddzielaj obserwacje z obrazów
+diagnostycznych od wyników na obrazach wydania.
+
+Projekt wydaje publiczny firmware (0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2, 0.4.4, aktualnie 0.4.5) zwalidowany na realnym sprzęcie.
 Wkład jest przyjmowany jako:
 
 - software na GPL-3.0-or-later,
@@ -30,7 +33,7 @@ prawny.
 - Stabilny rdzeń pozostaje mały.
 - Kod, identyfikatory i interfejsy techniczne są po angielsku.
 - Publiczna dokumentacja użytkownika zachowuje parytet EN/PL.
-- Bez telemetrii, obowiązkowej chmury, automatycznych kanałów aktualizacji i zdalnego wykonywania kodu.
+- Nie dodawaj telemetrii, zależności od usług chmurowych, automatycznych kanałów aktualizacji ani zdalnego wykonywania kodu.
 - Bez oficjalnych logotypów stacji bez manifestu praw i udokumentowanej zgody.
 - Oryginalne motywy stacji są mile widziane; prywatne assety trafiają do ignorowanego `assets-local/`.
 - Bez nagrań, endpointów premium i nieoficjalnych proxy streamów.
@@ -40,14 +43,13 @@ prawny.
 
 1. Większa zmiana ma issue albo RFC.
 2. Jeden PR rozwiązuje jeden problem.
-3. Zmiana zawiera testy i dowód hardware, jeśli dotyczy urządzenia.
+3. Dołącz testy oraz wyniki sprawdzenia na urządzeniu, jeśli zmiana tego wymaga.
 4. Instrukcje EN/PL są aktualizowane razem.
 5. Commit zawiera DCO: `Signed-off-by: Imię <email>`.
 
 Sieć, security, USB rescue i katalog `stable` wymagają dwóch review. Pozostałe zmiany
-wymagają jednego review maintenera. Bramki jakości projektu działają u maintenera,
-a nie w tym repozytorium, więc każdy wkład przechodzi jego przegląd i walidację
-przed scaleniem.
+wymagają jednego review maintenera. Każdy wkład przechodzi przegląd
+i walidację maintenera przed scaleniem.
 
 ## Dodawanie stacji
 
@@ -63,4 +65,4 @@ tożsamości słuchacza, PCM ani grafik. Każdy raport waliduje maintener, zanim
 zostanie użyty. Wynik `PASS` jest dowodem software dla wskazanego hasha
 firmware, a nie ogólną deklaracją zgodności sprzętowej.
 
-Pełny workflow kandydata źródłowego opisuje `REPRODUCIBILITY.pl.md`.
+Procedurę budowania i sprawdzania zgodności z wydaniem opisuje `REPRODUCIBILITY.pl.md`.

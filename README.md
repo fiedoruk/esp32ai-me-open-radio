@@ -3,7 +3,7 @@
 <p align="center"><img src="brand/logo-a-signal-cube.svg" width="92" alt="Open Radio — signal cube logo"></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/released-0.4.4-3db8f5" alt="Released 0.4.4">
+  <img src="https://img.shields.io/badge/released-0.4.5-3db8f5" alt="Released 0.4.5">
   <img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue" alt="GPL-3.0-or-later">
   <img src="https://img.shields.io/badge/stations-236_shipped-success" alt="236 stations shipped">
 </p>
@@ -17,15 +17,16 @@
   <img src="https://esp32ai.me/assets/img/or/screen-4.png" height="150" alt="Status card">
 </p>
 
-<p align="center"><b><a href="https://esp32ai.me/radio/install">⚡ Install from the browser</a></b> · <a href="https://fiedoruk.pl/os/open-radio-0-4-4.bin">Download 0.4.4</a> · <a href="https://esp32ai.me/radio/stations">The 236 stations</a></p>
+<p align="center"><b><a href="https://esp32ai.me/radio/install">⚡ Install from the browser</a></b> · <a href="https://fiedoruk.pl/os/open-radio-0-4-5.bin">Download 0.4.5</a> · <a href="https://esp32ai.me/radio/stations">The 236 stations</a></p>
 
-> Released publicly as **Open Radio**. The published release is **0.4.4**
-> (2026-10-12), the last release of the 0.4 line: it fixes two faults found in
-> 0.4.2 and brings a Bluetooth speaker that was switched off back in seconds
-> instead of minutes. No new features, no new stations, the same 236-station
-> directory. 0.4.3 was never published on its own; its fixes ship in 0.4.4.
-> Earlier releases 0.1, 0.2, 0.2.1, 0.4, 0.4.1 and 0.4.2 remain downloadable as
-> historical builds.
+> Released publicly as **Open Radio**. The published release is **0.4.5**
+> (2026-10-28, accepted with exceptions). It fixes several causes of
+> interrupted playback when station data arrives unevenly, a memory problem
+> that could leave the radio silent after repeated reconnects, a crash during a
+> Wi-Fi disconnect and an unbounded wait before Bluetooth starts. No new
+> features, no new stations, the same 236-station directory. Earlier releases
+> 0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2 and 0.4.4 remain downloadable as historical
+> builds; 0.4.3 was never published on its own, and its fixes shipped in 0.4.4.
 > Official binaries come only from `fiedoruk.pl/os/`, linked from
 > [esp32ai.me/radio](https://esp32ai.me/radio), and the corresponding source
 > is published beside each binary under the GPL.
@@ -77,15 +78,16 @@ vendor-specific features. Bluetooth LE Audio-only speakers are outside the
 original ESP32 hardware contract. No claim of universal speaker compatibility
 will be made before physical qualification.
 
-**Known limitations in 0.4.4.** A Bluetooth speaker that was switched off now
-comes back in seconds: over ten power cycles on RMF FM with the published bytes,
-3 to 16 seconds after the speaker called the radio, nine of ten within
-10 seconds (0.4.2 took from 13 seconds to about five minutes). That was measured
-on one speaker; a second has not been tested. The speaker often does not answer
-the radio's first call, and the return then takes about five seconds longer.
-The radio's own speaker can stutter on RMF FM while Bluetooth is not playing:
-decoding a 128 kb/s stream runs only about a quarter faster than playback on
-this hardware. Through a Bluetooth speaker no drop was measured.
+**Known limitations in 0.4.5.** The radio can restart when it reconnects a
+Bluetooth speaker after a weak-signal link loss. In a 21-hour run this happened
+twice; each time the radio came back on its own with Wi-Fi, the station and the
+speaker within about two minutes. Switching the speaker off and on does not
+trigger it. Release 0.4.4 has the same reconnect code, and a fix is planned for
+0.4.6. A second Bluetooth speaker has not been qualified for this release: with
+the one tested speaker, eight undisturbed power cycles came back in 3.2 to
+16.5 seconds. The built-in speaker can pause every few seconds; we did not check
+whether 0.4.4 does the same. A Wi-Fi protection event can still interrupt
+playback for about a minute.
 
 ## Honest air-sensor promise
 
@@ -129,42 +131,60 @@ audio and does not imply broadcaster endorsement.
 - continuous USB-C power from a power bank
 - Bluetooth Classic A2DP Source output
 
-## What 0.4.4 fixes
+## What 0.4.5 fixes
 
-Two faults found in the published 0.4.2, the slow return of a Bluetooth speaker,
-and the fixes of 0.4.3, which was never published on its own. Nothing else
-changed: no new features, no new stations.
+Several causes of interrupted playback when station data arrives unevenly, a
+memory problem that could leave the radio silent after repeated reconnects, a
+crash during a Wi-Fi disconnect and an unbounded wait before Bluetooth starts.
+Nothing else changed: no new features, no new stations, no voice announcements.
 
-- **A missing station icon could reboot the radio at every start.** An icon
-  server that answered `200` with an empty body made the radio call a method on
-  a null pointer. An empty answer is now treated as no icon.
-- **The speaker comes back in seconds.** Four causes are fixed: the radio no
-  longer waits for a full buffer in its own speaker before it reaches for
-  Bluetooth; it closes a link the speaker opens and calls the speaker itself,
-  again at once if that call goes unanswered; a five-second timeout no longer
-  tears working links down; and a link the Bluetooth library lost track of
-  during the call now starts the sound instead of being ignored.
-- **Fewer silences on RMF.** A dead server address no longer counts as the whole
-  station failing. The radio tries the next RMF FM address after one second and
-  waits longer only after all of them failed.
-- **Some stations played with glitches.** Eleven catalogue addresses answer an
-  HTTP/1.1 request with chunked transfer, and the chunk markers ended up in the
-  audio data. Audio is now requested over HTTP/1.0.
-- **Smaller fixes.** A stream title split across two network reads is no longer
-  cut at the seam. The setup code and the home-screen title are drawn whole. The
-  setup screen's code button is a neutral "Change code". Small text and neutral
-  controls are easier to see in the light theme. A pairing tap stops address
-  discovery. A corrupt pressure calibration gives no reading instead of an
-  overflow. The published binary no longer carries the build machine's path.
+- **A short pause in incoming MP3 data could make the radio end a live
+  stream.** The decoder now keeps partial input and waits for more data without
+  treating a temporary shortage as the end of the stream.
+- **The radio could reopen a stream while it was still preparing audio for
+  playback.** The watchdog now recognises newly decoded audio as progress,
+  including before the first sound.
+- **A Bluetooth speaker could be disconnected while waiting for audio, or while
+  taking it.** When the stream is still running and the buffers are filling
+  slowly, the radio can now keep the link while monitoring stream progress. The
+  pull watchdog no longer mistakes a fresh audio request for an overdue one.
+  Checks that protect Bluetooth from insufficient memory remain.
+- **Repeated stream openings could fragment memory until the next opening
+  failed**, and the radio could remain silent until restarted. The large
+  compressed-audio buffer is now allocated once and reused across reconnects.
+- **A stream that closed during a read could restart the radio.** The HTTP and
+  ICY readers now check that the stream pointer exists before using it.
+- **Wi-Fi retries no longer move to two-minute and ten-minute delays**; they
+  are now five seconds, then thirty seconds. A configured radio no longer opens
+  its setup network automatically after losing Wi-Fi. To change the saved
+  connection details, open the settings menu, tap **Wi-Fi**, then **Add Wi-Fi
+  network**.
+- **Bluetooth startup no longer waits indefinitely** for a healthy station
+  stream or unfinished station-logo downloads; the existing thirty-second
+  deferral limit now covers those conditions. Display transfers no longer grow
+  their conversion buffers while drawing.
+- **Updating from the browser keeps the settings.** The update writes the
+  bootloader, the partition table, the boot selector and the application, and
+  leaves the settings area alone. The installer asks whether to erase the
+  device; leave "Erase device" unticked to keep the Wi-Fi network, the paired
+  speaker and the chosen stations. It has not yet been run from the
+  installation page on a device.
+
+These changes remove unnecessary interruptions. They cannot provide continuous
+sound when the connection delivers less audio than playback consumes.
 
 ## Current status
 
-**The public release is 0.4.4, published 2026-10-12.** It was installed from an
-erased flash onto a Core2 v1.3 on the same day: onboarding from zero, a speaker
-the cube did not know paired, ten speaker power cycles on RMF FM back 3 to
-16 seconds after the speaker's call, zero panics and zero unexpected restarts.
-Not tested on these bytes: two hours of Bluetooth play, the update path from
-0.4.2 with settings kept, a second speaker, and stations other than RMF FM. The
+**The public release is 0.4.5, published 2026-10-28** and accepted with
+exceptions. Its release application ran on a Core2 v1.3 from 27 to 28 October,
+installed as an update from 0.4.4 that kept the settings: two hours through a
+Bluetooth speaker without a silent frame, a stream stop or a restart; over
+21 hours overnight two restarts on a Bluetooth reconnect, back in 129 and
+83 seconds, then 12.8 hours without a restart; ten speaker power cycles, the
+eight undisturbed ones back in 3.2 to 16.5 seconds. Not tested on these bytes:
+the factory image and setup from an erased flash, the browser update from the
+installation page, station changes and pairing a new speaker, a second speaker,
+and other Core2 revisions. Detailed screen messages are deferred to 0.4.6. The
 limitations that stay open are stated above rather than buried.
 
 Available now:
@@ -197,8 +217,9 @@ evidence from more than one unit:
 
 Still open on the release line:
 
-- the Bluetooth items described above: a second speaker, the unanswered first
-  call, and the built-in speaker's stutter on RMF FM,
+- the items described above: the restart on a Bluetooth reconnect after a
+  weak-signal link loss, a second speaker, the built-in speaker's pauses, and
+  Wi-Fi interruptions of about a minute after a protection event,
 - forced-recovery cycles (Wi-Fi, stream, speaker) and the long endurance
   soak, with SD and power-bank behavior,
 - additional Classic Bluetooth A2DP/SBC speaker interoperability,
@@ -206,8 +227,9 @@ Still open on the release line:
 
 The public MP3-only lane is the released lane: 0.4.1, 0.4 and 0.2.1 all
 reproduce byte-for-byte outside their provenance stamp when the documented
-build parameters are honored, and a build of 0.4.4 from its published source
-package, outside this repository, gives the release application byte for byte
+build parameters are honored, and builds of 0.4.4 and 0.4.5 from their
+published source packages, outside this repository, give the release
+application byte for byte
 (see [REPRODUCIBILITY.md](REPRODUCIBILITY.md)).
 The endurance items above stay open and are listed honestly rather than
 quietly.
@@ -241,7 +263,7 @@ Founder and original author: **Tomasz Fiedoruk — [fiedoruk.pl](https://fiedoru
 Software is licensed under `GPL-3.0-or-later`, original documentation and
 artwork under `CC BY-SA 4.0`, and catalog data under `CC0-1.0`. Official station
 logos are not bundled without documented permission. Public firmware releases
-(0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2 and the current 0.4.4) ship from `fiedoruk.pl/os/`;
+(0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2, 0.4.4 and the current 0.4.5) ship from `fiedoruk.pl/os/`;
 the corresponding-source archive is published alongside each binary, and every
 release records its provenance in a release manifest. Details:
 [LICENSES.md](LICENSES.md), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)

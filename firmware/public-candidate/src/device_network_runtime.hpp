@@ -16,6 +16,7 @@
 #include "station_slots.hpp"
 #include "open_radio/runtime_service_bridge.hpp"
 #include "open_radio/service_adapters.hpp"
+#include "open_radio/wifi_portal_policy.hpp"
 
 namespace open_radio::public_candidate {
 
@@ -39,14 +40,33 @@ class DeviceNetworkRuntime {
     connectedContext_ = context;
   }
 
-  void begin(std::uint32_t nowMs) {
+  void begin(std::uint32_t nowMs, bool onboardingComplete) {
+    // Snapshot of the UI gate at boot. Completing network onboarding invokes
+    // the connected callback and restarts the appliance (main.cpp).
+    onboardingComplete_ = onboardingComplete;
     WiFi.persistent(false);
     WiFi.setAutoReconnect(false);
     WiFi.setMinSecurity(WIFI_AUTH_WPA2_PSK);
     WiFi.mode(WIFI_STA);
+    // Until 0.4.5 a dropped link logged only status=1/6 and never the reason,
+    // so a router that vanished, a failed handshake and a weak signal read the
+    // same. (Not the fix for weak links: forcing an all-channel scan sorted by
+    // signal made the cube never join at all on this core, reason 201 on every
+    // attempt, 26.10.2026.)
+    WiFi.onEvent(
+        [](WiFiEvent_t, WiFiEventInfo_t info) {
+          Serial.printf("wifi_disconnect reason=%u\n",
+                        static_cast<unsigned>(info.wifi_sta_disconnected.reason));
+        },
+        ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
     loadProfiles();
     Serial.printf("wifi_boot profiles=%u\n",
                   static_cast<unsigned>(profileCount_));
+#if defined(OPEN_RADIO_DIAG_045) && defined(OPEN_RADIO_DIAG_BOOT_AP_SCAN)
+    // Costs ~6 s before the first join; diag1 used it once (one access point
+    // carrying the SSID: channel 1, -77 dBm).
+    logKnownAccessPoints();
+#endif
     if (!connectBestKnown(nowMs)) {
       startPortal();
       if (!portalActive_) scheduleRetry(nowMs);
@@ -116,6 +136,9 @@ class DeviceNetworkRuntime {
         connected_ = true;
         Serial.printf("wifi_state connected=yes profile=%u\n",
                       static_cast<unsigned>(activeProfileIndex_));
+        Serial.printf("wifi_join channel=%u rssi=%d bssid_tag=%04x\n",
+                      static_cast<unsigned>(WiFi.channel()),
+                      static_cast<int>(WiFi.RSSI()), bssidTag(WiFi.BSSID()));
         retryIndex_ = 0;
         failedProfileMask_ = 0;
         consecutiveTimeouts_ = 0;
@@ -176,8 +199,8 @@ class DeviceNetworkRuntime {
             // With a SINGLE profile, masking it guaranteed a wasted rescan,
             // a portal pop and an escalating backoff on every hiccup — the
             // owner measured two minutes of boot silence. One timeout gets a
-            // second immediate chance; only repeat failures step aside (which
-            // is what lets the portal open when the password really changed).
+            // second immediate chance; repeat failures step aside for backoff.
+            // Changing a saved password uses the on-screen portal control.
             ++consecutiveTimeouts_;
             if (profileCount_ > 1 || consecutiveTimeouts_ >= 2) {
               failedProfileMask_ |=
@@ -214,7 +237,7 @@ class DeviceNetworkRuntime {
 
   bool setPortalEnabled(bool enabled) {
     if (enabled) {
-      startPortal();
+      startPortal(WifiPortalRequest::User);
       return portalActive_;
     }
     if (!connected_) return false;
@@ -226,7 +249,7 @@ class DeviceNetworkRuntime {
     if (portalActive_) stopPortal();
     portalPassword_.fill(0);
     portalCsrfToken_.fill(0);
-    startPortal();
+    startPortal(WifiPortalRequest::User);
     return portalActive_;
   }
 
@@ -269,6 +292,39 @@ class DeviceNetworkRuntime {
     if (rssi >= -50) return 100;
     return static_cast<std::uint8_t>((rssi + 100) * 2);
   }
+
+  // A 16-bit tag tells two access points apart in a log without writing the
+  // router's hardware address into it.
+  static unsigned bssidTag(const std::uint8_t* bssid) {
+    if (bssid == nullptr) return 0;
+    std::uint32_t hash = 2166136261U;
+    for (std::size_t index = 0; index < 6; ++index) {
+      hash = (hash ^ bssid[index]) * 16777619U;
+    }
+    return static_cast<unsigned>((hash ^ (hash >> 16)) & 0xffffU);
+  }
+
+#if defined(OPEN_RADIO_DIAG_045)
+  // Once, at boot, before the radio and Bluetooth start: every access point
+  // carrying a saved SSID, so the log shows what the cube could have joined.
+  void logKnownAccessPoints() {
+    if (profileCount_ == 0) return;
+    const int count = WiFi.scanNetworks(false, true, false, 120, 0);
+    for (int index = 0; index < count; ++index) {
+      for (std::size_t profileIndex = 0; profileIndex < profileCount_;
+           ++profileIndex) {
+        if (WiFi.SSID(index) != profiles_[profileIndex].ssid) continue;
+        Serial.printf("wifi_ap profile=%u channel=%d rssi=%d bssid_tag=%04x\n",
+                      static_cast<unsigned>(profileIndex),
+                      static_cast<int>(WiFi.channel(index)),
+                      static_cast<int>(WiFi.RSSI(index)),
+                      bssidTag(WiFi.BSSID(index)));
+      }
+    }
+    Serial.printf("wifi_ap_scan visible=%d\n", count);
+    WiFi.scanDelete();
+  }
+#endif
 
   void updateSignalStrength(std::uint32_t nowMs) {
     if (!connected_ || WiFi.status() != WL_CONNECTED) {
@@ -345,8 +401,13 @@ class DeviceNetworkRuntime {
   static constexpr std::uint32_t kConsoleSavedCloseMs = 4000U;
   static constexpr std::uint32_t kProvisioningWindowMs = 120000;
   static constexpr std::uint32_t kProvisioningRetryMs = 5000;
+  // Was 5/30/120/600 s. 25.10.2026: after two misses the cube sat 117 s
+  // without a single attempt while the router was already back, and the next
+  // step would have been ten minutes of silence. With no network there is no
+  // audio for the retry's airtime to disturb; a direct join with one profile
+  // costs no scan.
   static constexpr std::array<std::uint32_t, 4> kRetryDelaysMs{{
-      5000, 30000, 120000, 600000}};
+      5000, 30000, 30000, 30000}};
 
   static String escapedJson(const String& input) {
     String output;
@@ -497,7 +558,7 @@ class DeviceNetworkRuntime {
       // the home SSID absent for one pass). One blind attempt at the first
       // unmasked profile costs a connection timeout at worst; skipping it
       // cost the whole retry ladder. Used once per disconnection, so a
-      // genuinely absent network still falls through to the portal.
+      // genuinely absent network still falls through to the retry backoff.
       for (std::size_t profileIndex = 0; profileIndex < profileCount_;
            ++profileIndex) {
         if ((failedProfileMask_ &
@@ -617,8 +678,12 @@ class DeviceNetworkRuntime {
     routesRegistered_ = true;
   }
 
-  void startPortal() {
+  void startPortal(WifiPortalRequest request = WifiPortalRequest::Automatic) {
     if (portalActive_) return;
+    if (!allowWifiPortalStart(profileCount_, onboardingComplete_, request)) {
+      Serial.println("wifi_portal stage=skipped reason=saved-network");
+      return;
+    }
     if (portalPassword_[0] == '\0') {
       std::snprintf(portalPassword_.data(), portalPassword_.size(),
                     "OR-%08lX%04lX", static_cast<unsigned long>(esp_random()),
@@ -911,6 +976,7 @@ class DeviceNetworkRuntime {
   void (*slotsChangedCallback_)(void*) = nullptr;
   void* slotsChangedContext_ = nullptr;
   bool portalActive_ = false;
+  bool onboardingComplete_ = false;
   bool consoleActive_ = false;
   std::uint32_t portalIdleDeadlineMs_ = 0;
   std::uint32_t consoleDeadlineMs_ = 0;

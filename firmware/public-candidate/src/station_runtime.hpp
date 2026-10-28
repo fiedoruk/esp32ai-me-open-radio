@@ -111,6 +111,7 @@ class StationRuntime {
       start(nowMs);
       return;
     }
+    const auto producedBefore = pipeline_.decodedProducedFrames();
     if (running_ && !pipeline_.loop()) {
       running_ = false;
       healthy_ = false;
@@ -127,6 +128,10 @@ class StationRuntime {
       services_.stream(false, 1, nextSequence(), nowMs);
       retryAtMs_ = nowMs + kFastReconnectDelayMs;
       return;
+    }
+    nowMs = millis();
+    if (running_ && pipeline_.decodedProducedFrames() != producedBefore) {
+      noteProgress(nowMs);
     }
     // Fast lane for an announced death: streamtheworld edges drop the TCP
     // connection outright (STATUS_DISCONNECTED; ~65 drops in a 12-minute soak
@@ -157,10 +162,16 @@ class StationRuntime {
       retryAtMs_ = nowMs + kFastReconnectDelayMs;
       return;
     }
-    if (running_ && healthy_ && startAllowed && lastProgressMs_ != 0 &&
+    if (running_ && startAllowed &&
         nowMs - lastProgressMs_ >= kStreamProgressStallMs) {
-      Serial.printf("stream_stage stage=stall-watchdog duration_ms=%lu\n",
-                    static_cast<unsigned long>(nowMs - lastProgressMs_));
+      Serial.printf(
+          "stream_stage stage=stall-watchdog duration_ms=%lu "
+          "input_delta=%lu pcm_delta=%lu\n",
+          static_cast<unsigned long>(nowMs - lastProgressMs_),
+          static_cast<unsigned long>(
+              pipeline_.inputReceivedBytes() - inputAtProgress_),
+          static_cast<unsigned long>(
+              pipeline_.decodedProducedFrames() - pcmAtProgress_));
       pipeline_.stop();
       running_ = false;
       healthy_ = false;
@@ -174,7 +185,7 @@ class StationRuntime {
 
   void decodedFrames(std::size_t count, std::uint32_t nowMs) {
     if (count > 0) {
-      lastProgressMs_ = nowMs;
+      noteProgress(nowMs);
       sourceDeadSinceMs_ = 0;
     }
     if (running_ && !healthy_ && count > 0) {
@@ -236,10 +247,12 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
   // A stalled-but-open connection (server stops sending, socket stays up)
   // keeps AudioGeneratorMP3::loop() "running" forever, so unexpectedStops_
   // never fires and playback wedges silently (hit live 2026-07-17 on an
-  // rmfstream edge minutes after the catalog swap). Eight seconds without a
-  // single drained frame while healthy is unambiguous: local drain moves a
-  // block at least every ~3 s and BT drain is continuous. The Bluetooth
-  // standby window (drain paused) is excluded via startAllowed.
+  // rmfstream edge minutes after the catalog swap). Watch for eight seconds
+  // without newly decoded PCM OR drain, including before the first sound.
+  // A local block contains ~3 s of audio, but collecting it can take longer
+  // under input starvation. Input bytes alone do not prove decodable audio.
+  // startAllowed excludes page/profile setup, but includes connected PCM
+  // prefill. Once the queues are ready, media admission may pause production.
   static constexpr std::uint32_t kStreamProgressStallMs = 8000;
   static constexpr std::uint32_t kSourceDeadReopenMs = 2000;
   static constexpr std::size_t kRmfCandidateCount = 10;
@@ -807,7 +820,7 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
     }
     running_ = true;
     healthy_ = false;
-    lastProgressMs_ = nowMs;
+    noteProgress(millis()); // Start the window AFTER the blocking open.
     sourceDeadSinceMs_ = 0;
     lastSourceEventCount_ = pipeline_.sourceStatusEvents();
     activeEndpoint_ = endpoint;
@@ -816,6 +829,12 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
     ready.status = ResolverStatus::Playing;
     ready.selected = selection;
     services_.resolver(ready, 1, nextSequence(), nowMs);
+  }
+
+  void noteProgress(std::uint32_t nowMs) {
+    lastProgressMs_ = nowMs;
+    inputAtProgress_ = pipeline_.inputReceivedBytes();
+    pcmAtProgress_ = pipeline_.decodedProducedFrames();
   }
 
   void scheduleRetry(std::uint32_t nowMs) {
@@ -836,6 +855,8 @@ RNZu9YO6bVi9JNlWSOrvxKJGgYhqOkbRqZtNyWHa0V1Xahg=
   std::uint32_t unexpectedStops_ = 0;
   std::uint32_t lastStartDurationMs_ = 0;
   std::uint32_t lastProgressMs_ = 0;
+  std::uint32_t inputAtProgress_ = 0;
+  std::uint32_t pcmAtProgress_ = 0;
   std::uint32_t sourceDeadSinceMs_ = 0;
   std::uint32_t lastSourceEventCount_ = 0;
   bool activeEndpointAac_ = false;

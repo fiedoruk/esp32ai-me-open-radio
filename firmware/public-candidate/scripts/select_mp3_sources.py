@@ -67,10 +67,30 @@ env.Append(CCFLAGS=[f"-ffile-prefix-map={repository_root}=/open-radio"])
 core_dir = Path(env.subst("$PROJECT_CORE_DIR")).resolve()
 env.Append(CCFLAGS=[f"-ffile-prefix-map={core_dir}=/open-radio/.tools/platformio-core"])
 
+# Call only after checking the pinned dependency commit.
+# A marker alone is insufficient: verify every replacement on later builds.
+def patch_decoder(name, marker, changes, *, dependency_dir=None):
+    path = (dependency_dir or audio_dependency_dir) / "src" / name
+    source = path.read_text()
+    if marker not in source:
+        for pattern, replacement in changes:
+            source, count = re.subn(
+                pattern, lambda match: replacement, source, flags=re.DOTALL
+            )
+            if count != 1:
+                raise RuntimeError(f"{name}: unexpected patch anchor: {pattern}")
+    if source.count(marker) != 1 or any(
+        source.count(replacement) != 1 for _, replacement in changes
+    ):
+        raise RuntimeError(f"{name}: incomplete {marker} patch")
+    if source != path.read_text():
+        path.write_text(source)
+
 expected_commit = "d6184e08977c0f15f1b09eeee119b238ce562383"
 environment_name = env.subst("$PIOENV")
 mp3_environments = {
     "core2-public-candidate",
+    "core2-diag-0-4-5",
     "core2-hardware-lab",
     "core2-owner-production",
     "core2-local-speaker-fallback",
@@ -78,6 +98,7 @@ mp3_environments = {
 hls_environments = {"core2-hardware-lab"}
 a2dp_environments = {
     "core2-public-candidate",
+    "core2-diag-0-4-5",
     "core2-hardware-lab",
     "core2-owner-production",
 }
@@ -222,6 +243,114 @@ if environment_name in mp3_environments:
     if icy_source_path.read_text().count(title_line) != 1:
         raise RuntimeError("failed to fix the pinned ICY split-title count")
 
+    patch_decoder("AudioGeneratorMP3.h", "open_radio_mp3_need_input_state", [
+        (r"    int lastBuffLen;\n", """    int lastBuffLen;
+    // open_radio_mp3_need_input_state: owner-loop continuation, not libmad state.
+    bool inputPending = false;
+    bool samplePending = false;
+"""),
+    ])
+    patch_decoder("AudioGeneratorMP3.cpp", "open_radio_mp3_need_input", [
+        (r"enum mad_flow AudioGeneratorMP3::Input\(\) \{.*?\n\}", """enum mad_flow AudioGeneratorMP3::Input() {
+    // open_radio_mp3_need_input: compact once, then retain ALL partial input.
+    if (!inputPending) {
+        int unused = 0;
+        if (stream->next_frame) {
+            unused = lastBuffLen - (stream->next_frame - buff);
+            if (unused < 0 || unused > lastBuffLen) {
+                desync();
+                unused = 0;
+            } else {
+                memmove(buff, stream->next_frame, unused);
+            }
+        }
+        // Preserve upstream's escape from a full, unconsumable buffer.
+        // A short refill, however, must never be discarded on resumption.
+        if (unused == buffLen) unused = 0;
+        stream->next_frame = NULL;
+        lastBuffLen = unused;
+        inputPending = true;
+    }
+
+    if (lastBuffLen < buffLen) {
+        lastBuffLen += file->readNonBlock(buff + lastBuffLen, buffLen - lastBuffLen);
+    }
+    // Do not charge libmad's three BUFLEN retries for partial live input.
+    // buffLen is the existing decoder buffer capacity, not a new threshold.
+    if (lastBuffLen < buffLen && file->isOpen()) return MAD_FLOW_IGNORE;
+    if (lastBuffLen < 8) return MAD_FLOW_STOP;
+
+    int header = 0;
+    while (header + 1 < lastBuffLen &&
+           !(buff[header] == 0xff && (buff[header + 1] & 0xe0) == 0xe0)) {
+        ++header;
+    }
+    if (header + 1 == lastBuffLen) {
+        // A sync word can straddle reads. Yield even for continuous junk.
+        const bool keepPrefix = buff[lastBuffLen - 1] == 0xff;
+        buff[0] = 0xff;
+        lastBuffLen = keepPrefix ? 1 : 0;
+        return file->isOpen() ? MAD_FLOW_IGNORE : MAD_FLOW_STOP;
+    }
+    if (header != 0) {
+        memmove(buff, buff + header, lastBuffLen - header);
+        lastBuffLen -= header;
+        if (file->isOpen()) return MAD_FLOW_IGNORE;
+    }
+    lastReadPos = file->getPos() - lastBuffLen;
+    mad_stream_buffer(stream, buff, lastBuffLen);
+    inputPending = false;
+    return MAD_FLOW_CONTINUE;
+}"""),
+        (r"    // First, try and push in the stored sample\..*?\n    \}\n",
+         """    // Retry only an output-refused sample, never one already accepted
+    // before a NeedInput yield or a failed-frame retry.
+    if (samplePending) {
+        if (!output->ConsumeSample(lastSample)) goto done;
+        samplePending = false;
+    }
+"""),
+        (r"retry:\n            if \(Input\(\) == MAD_FLOW_STOP\) \{\n                return false;\n            \}",
+         """            switch (Input()) {
+            case MAD_FLOW_STOP: return false;
+            case MAD_FLOW_IGNORE: goto done; // NeedInput; running stays true.
+            default: break;
+            }"""),
+        (r"                goto retry;",
+         "                goto done; // Bound corrupt-frame retries to one per loop()."),
+        (r"    \} while \(running && output->ConsumeSample\(lastSample\)\);",
+         """        samplePending = true;
+        if (!output->ConsumeSample(lastSample)) goto done;
+        samplePending = false;
+    } while (running);"""),
+        (r"    lastBuffLen = 0;\n\n    // Allocate", """    lastBuffLen = 0;
+    inputPending = false;
+    samplePending = false;
+
+    // Allocate"""),
+    ])
+
+    # getStreamPtr() is nullptr once the peer has closed (the logo store
+    # already checks for it). 26.10.2026 a Wi-Fi drop (reason 14)
+    # landed between the library's connected() check and this call and the
+    # prefetch worker crashed: LoadProhibited at 0 in
+    # AudioFileSourceICYStream::readInternal, Guru Meditation, reboot. A closed
+    # stream reads nothing and reports the drop like any other disconnect.
+    null_stream_guard = """    WiFiClient *stream = http.getStreamPtr();
+#endif
+    // open_radio_null_stream_guard: a closed peer has nothing to read.
+    if (stream == nullptr) {
+        cb.st(STATUS_DISCONNECTED, PSTR("Stream closed"));
+        return 0;
+    }
+"""
+    for stream_source in ("AudioFileSourceICYStream.cpp",
+                          "AudioFileSourceHTTPStream.cpp"):
+        patch_decoder(stream_source, "open_radio_null_stream_guard", [
+            (r"    WiFiClient \*stream = http\.getStreamPtr\(\);\n#endif\n",
+             null_stream_guard),
+        ])
+
     # The pinned decoder's default PCM scratch fits AAC-LC but not the maximum
     # stereo SBR frame documented by Helix. Keep the upstream pin and apply the
     # minimal reproducible capacity correction in the build workspace.
@@ -304,6 +433,33 @@ if pngle_path.exists():
             f"M5GFX commit mismatch: expected {expected_graphics_commit}, "
             f"got {actual_graphics_commit}"
         )
+    # Bound converted SPI transfers to the buffers reserved during panel init.
+    # Reuse the existing line-sized pair instead of growing it mid-frame.
+    patch_decoder("lgfx/v1/platforms/common.hpp",
+                  "open_radio_reserved_dma_capacity", [
+        (r"  private:\n    uint8_t\* _buffer\[2\]", """    // open_radio_reserved_dma_capacity: both slots must cover the floor.
+    size_t reservedCapacity(void) const
+    {
+      return (_length[0] >= _reserved && _length[1] >= _reserved)
+           ? _reserved : 0;
+    }
+
+  private:
+    uint8_t* _buffer[2]"""),
+    ], dependency_dir=graphics_dependency_dir)
+    patch_decoder("lgfx/v1/platforms/esp32/Bus_SPI.cpp",
+                  "open_radio_reserved_dma_chunks", [
+        (r"    const uint8_t bytes = param->dst_bits >> 3;\n"
+         r"    if \(_cfg\.dma_channel\)\n", """    const uint8_t bytes = param->dst_bits >> 3;
+    // open_radio_reserved_dma_chunks: failed reservation uses the CPU path.
+    const uint32_t capacity = _flip_buffer.reservedCapacity() / bytes;
+    if (_cfg.dma_channel && capacity != 0)
+"""),
+        (r"        len = \(limit << 1\) <= length \? limit : length;\n",
+         """        len = (limit << 1) <= length ? limit : length;
+        if (len > capacity) len = capacity;
+"""),
+    ], dependency_dir=graphics_dependency_dir)
     pngle_source = pngle_path.read_text()
     guard_marker = "open_radio_no_progress"
     if guard_marker not in pngle_source:

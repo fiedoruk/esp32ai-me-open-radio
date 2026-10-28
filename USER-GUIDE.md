@@ -4,23 +4,24 @@
 
 ## Current hardware evidence
 
-The current public release is **0.4.4** (2026-10-12), the last release of the
-0.4 line. It fixes two faults found in 0.4.2 and brings a Bluetooth speaker that
-was switched off back in seconds instead of minutes; it adds no features and no
-stations. Its evidence comes from one unit — the owner's Core2 v1.3 — on the
-published factory image, installed from a full erase the way a buyer installs
-it: onboarding from zero, audio from the built-in speaker, a speaker the cube
-did not know paired, and ten speaker power cycles on RMF FM, back 3 to
-16 seconds after the speaker's call and nine of ten within 10 seconds, with no
-silence on the speaker, no drop on the built-in speaker, zero panics and zero
-unexpected restarts. The known limitations below include the paths that were not tested on
-hardware at all.
+The current public release is **0.4.5** (2026-10-28), accepted with
+exceptions. It fixes several causes of interrupted playback when station data
+arrives unevenly, a memory problem that could leave the radio silent after
+repeated reconnects, a crash during a Wi-Fi disconnect and an unbounded wait
+before Bluetooth starts; it adds no features and no stations. Its evidence
+comes from one unit — the owner's Core2 v1.3 — with the release application
+installed as an update from 0.4.4 that kept the settings: two hours through a
+Bluetooth speaker without a silent frame, a stream stop or a restart; over
+21 hours overnight two restarts on a Bluetooth reconnect, back in 129 and
+83 seconds, then 12.8 hours without a restart; ten speaker power cycles, the
+eight undisturbed ones back in 3.2 to 16.5 seconds. The known limitations
+below include the paths that were not tested on hardware at all.
 
 **0.2.1 remains the release with the widest hardware evidence**: release-day
 smoke on the owner's Core2 v1.0, an external user who independently installed
 and confirmed it on a factory-fresh v1.1, and a customer who confirmed v1.3 — so
 the whole hardware line has field evidence for that release, and not yet for
-0.4.4. Battery duration is owner-measured (~2.5 h typical, up to ~3 h); power-bank
+0.4.5. Battery duration is owner-measured (~2.5 h typical, up to ~3 h); power-bank
 behaviour and long endurance runs remain unmeasured.
 
 ## First start
@@ -39,6 +40,27 @@ behaviour and long endurance runs remain unmeasured.
 
 The phone is not required after onboarding unless a new network must be added.
 
+### Opening Wi-Fi setup manually in 0.4.5
+
+After setup is complete and at least one Wi-Fi network is saved, losing Wi-Fi
+no longer opens `OpenRadio-Setup` automatically. The radio keeps trying its
+saved networks. If the password changed or you moved to a different network:
+
+1. Open the settings menu using the icon in the top-right corner of the home
+   screen. On the first settings page, tap **Wi-Fi**.
+2. Tap **Add Wi-Fi network**. If a console session is open, tap **Close console**
+   first, then **Add Wi-Fi network**.
+3. Scan the QR code with your phone, or join `OpenRadio-Setup` using the displayed
+   **Backup code**. Open `192.168.4.1` if the local setup page does not appear.
+4. Select your secured network and enter its password. The radio closes the
+   setup network once it connects. **Change code** creates a new setup password;
+   use it only when you need to replace the displayed code.
+
+With the Polish interface, the buttons are **Dodaj sieć Wi-Fi**,
+**Zamknij konsolę** and **Zmień kod**; **Backup code** is **Kod awaryjny**.
+Automatic setup remains available when there are no saved networks or initial
+setup has not been completed.
+
 ## Daily screen
 
 The bottom controls move to the previous station, open the station grid and move
@@ -49,16 +71,15 @@ Two home layouts are available:
 - **Full** prioritizes station identity and the current ICY title when present.
 - **Minimal** prioritizes the clock and keeps station information intentionally compact.
 
-The selection is stored on the device. Missing metadata never stops audio; the
-relevant field falls back or disappears.
+The selection is stored on the device. If a station supplies no title, the
+corresponding field shows fallback text or disappears.
 
 ## Settings
 
 Settings are split into three clearly numbered pages:
 
 - **Quick:** Wi-Fi status, Bluetooth, volume, brightness, theme and language.
-- **System:** location/region, display, project information, diagnostics, home
-  layout and Bluetooth rescan.
+- **System:** Home screen, Wi-Fi & networks, About, Diagnostics, Erase data and Console.
 - **Display:** screensaver on/off, delay, mode, screen-off on/off, delay and preview.
 
 Cards use one-tap bounded choices. Values wrap through a short predefined list;
@@ -106,10 +127,7 @@ screen and returns to the selected daily layout.
 ## Changing Wi-Fi and reaching the console (changed in 0.4.2)
 
 Wi-Fi is changed from the radio's own setup access point, not over your home
-network. On the Wi-Fi screen the bottom button opens that access point while the
-radio is connected, and when the saved network is genuinely gone the portal
-opens by itself. If a console session is open, close it first: while it is live
-that same button means "close console".
+network. In 0.4.5, tap **Add Wi-Fi network** to open setup, even when the radio is disconnected from your home network. If a console session is open, tap **Close console** first. Once setup is complete and a network is saved, losing Wi-Fi does not open setup automatically.
 
 The console answers at the two addresses the radio itself shows — `http://open-radio.local`
 and the IP address printed on the Wi-Fi screen and encoded in its QR code. A
@@ -147,33 +165,37 @@ become playback dependencies.
 
 ## Known limitations
 
-- **The speaker return was measured on one speaker.** On the published bytes,
-  ten power cycles on RMF FM brought it back 3 to 16 seconds after the speaker's
-  call. A second speaker has not been tested.
-- The speaker often does not answer the radio's first call, because it is still
-  calling the radio at that moment. The second call gets through, and the
-  return takes about five seconds longer.
-- Once in twenty cycles the radio held the sound back for five seconds, because
-  its memory was too fragmented to start Bluetooth audio safely, and then called
-  again: 23 seconds.
-- **The built-in speaker can stutter on RMF FM** while Bluetooth is not playing.
-  Through a Bluetooth speaker no drop was measured.
-- When the speaker's link comes up, the station stream sometimes restarts on the
-  next server within about a second. No silence or drop was measured.
-- Opening a stream on an address that does not answer freezes the screen for up
-  to five seconds, once per dead address.
-- Two hours of Bluetooth play, the update path that writes the application
-  alone over 0.4.2 with settings kept, and stations other than RMF FM were not
-  exercised on the published 0.4.4 bytes.
-- No uninterrupted 60-minute run exists for 0.4. The qualifying session ran 69
-  minutes but contained deliberate reboots, which produced recovery evidence
-  instead. The historical notes below about a failed 60-minute run describe an
-  older pre-release lab image.
-- Forced Wi-Fi/stream/speaker recovery cycles, PMU/battery/SD behaviour and
-  longer endurance remain formally unqualified.
-- All nine stations you pick from the 236-entry directory use MP3 paths, but endpoint availability
-  can change independently of any firmware release.
+0.4.5 was accepted on 2026-10-28 with exceptions, on one Core2 v1.3 and one
+Bluetooth speaker.
+
+- **The radio can restart when it reconnects a Bluetooth speaker after a
+  weak-signal link loss.** In a 21-hour run this happened twice; each time the
+  radio came back on its own with Wi-Fi, the station and the speaker within
+  about two minutes. Switching the speaker off and on does not trigger it.
+  Release 0.4.4 has the same reconnect code. A fix is planned for 0.4.6.
+- **A Wi-Fi protection event can still interrupt playback for about a minute.**
+  On a mixed CCMP/TKIP network the router blocked Wi-Fi with reason 14 (MIC
+  failure) eleven times in one night on the release image; each time the sound
+  stopped for about a minute and came back without help.
+- **The built-in speaker can pause every few seconds**, also when the station
+  data arrives in time. We did not check whether 0.4.4 does the same.
+- **A second Bluetooth speaker has not been qualified for this release.** With
+  the one tested speaker, eight undisturbed power cycles came back in 3.2 to
+  16.5 seconds. In one cycle, with a phone paired with the same speaker lying
+  next to it, the return took 72 seconds.
+- An unresponsive station address can leave the screen unresponsive for
+  several seconds while the connection is opened.
+- Bluetooth audio can wait for sufficient memory. A speaker can also require
+  another connection attempt; the earlier stream reopen at speaker connection
+  has not yet been declared resolved on 0.4.5.
+- Delayed ICY metadata can still cause a stream reconnect. 0.4.5 does not add
+  detailed screen explanations for these pauses; those are deferred to 0.4.6.
+  There are no voice announcements.
+- The 0.4.5 factory image and setup from an erased flash, the browser update
+  from the installation page, station changes and pairing a new speaker were
+  not tested on the release bytes. Tests of other Core2 revisions, the full
+  directory, battery duration and optional sensors are also pending for 0.4.5.
+- All nine selected stations use MP3 paths from the 236-entry directory.
+  Endpoint availability can change independently of a firmware release.
+  AAC, HLS and Bluetooth LE Audio-only speakers are not supported.
 - Official station logos are not publicly bundled without permission.
-- Bluetooth LE Audio-only speakers are outside the Core2 contract.
-- The current public release is 0.4.4; endurance and battery duration are not yet
-  formally qualified, and 0.4.4's hardware evidence comes from a single unit.

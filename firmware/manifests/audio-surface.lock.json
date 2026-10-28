@@ -6,12 +6,12 @@
   "files": [
     {
       "path": "firmware/public-candidate/src/public_audio_pipeline.hpp",
-      "sha256": "a2623c650f1b63c8d1655c87caa7b8c565019a1d30f76c37da0d807742dcc24e",
+      "sha256": "77c2e6350e5ca512220a1bfadd18942d55c1f5380cf6d58cdd003eca9b51744b",
       "frozenSha256": "a2623c650f1b63c8d1655c87caa7b8c565019a1d30f76c37da0d807742dcc24e"
     },
     {
       "path": "firmware/public-candidate/src/async_icy_stream_source.hpp",
-      "sha256": "e3890852bbb71860b79ea3fc793ef9c3f9bba4be3b2543d21110e9d9a931e1a3",
+      "sha256": "e0147f016a5f3dd270bd8c28ee739f8b2d5c02b87b4ff222c563dc00f065bb63",
       "frozenSha256": "62bbac547234f2482a556002458be1fa6209b1c5db0f99301171b90ecac844d1"
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "firmware/public-candidate/src/device_network_runtime.hpp",
-      "sha256": "a4d476470dba7b061666d17a686ab5f6338aea086e96f280c21db7cb01ae8787",
+      "sha256": "d4e3661142b0cd263d5bf963d27accbe566f8477697037e07e2be1433003f229",
       "frozenSha256": "e36ff2a31c1ea3584e6dff962241202505d934909949503e5d9d840c63472677"
     },
     {
@@ -46,7 +46,7 @@
     },
     {
       "path": "firmware/public-candidate/src/station_runtime.hpp",
-      "sha256": "d7338b584d95866d84c54d1602b8e44a3d33a0989466d3498bcf97a744fdad96",
+      "sha256": "151d4a059bfbf2e4aa7d3888c2512ae1f5342ba88711e93c7f95749bb7801def",
       "frozenSha256": "f8bc20670a0ef4bf4ebfeb5b73a8e05557893fd203dc4e92277e7ba7147cc925"
     },
     {
@@ -61,7 +61,7 @@
     },
     {
       "path": "firmware/common/include/open_radio/bluetooth_retry_deferral.hpp",
-      "sha256": "073b4c8768a0c0e779b435b2677992551a4c900f6952cdb52fbe22781914c4d0",
+      "sha256": "da05136feebe4d8f5717279052fc89db929cad721023277c80fbedb97596d4cd",
       "frozenSha256": "073b4c8768a0c0e779b435b2677992551a4c900f6952cdb52fbe22781914c4d0"
     }
   ],
@@ -342,6 +342,60 @@
       "toSha256": "d7338b584d95866d84c54d1602b8e44a3d33a0989466d3498bcf97a744fdad96",
       "reason": "Two corrections to T36 from the pre-release review. A failed open blocks the loop for its whole connect timeout, and the retry deadline was taken before it, so the second between alternates (and the first 5 s backoff) had already passed when the loop came back; the deadline now counts from the end of the failed open. The logged edge host now also stops at '?' and '#', so a URL without a path cannot carry its query into the log.",
       "verification": "core2-public-candidate, core2-owner-production and core2-hardware-lab build; firmware-fault-matrix T36 test asserts the deadline is taken after the failed open (failedAtMs) and red on the previous file; npm run check green."
+    },
+    {
+      "path": "firmware/common/include/open_radio/bluetooth_retry_deferral.hpp",
+      "movedIn": "0.4.5-candidate",
+      "date": "2026-10-26",
+      "fromSha256": "073b4c8768a0c0e779b435b2677992551a4c900f6952cdb52fbe22781914c4d0",
+      "toSha256": "da05136feebe4d8f5717279052fc89db929cad721023277c80fbedb97596d4cd",
+      "reason": "C1/E3: count unhealthy audio and logo work inside the existing Bluetooth deferral cap; cancel logo work cooperatively and keep its expired window until cleanup. Replace the inferred 5 s cancellation with explicit owner reset. No change to media or stack-memory admission.",
+      "verification": "Host regression failed on e52a720, then passed with explicit cancellation, slow-loop, logo cleanup, independent-window, cap=0 and millis-wrap cases. Run make -C firmware/common test and test-san plus node --test tests/firmware-fault-matrix.test.mjs. Firmware build, hardware playback, logo cleanup latency and soak NOT MEASURED; candidate patch only."
+    },
+    {
+      "path": "firmware/public-candidate/src/public_audio_pipeline.hpp",
+      "movedIn": "0.4.5-candidate",
+      "date": "2026-10-26",
+      "fromSha256": "a2623c650f1b63c8d1655c87caa7b8c565019a1d30f76c37da0d807742dcc24e",
+      "toSha256": "77c2e6350e5ca512220a1bfadd18942d55c1f5380cf6d58cdd003eca9b51744b",
+      "reason": "0.4.5 E1 (26.10.2026): the decoder output takes an input gate (inputStarved) and the pump stops at once on a starved live source, so an empty read is never taken for end of stream; source_->loop() keeps ICY metadata flowing during the hold; decoded-PCM production and input-starvation entries/time are counted for the progress watchdog and audio_qc. Lab-only: OPEN_RADIO_LAB_NO_INPUT_GATE and the OPEN_RADIO_DIAG_045 stream-open memory probe.",
+      "verification": "Host: make -C firmware/common test 21 PASS; node: fault matrix + soak evidence 66/66, npm test 303/305 with only the two audio-surface checks red before this record; pio: core2-diag-0-4-5, core2-public-candidate, core2-owner-production, core2-local-speaker-fallback, core2-hardware-lab SUCCESS; MP3 patch falsifier: one corrupted replacement stops the build (incomplete open_radio_mp3_need_input patch). Device: lab1 c8351d6 input_underruns=0 at 40 % ingest; lab2 ec05d1e stack at 39.3 s, 2 min without a stream stop, psram_largest 278516 B. Logs output/hardware-soaks/cube-v13-*-2026-10-26.log. A/B with the ingest limiter and the 10 h soak: NOT MEASURED yet."
+    },
+    {
+      "path": "firmware/public-candidate/src/async_icy_stream_source.hpp",
+      "movedIn": "0.4.5-candidate",
+      "date": "2026-10-26",
+      "fromSha256": "e3890852bbb71860b79ea3fc793ef9c3f9bba4be3b2543d21110e9d9a931e1a3",
+      "toSha256": "e0147f016a5f3dd270bd8c28ee739f8b2d5c02b87b4ff222c563dc00f065bb63",
+      "reason": "0.4.5 E1: inputStarved() for a live connection with less than one decoder read buffered. Ring and scratch allocated once and kept: per-open 128 KB PSRAM allocations fragmented PSRAM until every open failed (alloc_failed size=131072 caps=0x404, silence until reboot, also on published 0.4.4 on 26.10). Lab-only OPEN_RADIO_LAB_INGEST_LIMIT_BPS limiter. kReadWaitMs stays 100 ms.",
+      "verification": "Host: make -C firmware/common test 21 PASS; node: fault matrix + soak evidence 66/66, npm test 303/305 with only the two audio-surface checks red before this record; pio: core2-diag-0-4-5, core2-public-candidate, core2-owner-production, core2-local-speaker-fallback, core2-hardware-lab SUCCESS; MP3 patch falsifier: one corrupted replacement stops the build (incomplete open_radio_mp3_need_input patch). Device: lab1 c8351d6 input_underruns=0 at 40 % ingest; lab2 ec05d1e stack at 39.3 s, 2 min without a stream stop, psram_largest 278516 B. Logs output/hardware-soaks/cube-v13-*-2026-10-26.log. A/B with the ingest limiter and the 10 h soak: NOT MEASURED yet."
+    },
+    {
+      "path": "firmware/public-candidate/src/device_network_runtime.hpp",
+      "movedIn": "0.4.5-candidate",
+      "date": "2026-10-26",
+      "fromSha256": "a4d476470dba7b061666d17a686ab5f6338aea086e96f280c21db7cb01ae8787",
+      "toSha256": "d4e3661142b0cd263d5bf963d27accbe566f8477697037e07e2be1433003f229",
+      "reason": "0.4.5 E2 retry ladder 5/30/30/30 s (was up to 600 s); E4 automatic setup access point only without a saved profile or with onboarding unfinished (common/wifi_portal_policy.hpp, host tests); E5 wifi_disconnect reason and wifi_join channel/rssi/bssid_tag logs. Lab-only boot AP scan behind OPEN_RADIO_DIAG_045 + OPEN_RADIO_DIAG_BOOT_AP_SCAN.",
+      "verification": "Host: make -C firmware/common test 21 PASS; node: fault matrix + soak evidence 66/66, npm test 303/305 with only the two audio-surface checks red before this record; pio: core2-diag-0-4-5, core2-public-candidate, core2-owner-production, core2-local-speaker-fallback, core2-hardware-lab SUCCESS; MP3 patch falsifier: one corrupted replacement stops the build (incomplete open_radio_mp3_need_input patch). Device: lab1 c8351d6 input_underruns=0 at 40 % ingest; lab2 ec05d1e stack at 39.3 s, 2 min without a stream stop, psram_largest 278516 B. Logs output/hardware-soaks/cube-v13-*-2026-10-26.log. A/B with the ingest limiter and the 10 h soak: NOT MEASURED yet."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.5-candidate",
+      "date": "2026-10-26",
+      "fromSha256": "d7338b584d95866d84c54d1602b8e44a3d33a0989466d3498bcf97a744fdad96",
+      "toSha256": "0fa9084ea0d4cfb5e706ebda65325855af64e0838e695115cb1d6a8af889399a",
+      "reason": "0.4.5 E1b: the 8 s progress watchdog counts newly decoded PCM or drain, also before the first sound, with its window starting after the blocking open; the event logs input and PCM deltas. Before this a local speaker that takes 131072-frame blocks made the watchdog drop live connections under input starvation (lab1 26.10: 109953 frames queued at the 43.3 s stall).",
+      "verification": "Host: make -C firmware/common test 21 PASS; node: fault matrix + soak evidence 66/66, npm test 303/305 with only the two audio-surface checks red before this record; pio: core2-diag-0-4-5, core2-public-candidate, core2-owner-production, core2-local-speaker-fallback, core2-hardware-lab SUCCESS; MP3 patch falsifier: one corrupted replacement stops the build (incomplete open_radio_mp3_need_input patch). Device: lab1 c8351d6 input_underruns=0 at 40 % ingest; lab2 ec05d1e stack at 39.3 s, 2 min without a stream stop, psram_largest 278516 B. Logs output/hardware-soaks/cube-v13-*-2026-10-26.log. A/B with the ingest limiter and the 10 h soak: NOT MEASURED yet."
+    },
+    {
+      "path": "firmware/public-candidate/src/station_runtime.hpp",
+      "movedIn": "0.4.5-candidate",
+      "date": "2026-10-26",
+      "fromSha256": "0fa9084ea0d4cfb5e706ebda65325855af64e0838e695115cb1d6a8af889399a",
+      "toSha256": "151d4a059bfbf2e4aa7d3888c2512ae1f5342ba88711e93c7f95749bb7801def",
+      "reason": "0.4.5 E7: comment only — startAllowed now also covers connected Bluetooth PCM prefill (common/bluetooth_prefill_policy.hpp), so the progress watchdog supervises a live but starved stream while the speaker link waits for PCM instead of the 5 s prefill timeout tearing the link down (lab3-t40 26.10: local_reason=6 three times).",
+      "verification": "make -C firmware/common test 22 PASS incl. bluetooth-prefill-policy, test-san PASS; two mutants (no waitingForPcm in recovery, MayWait=false) fail the host test; fault matrix 58/58. Device: NOT MEASURED yet (lab4 soak running)."
     }
   ],
   "exceptionsNote": "An exception is the AUDIT TRAIL of a reviewed change, never a bypass. Until 2026-07-29 the checker excused a path by name, which meant one entry silently unfroze that file forever — and 0.3 plans to touch five frozen files. The hash check is now unconditional; an exception must name the exact from/to transition and its toSha256 must equal the current lock entry, so the record cannot drift from the file either.",

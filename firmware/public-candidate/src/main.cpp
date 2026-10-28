@@ -4,6 +4,9 @@
 #include <Preferences.h>
 #include <esp_heap_caps.h>
 #include <esp_system.h>
+#if defined(OPEN_RADIO_DIAG_045)
+#include <esp_debug_helpers.h>
+#endif
 #include <nvs_flash.h>
 #include <esp_sntp.h>
 #include <esp_task_wdt.h>
@@ -21,6 +24,8 @@
 #include "open_radio/firmware_contract.hpp"
 #include "open_radio/bluetooth_listen_policy.hpp"
 #include "open_radio/bluetooth_profile_gate.hpp"
+#include "open_radio/bluetooth_prefill_policy.hpp"
+#include "open_radio/bluetooth_pull_watchdog.hpp"
 #include "open_radio/bluetooth_retry_deferral.hpp"
 #include "open_radio/local_noise_source.hpp"
 #include "open_radio/upgrade_policy.hpp"
@@ -920,6 +925,25 @@ void reportMemoryBudget(const char* stage) {
       static_cast<unsigned>(heap_caps_get_minimum_free_size(psramCaps)),
       static_cast<unsigned>(heap_caps_get_largest_free_block(psramCaps)),
       static_cast<unsigned>(uxTaskGetStackHighWaterMark(nullptr)));
+#if defined(OPEN_RADIO_DIAG_045)
+  // 0.4.5 plan A2: the largest block alone cannot tell a heap that shrank
+  // from one that shattered. The block count and the share of free DMA
+  // memory outside the largest block can.
+  multi_heap_info_t dma{};
+  heap_caps_get_info(&dma, MALLOC_CAP_DMA);
+  const unsigned fragPct =
+      dma.total_free_bytes == 0
+          ? 0U
+          : 100U - static_cast<unsigned>(
+                       (static_cast<std::uint64_t>(dma.largest_free_block) * 100U) /
+                       dma.total_free_bytes);
+  Serial.printf(
+      "memory_frag stage=%s dma_free=%u dma_largest=%u dma_free_blocks=%u "
+      "dma_frag_pct=%u\n",
+      stage, static_cast<unsigned>(dma.total_free_bytes),
+      static_cast<unsigned>(dma.largest_free_block),
+      static_cast<unsigned>(dma.free_blocks), fragPct);
+#endif
 }
 
 void startOptionalTimeSync(std::uint32_t nowMs) {
@@ -1595,7 +1619,8 @@ bool consoleSessionActive = false;
 bool consoleSlotsChanged = false;
 // Background logo fetching runs on its OWN low-priority task pinned to the
 // other core: TLS handshakes and slow CDNs never touch the audio loop.
-// Bluetooth auto-start waits until the pass completes so TLS keeps its heap.
+// Bluetooth auto-start gives the pass its bounded window, then requests an
+// abort and waits for cleanup so TLS and Bluetooth never share the heap.
 // The task only reads stationSlots (slot changes restart the device) and
 // writes PSRAM pixel buffers + SPIFFS; the flag is its single output.
 volatile bool logoFetchPending = false;
@@ -1895,6 +1920,9 @@ void reportAudioQualityCounters() {
                   static_cast<unsigned long>(eventStackBytes));
   }
 #endif
+  Serial.printf(" input_starvation_entries=%lu input_starved_ms=%llu",
+                static_cast<unsigned long>(mp3Pipeline.inputStarvationEntries()),
+                static_cast<unsigned long long>(mp3Pipeline.inputStarvedMs()));
   Serial.println();
 }
 
@@ -2049,11 +2077,11 @@ constexpr std::uint32_t kBluetoothCleanAttemptMaxMs = 5420U;
 // The ceiling is physics, not preference: after the CDN burst a live stream
 // delivers 1x realtime, so decoded + BT queue can never exceed the burst
 // equilibrium (~98k frames measured 2026-07-17) during playback. Standby
-// pauses the local drain, which grows the pool at exactly one realtime
-// second per second — two seconds of staged A2DP PCM is reachable within the
-// five-second prefill timeout at every station, covers the worst measured
-// 2.10-second owner-loop stall, and the sink keeps receiving padded frames
-// through any deeper transient.
+// pauses the local drain. At full input rate, two seconds of staged A2DP PCM
+// plus the fallback reserve fit within the five-second prefill window and
+// cover the worst measured 2.10-second owner-loop stall. At 40% input, three
+// seconds of PCM need about 7.5 seconds from empty: wait under the stream
+// progress watchdog instead of treating slow prefill as a failed BT link.
 constexpr std::size_t kBluetoothStandbyReadyFrames =
     open_radio::kPcmSampleRate * 2U;
 static_assert(kBluetoothStandbyReadyFrames >=
@@ -2110,6 +2138,8 @@ open_radio::BluetoothRetryDeferral bluetoothRetryDeferral(
 // In the B5b run of 12.10 Bluetooth did not start for 460 s after boot, until
 // the station was changed. Same cap, its own window.
 open_radio::BluetoothRetryDeferral bluetoothAutoStartDeferral(
+    kBluetoothRetryDeferralCapMs);
+open_radio::BluetoothRetryDeferral bluetoothDiscoveryDeferral(
     kBluetoothRetryDeferralCapMs);
 
 #if defined(OPEN_RADIO_BT_REPLACE_INBOUND)
@@ -2251,7 +2281,15 @@ bool bluetoothAclAllowsProfileDial(std::uint32_t nowMs) {
 bool bluetoothMustWaitForAudio(open_radio::BluetoothRetryDeferral& deferral,
                                const char* what, bool localAudioReady,
                                std::uint32_t nowMs) {
-  const auto decision = deferral.decide(localAudioReady, nowMs);
+  const auto decision = deferral.decide(
+      localAudioReady, nowMs, !bluetoothStackStarted && logoFetchPending);
+  if (decision == open_radio::BluetoothRetryDeferral::Decision::abortLogoFetch) {
+    if (!logoFetchAbort.exchange(true, std::memory_order_relaxed)) {
+      Serial.printf("bluetooth %s_deferral_cap action=abort-logo-fetch cap_ms=%lu\n",
+                    what, static_cast<unsigned long>(kBluetoothRetryDeferralCapMs));
+    }
+    return true;  // Keep the expired window until the loop reaps the task.
+  }
   if (decision == open_radio::BluetoothRetryDeferral::Decision::dialAtCap) {
     Serial.printf(
         "bluetooth %s_deferral_cap cap_ms=%lu local_blocks=%u decoded_frames=%u\n",
@@ -2298,6 +2336,17 @@ bool bluetoothStandbyReady() {
          decodedFrames.size() >=
              open_radio::public_candidate::kBluetoothFallbackReserveFrames &&
          bluetoothQueue.bufferedFrames() >= kBluetoothStandbyReadyFrames;
+}
+
+bool bluetoothWaitingForPcm() {
+  return bluetoothLinkConnected && !bluetoothMediaStarted &&
+         bluetoothMediaStartAllowedAtMs == 0 && !bluetoothStandbyReady();
+}
+
+bool bluetoothStreamRecoveryAllowed() {
+  return open_radio::bluetoothStreamRecoveryAllowed(
+      consoleSessionActive, bluetoothConnectInFlight, bluetoothMediaStarted,
+      bluetoothWaitingForPcm());
 }
 
 void allowBluetoothMediaStart(std::uint32_t nowMs) {
@@ -2541,6 +2590,7 @@ void scheduleBluetoothRetry(std::uint32_t nowMs,
   }
   const auto delay = overrideDelayMs != 0 ? overrideDelayMs
                                            : bluetoothRecoveryDelayMs();
+  bluetoothRetryDeferral.reset();
   bluetoothRetryAtMs = nowMs + delay;
   Serial.printf("bluetooth retry_in_ms=%lu\n",
                 static_cast<unsigned long>(bluetoothRetryAtMs - nowMs));
@@ -2555,6 +2605,7 @@ void scheduleBluetoothDiscoveryRetry(std::uint32_t nowMs,
   const auto delay = overrideDelayMs != 0
                          ? overrideDelayMs
                          : kBluetoothDiscoveryRecoveryDelayMs;
+  bluetoothDiscoveryDeferral.reset();
   bluetoothDiscoveryRetryAtMs = nowMs + delay;
   Serial.printf("bluetooth discovery_retry_in_ms=%lu\n",
                 static_cast<unsigned long>(delay));
@@ -2916,6 +2967,9 @@ bool startBluetoothStack(bool scan, std::uint32_t nowMs) {
 void startBluetooth(bool scan) {
   const auto nowMs = millis();
   bluetoothAutoStartPending = false;
+  bluetoothAutoStartDeferral.reset();
+  bluetoothRetryDeferral.reset();
+  bluetoothDiscoveryDeferral.reset();
   bluetoothRetryAtMs = 0;
   bluetoothDiscoveryRetryAtMs = 0;
   useLocalBluetoothFallback();
@@ -3473,8 +3527,8 @@ void handleNetworkConnected(void*, bool newlyProvisioned) {
   }
 #endif
 #if defined(OPEN_RADIO_VARIANT_FULL)
-  // Defer the memory-heavy Classic Bluetooth stack until the first decoded
-  // audio proves that Wi-Fi, endpoint resolution and playback are healthy.
+  // Prefer decoded audio before the memory-heavy Classic Bluetooth stack,
+  // but include unhealthy audio and logo work in the deferral cap.
   // Then reconnect the trusted peer automatically or discover the first
   // standards-compatible speaker automatically when no peer exists yet.
   if (!bluetoothStackStarted && !bluetoothMediaStarted) {
@@ -3484,6 +3538,12 @@ void handleNetworkConnected(void*, bool newlyProvisioned) {
 }
 
 }  // namespace
+
+#if defined(OPEN_RADIO_DIAG_045)
+// The pipeline header is included before the anonymous namespace and cannot
+// name reportMemoryBudget; this is its one way in.
+void openRadioDiagMemoryProbe(const char* stage) { reportMemoryBudget(stage); }
+#endif
 
 #if defined(OPEN_RADIO_LAB_CONSOLE) && defined(OPEN_RADIO_HAS_MP3)
 // Lab-lane serial console so soak captures can drive station switches
@@ -3687,6 +3747,11 @@ void setup() {
         ets_printf("alloc_failed size=%u caps=0x%x fn=%s\n",
                    static_cast<unsigned>(size), static_cast<unsigned>(caps),
                    function != nullptr ? function : "?");
+#if defined(OPEN_RADIO_DIAG_045)
+        // 0.4.5 plan A1: who asks for the 1856-byte DMA block. The ROM
+        // backtrace printer allocates nothing, which matters in this hook.
+        esp_backtrace_print(8);
+#endif
       });
   Serial.printf("boot build_sha=%s\n", OPEN_RADIO_BUILD_SHA);
 #if defined(OPEN_RADIO_SERIAL_TX_BUFFER)
@@ -3868,7 +3933,7 @@ void setup() {
   }
 #endif
   networkRuntime.setConnectedCallback(handleNetworkConnected, nullptr);
-  networkRuntime.begin(millis());
+  networkRuntime.begin(millis(), boardUi.config().onboardingComplete);
   if (!networkRuntime.hasProfiles()) {
     boardUi.requireNetworkOnboarding();
   }
@@ -3922,6 +3987,13 @@ void loop() {
   boardUi.setWifiOnline(networkRuntime.connected());
   boardUi.setWifiStrength(networkRuntime.signalPercent());
   boardUi.setConsoleActive(networkRuntime.consoleActive());
+#if defined(OPEN_RADIO_DIAG_045)
+  // 0.4.5 plan A2: the ratchet moves at these two edges (25.10 soak: largest
+  // block 15.3 KB with Wi-Fi down, 5.4 KB right after it came back).
+  if (networkWasConnected != networkRuntime.connected()) {
+    reportMemoryBudget(networkRuntime.connected() ? "wifi-up" : "wifi-down");
+  }
+#endif
   if (networkWasConnected && !networkRuntime.connected()) {
     boardUi.setDeviceAddress(nullptr);
 #if defined(OPEN_RADIO_HAS_MP3)
@@ -3959,9 +4031,7 @@ void loop() {
     // A Classic Bluetooth connect attempt occupies the shared 2.4 GHz radio
     // for about five seconds. Defer only a new network open; local noise never
     // touches this path.
-    stationRuntime.loop(millis(),
-                        !consoleSessionActive &&
-                            (!bluetoothConnectInFlight || bluetoothMediaStarted));
+    stationRuntime.loop(millis(), bluetoothStreamRecoveryAllowed());
 #else
     stationRuntime.loop(millis(), !consoleSessionActive);
 #endif
@@ -4074,11 +4144,15 @@ void loop() {
     startBluetooth(true);
     reportMemoryBudget("post-bluetooth-start");
   }
-  if (bluetoothAutoStartPending && !logoFetchPending &&
-      activeAudioSourceHealthy() && !bluetoothConnectInFlight &&
+  if (!bluetoothAutoStartPending || bluetoothConnectInFlight ||
+      bluetoothMediaStarted) {
+    bluetoothAutoStartDeferral.reset();
+  }
+  if (bluetoothAutoStartPending && !bluetoothConnectInFlight &&
       !bluetoothMediaStarted &&
       !bluetoothMustWaitForAudio(bluetoothAutoStartDeferral, "autostart",
-                                 localAudioReadyForBluetoothRetry(),
+                                 activeAudioSourceHealthy() &&
+                                     localAudioReadyForBluetoothRetry(),
                                  millis())) {
     reportMemoryBudget("pre-bluetooth");
     startBluetooth(!boardUi.config().bluetoothRemembered);
@@ -4481,14 +4555,23 @@ void loop() {
       scheduleBluetoothDiscoveryRetry(millis());
     }
   }
+  // Stamp first, clock second; the signed age covers a stamp the other core
+  // wrote between the two reads anyway.
+  const std::uint32_t bluetoothLastPullSnapshotMs =
+      bluetoothLastPullMs.load(std::memory_order_acquire);
+  const std::uint32_t bluetoothPullCheckMs = millis();
   if (bluetoothMediaStarted &&
-      millis() - bluetoothLastPullMs.load(std::memory_order_relaxed) >=
-          kBluetoothPullWatchdogMs) {
+      open_radio::bluetoothPullStalled(bluetoothPullCheckMs,
+                                       bluetoothLastPullSnapshotMs,
+                                       kBluetoothPullWatchdogMs)) {
     ++bluetoothPullWatchdogTrips;
-    Serial.printf("bluetooth pull_watchdog=%lu media_age_ms=%lu\n",
+    Serial.printf("bluetooth pull_watchdog=%lu media_age_ms=%lu "
+                  "pull_age_ms=%lu\n",
                   static_cast<unsigned long>(bluetoothPullWatchdogTrips),
                   static_cast<unsigned long>(millis() -
-                                             bluetoothMediaStartedAtMs));
+                                             bluetoothMediaStartedAtMs),
+                  static_cast<unsigned long>(bluetoothPullCheckMs -
+                                             bluetoothLastPullSnapshotMs));
     bluetoothLinkConnected = false;
     resetBluetoothMediaProbe();
     bluetoothConnectInFlight = false;
@@ -4605,9 +4688,26 @@ void loop() {
               : bluetoothNowMs + kBluetoothMediaProbeIntervalMs;
     }
   }
+  const bool bluetoothPrefillWaitingForStream =
+      open_radio::bluetoothPrefillMayWait(
+          playbackMode == PlaybackMode::Radio && stationRuntime.running(),
+          bluetoothWaitingForPcm(), bluetoothStreamRecoveryAllowed());
+  if (bluetoothPrefillWaitingForStream &&
+      bluetoothNowMs - bluetoothLinkConnectedAtMs >= kBluetoothStandbyPrefillTimeoutMs &&
+      static_cast<std::int32_t>(bluetoothNowMs - nextStandbyWithheldLogMs) >= 0) {
+    nextStandbyWithheldLogMs =
+        bluetoothNowMs + kBluetoothRetryDeferredReportIntervalMs;
+    Serial.printf(
+        "bluetooth standby_wait reason=stream_progress bt_buffered=%u "
+        "pcm_total=%lu input_starvation_entries=%lu input_starved_ms=%llu\n",
+        static_cast<unsigned>(bluetoothQueue.bufferedFrames()),
+        static_cast<unsigned long>(mp3Pipeline.decodedProducedFrames()),
+        static_cast<unsigned long>(mp3Pipeline.inputStarvationEntries()),
+        static_cast<unsigned long long>(mp3Pipeline.inputStarvedMs()));
+  }
   const bool bluetoothStandbyPrefillTimeout =
       bluetoothLinkConnected && bluetoothLinkConnectedAtMs != 0 &&
-      bluetoothMediaStartAllowedAtMs == 0 &&
+      bluetoothMediaStartAllowedAtMs == 0 && !bluetoothPrefillWaitingForStream &&
       bluetoothNowMs - bluetoothLinkConnectedAtMs >=
           kBluetoothStandbyPrefillTimeoutMs;
   const bool bluetoothMediaStartTimeout =
@@ -4700,11 +4800,22 @@ void loop() {
     bluetoothRetryAtMs = millis();
   }
   dialAfterSlaveInboundClose();
+  // Cancellation is explicit: neither a slow loop nor an unhealthy stream
+  // means that an armed retry stopped being pending.
+  if (bluetoothDiscoveryRetryAtMs == 0 || boardUi.config().bluetoothRemembered) {
+    bluetoothDiscoveryDeferral.reset();
+  }
+  if (bluetoothRetryAtMs == 0 || !boardUi.config().bluetoothRemembered) {
+    bluetoothRetryDeferral.reset();
+  }
   if (bluetoothDiscoveryRetryAtMs != 0 &&
       static_cast<std::int32_t>(millis() - bluetoothDiscoveryRetryAtMs) >= 0 &&
-      activeAudioSourceHealthy() && !boardUi.config().bluetoothRemembered) {
+      !boardUi.config().bluetoothRemembered) {
     const auto retryNowMs = millis();
-    if (!localAudioReadyForBluetoothRetry()) {
+    if (bluetoothMustWaitForAudio(
+            bluetoothDiscoveryDeferral, "discovery",
+            activeAudioSourceHealthy() && localAudioReadyForBluetoothRetry(),
+            retryNowMs)) {
       bluetoothDiscoveryRetryAtMs =
           retryNowMs + kBluetoothRetryAudioPollMs;
     } else if (!bluetoothStackStarted ||
@@ -4718,15 +4829,16 @@ void loop() {
   }
   if (bluetoothRetryAtMs != 0 &&
       static_cast<std::int32_t>(millis() - bluetoothRetryAtMs) >= 0 &&
-      activeAudioSourceHealthy() && boardUi.config().bluetoothRemembered) {
+      boardUi.config().bluetoothRemembered) {
     const auto retryNowMs = millis();
     if (bluetoothMustWaitForAudio(
             bluetoothRetryDeferral, "retry",
             // The replacement flag is read first so its dial always sees it;
             // it is cleared when that dial goes out, below.
-            bluetoothReplacementDialReady() ||
-                localAudioReadyForBluetoothRetry() ||
-                bluetoothAclAllowsProfileDial(retryNowMs),
+            activeAudioSourceHealthy() &&
+                (bluetoothReplacementDialReady() ||
+                 localAudioReadyForBluetoothRetry() ||
+                 bluetoothAclAllowsProfileDial(retryNowMs)),
             retryNowMs)) {
       deferBluetoothRetryForAudio(retryNowMs);
     } else if (!bluetoothStackStarted) {

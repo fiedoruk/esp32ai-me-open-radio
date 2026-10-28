@@ -10,6 +10,7 @@ UI_TARGET := $(BUILD_DIR)/ui-controller-tests
 BLUETOOTH_PROFILE_TARGET := $(BUILD_DIR)/bluetooth-profile-gate-tests
 BLUETOOTH_LISTEN_TARGET := $(BUILD_DIR)/bluetooth-listen-policy-tests
 BLUETOOTH_DEFERRAL_TARGET := $(BUILD_DIR)/bluetooth-retry-deferral-tests
+WIFI_PORTAL_TARGET := $(BUILD_DIR)/wifi-portal-policy-tests
 NOISE_TARGET := $(BUILD_DIR)/local-noise-source-tests
 IMAGE_DIMS_TARGET := $(BUILD_DIR)/image-dims-tests
 STATION_BINDING_TARGET := $(BUILD_DIR)/station-binding-tests
@@ -27,7 +28,11 @@ TOUCH_TARGET := $(BUILD_DIR)/touch-target-audit
 SLOT_MIGRATION_INCLUDES = -Itests/stubs -I../public-candidate/src $(INCLUDES)
 UI_TRACE_TARGET := $(BUILD_DIR)/ui-controller-trace
 NOISE_PROBE_TARGET := $(BUILD_DIR)/local-noise-source-probe
-TARGETS := $(CONTRACT_TARGET) $(PARITY_TARGET) $(HOSTILE_TARGET) $(RUNTIME_TARGET) $(INGRESS_TARGET) $(UI_TARGET) $(BLUETOOTH_PROFILE_TARGET) $(BLUETOOTH_LISTEN_TARGET) $(BLUETOOTH_DEFERRAL_TARGET) $(NOISE_TARGET) $(IMAGE_DIMS_TARGET) $(STATION_BINDING_TARGET) $(SLOT_MIGRATION_TARGET) $(UPGRADE_POLICY_TARGET) $(SENSOR_SNAPSHOT_TARGET) $(SCD4X_TARGET) $(AIR_TARGET) $(ALERT_TARGET) $(BME688_TARGET) $(TOUCH_TARGET)
+TARGETS := $(CONTRACT_TARGET) $(PARITY_TARGET) $(HOSTILE_TARGET) $(RUNTIME_TARGET) $(INGRESS_TARGET) $(UI_TARGET) $(BLUETOOTH_PROFILE_TARGET) $(BLUETOOTH_LISTEN_TARGET) $(BLUETOOTH_DEFERRAL_TARGET) $(WIFI_PORTAL_TARGET) $(NOISE_TARGET) $(IMAGE_DIMS_TARGET) $(STATION_BINDING_TARGET) $(SLOT_MIGRATION_TARGET) $(UPGRADE_POLICY_TARGET) $(SENSOR_SNAPSHOT_TARGET) $(SCD4X_TARGET) $(AIR_TARGET) $(ALERT_TARGET) $(BME688_TARGET) $(TOUCH_TARGET)
+BLUETOOTH_PREFILL_TARGET := $(BUILD_DIR)/bluetooth-prefill-policy-tests
+TARGETS += $(BLUETOOTH_PREFILL_TARGET)
+BLUETOOTH_PULL_TARGET := $(BUILD_DIR)/bluetooth-pull-watchdog-tests
+TARGETS += $(BLUETOOTH_PULL_TARGET)
 INCLUDES := -Iinclude -I../generated
 
 .PHONY: test test-san trace probe clean
@@ -51,6 +56,9 @@ test: $(TARGETS)
 	$(BLUETOOTH_PROFILE_TARGET)
 	$(BLUETOOTH_LISTEN_TARGET)
 	$(BLUETOOTH_DEFERRAL_TARGET)
+	$(BLUETOOTH_PREFILL_TARGET)
+	$(BLUETOOTH_PULL_TARGET)
+	$(WIFI_PORTAL_TARGET)
 	$(NOISE_TARGET)
 	$(IMAGE_DIMS_TARGET)
 	$(STATION_BINDING_TARGET)
@@ -100,6 +108,18 @@ $(BLUETOOTH_LISTEN_TARGET): tests/bluetooth_listen_policy_tests.cpp include/open
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
 
 $(BLUETOOTH_DEFERRAL_TARGET): tests/bluetooth_retry_deferral_tests.cpp include/open_radio/bluetooth_retry_deferral.hpp
+	mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
+
+$(BLUETOOTH_PREFILL_TARGET): tests/bluetooth_prefill_policy_tests.cpp include/open_radio/bluetooth_prefill_policy.hpp
+	mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
+
+$(BLUETOOTH_PULL_TARGET): tests/bluetooth_pull_watchdog_tests.cpp include/open_radio/bluetooth_pull_watchdog.hpp
+	mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
+
+$(WIFI_PORTAL_TARGET): tests/wifi_portal_policy_tests.cpp include/open_radio/wifi_portal_policy.hpp include/open_radio/ui_controller.hpp include/open_radio/service_contracts.hpp
 	mkdir -p $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
 

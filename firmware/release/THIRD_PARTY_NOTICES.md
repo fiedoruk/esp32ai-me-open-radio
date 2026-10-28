@@ -19,11 +19,31 @@ eligible from ESP8266Audio. AAC, Opus, FLAC, MIDI, MOD and alternative hardware
 outputs are mechanically excluded from the public link graph.
 
 ESP8266Audio is modified when the firmware is built:
-`../public-candidate/scripts/select_mp3_sources.py` changes its
-`src/AudioFileSourceICYStream.cpp` (a 500 ms bound on reading stream metadata,
-a cleared metadata buffer, HTTP/1.0 requests, and the length of a stream title
-split across two reads) and its `library.json` (which files are compiled).
-Modified as of 2026-09-25.
+`../public-candidate/scripts/select_mp3_sources.py` applies the following
+changes, as of 2026-10-26:
+
+- `src/AudioGeneratorMP3.h` and `.cpp`: retain partial MP3 input and yield for
+  more data without ending an open stream (`NeedInput`); retry only an output
+  sample that was refused, and bound corrupt-frame retries per loop call.
+- `src/AudioFileSourceICYStream.cpp` and `src/AudioFileSourceHTTPStream.cpp`:
+  check for a null stream pointer before reading a connection that has closed.
+- The earlier ICY changes remain: a 500 ms bound on reading stream metadata,
+  a cleared metadata buffer, HTTP/1.0 requests, and the correct length of a
+  stream title split across two reads.
+- `library.json`: restrict which files are compiled for the public MP3 image.
+
+The same build script modifies M5GFX, as of 2026-10-26:
+
+- `src/lgfx/v1/platforms/common.hpp` and
+  `src/lgfx/v1/platforms/esp32/Bus_SPI.cpp`: expose the capacity of both reserved
+  DMA conversion buffers and cap converted SPI transfers to that capacity.
+  If the reservation is unavailable, use the CPU transfer path.
+- The earlier `src/lgfx/utility/lgfx_pngle.c` change remains: leave the inner
+  decompression loop when the zlib stream has ended without consuming input,
+  so trailing data cannot keep that loop running indefinitely.
+
+These patches keep the pinned upstream commits and are applied by the build
+script; their source is included in the corresponding-source bundle.
 
 Each released binary ships with its corresponding-source bundle, license
 texts, build instructions and the generated SBOM, published next to the

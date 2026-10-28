@@ -2,10 +2,12 @@
 
 [Polska wersja](SUPPORT.pl.md)
 
-Public releases 0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2 and the current 0.4.4 are
-live; official binaries come only from `fiedoruk.pl/os/`. 0.4.4 is validated on
-one reference device, a Core2 v1.3; 0.2.1 remains the release with the widest
-hardware evidence. Reports go
+When reporting an issue, name the version actually installed on your device.
+
+Public releases 0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2, 0.4.4 and the current 0.4.5
+are live; official binaries come only from `fiedoruk.pl/os/`. 0.4.5 was
+accepted, with exceptions, on one reference device, a Core2 v1.3; 0.2.1 remains
+the release with the widest hardware evidence. Reports go
 to the issue tracker at [github.com/fiedoruk/esp32ai-me-open-radio](https://github.com/fiedoruk/esp32ai-me-open-radio);
 security reports follow `SECURITY.md`.
 

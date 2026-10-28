@@ -2,7 +2,10 @@
 
 [Polska wersja](CONTRIBUTING.pl.md)
 
-The project ships public firmware releases (0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2, current 0.4.4) validated on real
+**0.4.5 is the published release.** Keep observations from diagnostic images
+separate from results on the release images.
+
+The project ships public firmware releases (0.1, 0.2, 0.2.1, 0.4, 0.4.1, 0.4.2, 0.4.4, current 0.4.5) validated on real
 hardware. Contributions are:
 
 - software under GPL-3.0-or-later,
@@ -44,9 +47,8 @@ request — it is short, and it is the only document here with legal effect.
 5. Sign commits with the DCO trailer: `Signed-off-by: Name <email>`.
 
 Network, security, USB-rescue and stable-catalog changes require two reviews. Other
-changes require one maintainer review. The project's validation gates run in the
-maintainer's own workspace rather than in this repository, so every contribution
-is reviewed and validated by the maintainer before merge.
+changes require one maintainer review. The maintainer reviews and validates
+every contribution before merge.
 
 ## Station contributions
 

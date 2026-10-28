@@ -1,10 +1,16 @@
-// Assemble the two artifacts a release ships, from the parts a build produced.
+// Assemble the artifacts a release ships, from the parts a build produced.
 //
 // The factory image is the four parts laid at their flash offsets with 0xFF
 // everywhere between them — including across the settings partition, which is
 // what makes "erases all settings" true rather than merely intended. The update
 // artifact is the application alone, byte for byte the same application that
 // sits inside the factory image.
+//
+// The browser update writes the three boot parts as well, each at its own
+// offset and none of them over the settings partition. The browser flasher may
+// erase the whole chip before it writes (it asks, and the owner can tick the
+// box); an update that brought only the application would then leave a device
+// with no bootloader. So the boot parts ship under release names too.
 //
 // This existed as a sequence of commands typed by hand, which is how the wrong
 // image reached the device yesterday. It is a script now, and its output is
@@ -29,9 +35,9 @@ if (!buildDir || !bootAppPath || !outDir || !slug) {
 // The Core2 layout. These offsets are the flasher's contract; a part written
 // one address off is a device that does not boot.
 const PARTS = [
-  {file: "bootloader.bin", offset: 0x1000, from: "build"},
-  {file: "partitions.bin", offset: 0x8000, from: "build"},
-  {file: "boot_app0.bin", offset: 0xe000, from: "argument"},
+  {file: "bootloader.bin", offset: 0x1000, from: "build", release: "bootloader"},
+  {file: "partitions.bin", offset: 0x8000, from: "build", release: "partitions"},
+  {file: "boot_app0.bin", offset: 0xe000, from: "argument", release: "boot-app0"},
   {file: "firmware.bin", offset: 0x10000, from: "build"}
 ];
 
@@ -62,9 +68,16 @@ await writeFile(join(outDir, updateName), application);
 // can re-derive the merged image without this script.
 for (const part of loaded) await writeFile(join(outDir, part.file), part.body);
 
+const bootNames = [];
+for (const part of loaded.filter(entry => entry.release)) {
+  const name = `open-radio-${slug}-${part.release}.bin`;
+  await writeFile(join(outDir, name), part.body);
+  bootNames.push(name);
+}
+
 // Checksum sidecars in the form a downloader can actually use: a bare name, so
 // `shasum -a 256 -c` works in the directory the files land in.
-for (const name of [factoryName, updateName]) {
+for (const name of [factoryName, updateName, ...bootNames]) {
   const body = await readFile(join(outDir, name));
   await writeFile(join(outDir, `${name}.sha256`), `${sha(body)}  ${name}\n`);
 }
