@@ -2,6 +2,22 @@
 
 [Polska wersja](USER-GUIDE.pl.md)
 
+## Outside Poland — read this first
+
+Open Radio is made in Poland for Polish radio. It also plays abroad; what you
+need to know:
+
+- Install it from [esp32ai.me/radio/install](https://esp32ai.me/radio/install)
+  (Chrome, Edge or Opera on a computer).
+- **The screen starts in Polish.** On the first setup screen tap **Język**
+  (bottom left) to switch to English; later the switch is in Settings →
+  **Szybkie** (Quick) → **Język**.
+- **The clock shows Polish time** (CET/CEST). There is no time-zone setting yet.
+- **All 236 stations are Polish** and stream in MP3. Some broadcasters may limit
+  listening from outside Poland; we have not tested this.
+- **Wi-Fi:** 2.4 GHz with a WPA2 password. Open networks and networks with a
+  sign-in page (common in hotels and airports) are not supported.
+
 ## Current hardware evidence
 
 The current public release is **0.4.5** (2026-10-28), accepted with

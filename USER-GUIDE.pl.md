@@ -2,6 +2,22 @@
 
 [English version](USER-GUIDE.md)
 
+## Poza Polską — przeczytaj najpierw
+
+Open Radio powstało w Polsce dla polskiego radia. Za granicą też gra; warto
+wiedzieć:
+
+- Instalacja: [esp32ai.me/pl/radio/instalacja](https://esp32ai.me/pl/radio/instalacja)
+  (Chrome, Edge albo Opera na komputerze).
+- **Ekran startuje po polsku.** Na pierwszym ekranie konfiguracji przycisk
+  **Język** (w lewym dolnym rogu) przełącza na angielski; później jest
+  w Ustawieniach → **Szybkie** → **Język**.
+- **Zegar pokazuje czas polski** (CET/CEST). Wyboru strefy czasowej jeszcze nie ma.
+- **Wszystkie 236 stacji są polskie** i nadają w MP3. Część nadawców może
+  ograniczać słuchanie spoza Polski; tego nie sprawdzaliśmy.
+- **Wi-Fi:** 2,4 GHz z hasłem WPA2. Sieci otwarte i sieci ze stroną logowania
+  (częste w hotelach i na lotniskach) nie są obsługiwane.
+
 ## Bieżące dowody sprzętowe
 
 Aktualne publiczne wydanie to **0.4.5** (28.10.2026), odebrane z wyjątkami.
