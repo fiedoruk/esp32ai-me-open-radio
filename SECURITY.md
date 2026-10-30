@@ -28,9 +28,10 @@ devices stay on their installed version.
 Do not include Wi-Fi passwords, private MAC addresses or personal listening
 data in a public issue. Report privately through GitHub private vulnerability
 reporting (Security Advisories) at
-[github.com/fiedoruk/esp32ai-me-open-radio/security/advisories](https://github.com/fiedoruk/esp32ai-me-open-radio/security/advisories),
-or by e-mail to the address published in `/.well-known/security.txt` on
-`fiedoruk.pl` and `esp32ai.me`. We acknowledge a report within 72 hours and
+[github.com/fiedoruk/esp32ai-me-open-radio/security/advisories/new](https://github.com/fiedoruk/esp32ai-me-open-radio/security/advisories/new),
+or through the contact form listed in
+[esp32ai.me/security.txt](https://esp32ai.me/security.txt). Reports in English
+or Polish are welcome. We acknowledge a report within 72 hours and
 follow a coordinated disclosure policy: a fixed vulnerability is published once
 a release carrying the fix is downloadable.
 
